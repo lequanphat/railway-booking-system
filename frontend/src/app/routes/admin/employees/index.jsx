@@ -2,19 +2,11 @@ import { Button, Flex, Spin } from "antd";
 import Search from "antd/es/input/Search";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
-import { useQuery } from "@tanstack/react-query";
-import { EmployeeTable } from "./section/EmployeeTable";
+import { EmployeeTable } from "../../../../features/employees/components/EmployeeTable";
+import { useEmployees } from "~/features/employees/api/get-employees";
 
 const EmployeePage = () => {
-  const { data: employees, isLoading } = useQuery({
-    queryKey: ["employees"],
-    queryFn: async () => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      return response.json();
-    },
-  });
+  const { data: employees, isLoading } = useEmployees({ page: 1 });
 
   return (
     <div>
