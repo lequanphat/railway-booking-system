@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Faruk
  */
 @RestController
-@RequestMapping("admin")
+@RequestMapping("api/admin")
 public class AdminController {
     @GetMapping("/hello")
     @Operation(tags = "Hello Admin Service", description = "When you send token information in the header it just says Hello Admin")

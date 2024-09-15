@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.model.UserRole;
+import com.farukgenc.boilerplate.springboot.security.utils.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,15 +26,15 @@ public class JwtTokenManager {
 	public String generateToken(User user) {
 
 		final String username = user.getUsername();
-		final UserRole userRole = user.getUserRole();
+		final UserRole role = user.getUserRole();
 
 		//@formatter:off
 		return JWT.create()
 				.withSubject(username)
 				.withIssuer(jwtProperties.getIssuer())
-				.withClaim("role", userRole.name())
+				.withClaim("role", role.name())
 				.withIssuedAt(new Date())
-				.withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMinute() * 60 * 1000))
+				.withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMinute() * SecurityConstants.EXPIRATION_TIME))
 				.sign(Algorithm.HMAC256(jwtProperties.getSecretKey().getBytes()));
 		//@formatter:on
 	}
