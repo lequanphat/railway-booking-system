@@ -12,6 +12,11 @@ import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 /**
  * Created on Ağustos, 2020
@@ -42,6 +47,7 @@ public class SecurityConfiguration {
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(request -> request.requestMatchers("/register",
 																	      "/login",
+																			"/api/hello-world",
 																	      "/v3/api-docs/**",
 																          "/swagger-ui/**",
 																	      "/swagger-ui.html",
@@ -57,5 +63,4 @@ public class SecurityConfiguration {
 
 		//@formatter:on
 	}
-
 }
