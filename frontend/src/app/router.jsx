@@ -25,6 +25,13 @@ const createAppRouter = () =>
             return { Component: HomeRoute.default };
           },
         },
+        {
+          path: "employees",
+          lazy: async () => {
+            const EmployeePage = await import("./routes/admin/employees");
+            return { Component: EmployeePage.default };
+          }
+        }
       ],
     },
     // Auth routes

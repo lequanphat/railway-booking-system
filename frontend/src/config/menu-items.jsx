@@ -111,7 +111,7 @@ const menuItems = [
       {
         key: "6-1",
         label: "Danh sách nhân viên",
-        path: "/employees/list",
+        path: "/admin/employees",
       },
       {
         key: "6-2",
