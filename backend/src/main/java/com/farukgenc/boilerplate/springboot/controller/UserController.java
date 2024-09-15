@@ -41,23 +41,15 @@ public class UserController {
 	@PutMapping("/{id}")
 	@Operation(tags = "Update user", description = "Update an existing user")
 	public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest userRequest) {
-		try {
-			UserResponse updatedUser = userService.updateUser(id, userRequest);
-			return ResponseEntity.ok(updatedUser);
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		UserResponse updatedUser = userService.updateUser(id, userRequest);
+		return ResponseEntity.ok(updatedUser);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(tags = "Delete user", description = "Delete an existing user")
 	public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
-		try {
-			UserResponse deletedUser = userService.deleteUser(id);
-			return ResponseEntity.ok(deletedUser);
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		UserResponse deletedUser = userService.deleteUser(id);
+		return ResponseEntity.ok(deletedUser);
 	}
 
 }

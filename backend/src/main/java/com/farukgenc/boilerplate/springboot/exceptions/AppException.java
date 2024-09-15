@@ -1,9 +1,8 @@
 package com.farukgenc.boilerplate.springboot.exceptions;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import java.time.LocalDateTime;
 
 /**
  * Created on Ağustos, 2020
@@ -11,15 +10,9 @@ import java.time.LocalDateTime;
  * @author Faruk
  */
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ApiExceptionResponse extends Throwable {
-
+public class AppException extends RuntimeException {
 	private String message;
-
 	private HttpStatus status;
-
-	private LocalDateTime time;
 
 }
