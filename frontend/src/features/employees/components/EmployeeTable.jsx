@@ -26,36 +26,19 @@ export const EmployeeTable = ({ employees }) => {
         key: "email",
       },
       {
-        title: "Phone number",
-        dataIndex: "phone",
-        key: "phone",
-      },
-      {
         title: "Role",
-        key: "role",
-        dataIndex: "role",
-        render: (_, { role }) => (
+        key: "userRole",
+        dataIndex: "userRole",
+        render: (_, { userRole }) => (
           <>
-            <Tag color={role === "ADMIN" ? "red" : "blue"}>{role}</Tag>
+            <Tag color={userRole === "ADMIN" ? "red" : "blue"}>{userRole}</Tag>
           </>
         ),
       },
     ],
     []
   );
-  const data = useMemo(() => {
-    return employees.map((employee) => ({
-      key: employee.id,
-      id: employee.id,
-      name: employee.name,
-      username: employee.username,
-      email: employee.email,
-      phone: employee.phone,
-      role: Math.random() > 0.5 ? "ADMIN" : "USER",
-    }));
-  }, [employees]);
-
-  return <Table columns={columns} dataSource={data} />;
+  return <Table columns={columns} dataSource={employees} />;
 };
 
 EmployeeTable.propTypes = {
