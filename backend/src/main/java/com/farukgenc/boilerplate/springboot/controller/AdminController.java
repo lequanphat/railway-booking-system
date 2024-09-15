@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Faruk
  */
 @RestController
-@RequestMapping("api")
-public class HelloController {
+@RequestMapping("admin")
+public class AdminController {
+    @GetMapping("/hello")
+    @Operation(tags = "Hello Admin Service", description = "When you send token information in the header it just says Hello Admin")
+    public ResponseEntity<String> sayHelloAdmin() {
 
-	@GetMapping("/hello")
-	@Operation(tags = "Hello User Service", description = "When you send token information in the header it just says Hello User")
-	public ResponseEntity<String> sayHello() {
+        return ResponseEntity.ok("Hello Admin, Welcome to my app");
+    }
 
-		return ResponseEntity.ok("Hello User, Welcome to my app");
-	}
 }
