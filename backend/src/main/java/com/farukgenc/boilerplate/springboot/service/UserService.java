@@ -4,7 +4,6 @@ import com.farukgenc.boilerplate.springboot.dto.users.CreateUserRequest;
 import com.farukgenc.boilerplate.springboot.dto.users.UpdateUserRequest;
 import com.farukgenc.boilerplate.springboot.dto.users.UserResponse;
 import com.farukgenc.boilerplate.springboot.exceptions.AppException;
-import com.farukgenc.boilerplate.springboot.exceptions.RegistrationException;
 import com.farukgenc.boilerplate.springboot.mappers.UserMapper;
 import com.farukgenc.boilerplate.springboot.model.User;
 import com.farukgenc.boilerplate.springboot.repository.UserRepository;
