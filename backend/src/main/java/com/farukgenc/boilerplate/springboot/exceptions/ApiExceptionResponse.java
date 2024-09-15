@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiExceptionResponse extends Throwable {
+public class ApiExceptionResponse {
 
 	private String message;
 
