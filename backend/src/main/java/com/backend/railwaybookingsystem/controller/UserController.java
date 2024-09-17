@@ -7,6 +7,7 @@ import com.backend.railwaybookingsystem.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +28,18 @@ public class UserController {
 	}
 
 	@GetMapping()
-	@Operation(tags = "User", description = "Return all users")
-	public ResponseEntity<List<UserResponse>> getAllUsers() {
-		List<UserResponse> users = userService.getAllUsers();
+	@Operation(tags = "User", description = "Return list of users with pagination")
+	public ResponseEntity<Page<UserResponse>> getAllUsers(@RequestParam(defaultValue = "1") int page,
+														  @RequestParam(defaultValue = "10") int size,
+															@RequestParam(defaultValue = "") String keyword) {
+		Page<UserResponse> users = userService.getUsers(page-1, size, keyword);
 		return ResponseEntity.ok(users);
 	}
 
 	@PutMapping("/{id}")
 	@Operation(tags = "User", description = "Update an existing user")
 	public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest userRequest) {
+		System.out.println("enter ->");
 		UserResponse updatedUser = userService.updateUser(id, userRequest);
 		return ResponseEntity.ok(updatedUser);
 	}

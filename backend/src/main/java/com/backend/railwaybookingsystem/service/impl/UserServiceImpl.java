@@ -17,6 +17,10 @@ import com.backend.railwaybookingsystem.utils.ErrorCode;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,9 +46,19 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.convertToUserResponse(savedUser);
     }
 
-    public List<UserResponse> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return UserMapper.INSTANCE.convertToUserResponses(users);
+    public Page<UserResponse> getUsers(int page, int size, String keyword) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+
+        Page<User> userPage;
+        if (keyword != null && !keyword.isEmpty()) {
+            userPage = userRepository.findByNameContainingIgnoreCaseOrUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword,keyword,keyword, pageRequest);
+        } else {
+            userPage = userRepository.findAll(pageRequest);
+        }
+
+        List<UserResponse> userResponseList = UserMapper.INSTANCE.convertToUserResponses(userPage.getContent());
+
+        return new PageImpl<>(userResponseList, pageRequest, userPage.getTotalElements());
     }
 
     @SneakyThrows
@@ -53,8 +67,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND, id));
 
         existingUser.setName(updateRequest.getName());
-        existingUser.setUserRole(updateRequest.getUserRole());
-        existingUser.setPassword(updateRequest.getPassword());
 
         User updatedUser = userRepository.save(existingUser);
         return UserMapper.INSTANCE.convertToUserResponse(updatedUser);
