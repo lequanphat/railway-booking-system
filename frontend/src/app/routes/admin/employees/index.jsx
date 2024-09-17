@@ -1,155 +1,49 @@
-import { Button, Flex, Space, Spin } from "antd";
-import { LoadingOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { EmployeeTable } from "../../../../features/employees/components/EmployeeTable";
-import { useEmployees } from "~/features/employees/api/get-employees";
+import { PlusSquareOutlined } from "@ant-design/icons";
+import { Button, Flex, Space, Tag } from "antd";
+import { useState } from "react";
+import ConfirmModal from "~/components/ui/modals/ConfirmModal";
 import PageHeader from "~/components/ui/page-header";
+import CreateEmployeeModal from "~/features/employees/components/CreateEmployeeModal";
+import { EmployeeTable } from "~/features/employees/components/EmployeeTable";
+import UpdateEmployeeModal from "~/features/employees/components/UpdateEmployeeModal";
 
 const EmployeePage = () => {
-  // const { data: employees, isLoading } = useEmployees({ page: 1 });
-  const employees = [
-    {
-      id: 1,
-      name: "John Doe",
-      username: "johndoe",
-      email: "john.doe@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      username: "janesmith",
-      email: "jane.smith@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      username: "alicej",
-      email: "alice.j@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      username: "bobbrown",
-      email: "bob.brown@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 5,
-      name: "Charlie Davis",
-      username: "charlied",
-      email: "charlie.d@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 6,
-      name: "David Wilson",
-      username: "davidw",
-      email: "david.w@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 7,
-      name: "Eva Thompson",
-      username: "evat",
-      email: "eva.t@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 8,
-      name: "Frank Green",
-      username: "frankg",
-      email: "frank.g@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 9,
-      name: "Grace Lee",
-      username: "gracel",
-      email: "grace.l@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 10,
-      name: "Henry White",
-      username: "henryw",
-      email: "henry.w@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 11,
-      name: "Irene Black",
-      username: "ireneb",
-      email: "irene.b@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 12,
-      name: "Jack King",
-      username: "jackk",
-      email: "jack.k@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 13,
-      name: "Kathy Moore",
-      username: "kathym",
-      email: "kathy.m@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 14,
-      name: "Liam Harris",
-      username: "liamh",
-      email: "liam.h@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 15,
-      name: "Megan Scott",
-      username: "megans",
-      email: "megan.s@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 16,
-      name: "Nathan Baker",
-      username: "nathanb",
-      email: "nathan.b@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 17,
-      name: "Olivia Young",
-      username: "oliviay",
-      email: "olivia.y@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 18,
-      name: "Paul Walker",
-      username: "paulw",
-      email: "paul.w@example.com",
-      userRole: "USER",
-    },
-    {
-      id: 19,
-      name: "Quinn Allen",
-      username: "quinna",
-      email: "quinn.a@example.com",
-      userRole: "ADMIN",
-    },
-    {
-      id: 20,
-      name: "Rachel Hill",
-      username: "rachelh",
-      email: "rachel.h@example.com",
-      userRole: "USER",
-    },
-  ];
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const isLoading = false;
+  // handle
+  const handleDelete = (employee) => {
+    setSelectedEmployee(employee);
+    setOpenDeleteModal(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleDeleteOk = () => {
+    console.log("delete", selectedEmployee);
+    setOpenDeleteModal(false);
+  };
+
+  const handleCreate = () => {
+    setOpenCreateModal(true);
+  };
+
+  const handleCreateCancel = () => {
+    setOpenCreateModal(false);
+  };
+
+  const handleUpdate = (employee) => {
+    setSelectedEmployee(employee);
+    setOpenUpdateModal(true);
+  };
+
+  const handleUpdateCancel = () => {
+    setOpenUpdateModal(false);
+  };
 
   return (
     <>
@@ -159,20 +53,37 @@ const EmployeePage = () => {
           links={[{ title: "Home", href: "/" }, { title: "Nhân viên" }]}
         />
         <Space>
-          <Button type="primary" icon={<PlusSquareOutlined />}>
+          <Button
+            onClick={handleCreate}
+            type="primary"
+            icon={<PlusSquareOutlined />}
+          >
             Thêm mới
           </Button>
         </Space>
       </Flex>
       <div style={{ paddingTop: 20 }}>
-        {isLoading ? (
-          <Flex justify="center">
-            <Spin indicator={<LoadingOutlined spin />} size="large" />
-          </Flex>
-        ) : (
-          <EmployeeTable employees={employees} />
-        )}
+        <EmployeeTable
+          handleDeleteItem={handleDelete}
+          handleUpdateItem={handleUpdate}
+        />
       </div>
+      <ConfirmModal
+        title={`Are you sure to delete employee ${selectedEmployee?.name}?`}
+        content={<Tag color="blue">Coming Soon</Tag>}
+        open={openDeleteModal}
+        handleCancel={handleDeleteCancel}
+        handleOk={handleDeleteOk}
+      />
+      <CreateEmployeeModal
+        open={openCreateModal}
+        handleCancel={handleCreateCancel}
+      />
+      <UpdateEmployeeModal
+        open={openUpdateModal}
+        handleCancel={handleUpdateCancel}
+        selectedEmployee={selectedEmployee}
+      />
     </>
   );
 };

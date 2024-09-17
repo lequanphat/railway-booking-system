@@ -30,8 +30,8 @@ const createAppRouter = () =>
           lazy: async () => {
             const EmployeePage = await import("./routes/admin/employees");
             return { Component: EmployeePage.default };
-          }
-        }
+          },
+        },
       ],
     },
     // Auth routes

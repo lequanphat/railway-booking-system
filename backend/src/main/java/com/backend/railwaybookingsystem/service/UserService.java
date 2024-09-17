@@ -7,11 +7,12 @@ import com.backend.railwaybookingsystem.dto.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dto.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dto.users.UserResponse;
 import com.backend.railwaybookingsystem.model.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface UserService {
-    List<UserResponse> getAllUsers();
+    Page<UserResponse> getUsers(int page, int size, String keyword);
     UserResponse saveUser(CreateUserRequest request);
     UserResponse updateUser(Long id, UpdateUserRequest updateRequest);
     UserResponse deleteUser(Long id);

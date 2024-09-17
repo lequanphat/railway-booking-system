@@ -25,7 +25,6 @@ public interface UserMapper {
     @Mapping(source = "userRole", target = "userRole")
     User convertToUser(CreateUserRequest createUserRequest);
 
-    @Mapping(source = "userRole", target = "userRole")
     User convertToUser(UpdateUserRequest createUserRequest);
 
     User convertToUser(RegistrationRequest registrationRequest);
