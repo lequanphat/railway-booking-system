@@ -23,11 +23,6 @@ const EmployeePage = () => {
     setOpenDeleteModal(false);
   };
 
-  const handleDeleteOk = () => {
-    console.log("delete", selectedEmployee);
-    setOpenDeleteModal(false);
-  };
-
   const handleCreate = () => {
     setOpenCreateModal(true);
   };
@@ -73,7 +68,7 @@ const EmployeePage = () => {
         content={<Tag color="blue">Coming Soon</Tag>}
         open={openDeleteModal}
         handleCancel={handleDeleteCancel}
-        handleOk={handleDeleteOk}
+        handleOk={null}
       />
       <CreateEmployeeModal
         open={openCreateModal}
