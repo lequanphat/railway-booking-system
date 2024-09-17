@@ -1,6 +1,7 @@
-import { Table, Tag } from "antd";
+import { Button, Flex, Input, Table, Tag } from "antd";
 import PropTypes from "prop-types";
 import { useMemo } from "react";
+import {ExportOutlined} from "@ant-design/icons";
 
 export const EmployeeTable = ({ employees }) => {
   const columns = useMemo(
@@ -38,7 +39,23 @@ export const EmployeeTable = ({ employees }) => {
     ],
     []
   );
-  return <Table columns={columns} dataSource={employees} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={employees}
+      size="middle"
+      title={() => (
+        <Flex justify="space-between">
+          <Input.Search
+            placeholder="Tìm kiếm nhân viên"
+            className="w-[250px]"
+            allowClear
+          />
+          <Button icon={<ExportOutlined />}>Export</Button>
+        </Flex>
+      )}
+    />
+  );
 };
 
 EmployeeTable.propTypes = {

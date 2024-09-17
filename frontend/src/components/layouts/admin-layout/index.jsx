@@ -3,7 +3,7 @@ import {
   MenuUnfoldOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Layout, Space, theme } from "antd";
+import { Button, Input, Layout, Space } from "antd";
 import { Outlet } from "react-router-dom";
 import FooterAdmin from "~/components/layouts/admin-layout/footer";
 import SiderResponsive from "~/components/layouts/admin-layout/sider-responsive";
@@ -12,10 +12,6 @@ import useMenuStore from "~/stores/menu-store";
 const { Header, Content } = Layout;
 
 const AdminLayout = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   const { siderVisible, setSiderVisible } = useMenuStore();
 
   return (
@@ -45,15 +41,7 @@ const AdminLayout = () => {
             overflow: "initial",
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Outlet />
-          </div>
+          <Outlet />
         </Content>
         <FooterAdmin />
       </Layout>

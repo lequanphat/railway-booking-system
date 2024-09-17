@@ -11,7 +11,7 @@ const MenuCustom = ({ isMobile, onClose, theme = "light", ...props }) => {
 
   const findItemByPath = useCallback((items, path) => {
     for (const item of items) {
-      if (new RegExp(`^${item.path}(/|$)`).test(path)) {
+      if (item.path && item.path.includes(path)) {
         return item;
       }
       if (item.children) {
