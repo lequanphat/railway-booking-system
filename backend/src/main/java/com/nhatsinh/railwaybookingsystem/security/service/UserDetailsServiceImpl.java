@@ -1,16 +1,17 @@
 package com.nhatsinh.railwaybookingsystem.security.service;
 
 import com.nhatsinh.railwaybookingsystem.model.UserRole;
-import com.nhatsinh.railwaybookingsystem.security.dto.AuthenticatedUserDto;
+import com.nhatsinh.railwaybookingsystem.dto.auth.AuthenticatedUserDto;
+import com.nhatsinh.railwaybookingsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private static final String USERNAME_OR_PASSWORD_INVALID = "Invalid username or password.";
 
+	@Autowired
 	private final UserService userService;
 
 	@Override

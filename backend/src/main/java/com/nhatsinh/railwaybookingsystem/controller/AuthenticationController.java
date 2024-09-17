@@ -1,13 +1,14 @@
 package com.nhatsinh.railwaybookingsystem.controller;
 
-import com.nhatsinh.railwaybookingsystem.security.dto.LoginRequest;
-import com.nhatsinh.railwaybookingsystem.security.dto.LoginResponse;
-import com.nhatsinh.railwaybookingsystem.security.dto.RegistrationRequest;
-import com.nhatsinh.railwaybookingsystem.security.dto.RegistrationResponse;
+import com.nhatsinh.railwaybookingsystem.dto.auth.request.LoginRequest;
+import com.nhatsinh.railwaybookingsystem.dto.auth.response.LoginResponse;
+import com.nhatsinh.railwaybookingsystem.dto.auth.request.RegistrationRequest;
+import com.nhatsinh.railwaybookingsystem.dto.auth.response.RegistrationResponse;
 import com.nhatsinh.railwaybookingsystem.security.jwt.JwtTokenService;
-import com.nhatsinh.railwaybookingsystem.security.service.UserService;
+import com.nhatsinh.railwaybookingsystem.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/auth")
 public class AuthenticationController {
+    @Autowired
     private JwtTokenService jwtTokenService;
+    @Autowired
     private UserService userService;
 
     @PostMapping("/login")

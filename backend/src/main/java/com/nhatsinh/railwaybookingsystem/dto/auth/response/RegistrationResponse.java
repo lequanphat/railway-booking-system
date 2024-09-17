@@ -1,15 +1,10 @@
-package com.nhatsinh.railwaybookingsystem.security.dto;
+package com.nhatsinh.railwaybookingsystem.dto.auth.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
 @Getter
 @Setter
 @NoArgsConstructor

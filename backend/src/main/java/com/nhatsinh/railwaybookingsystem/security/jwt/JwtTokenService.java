@@ -1,13 +1,14 @@
 package com.nhatsinh.railwaybookingsystem.security.jwt;
 
-import com.nhatsinh.railwaybookingsystem.security.mapper.UserMapper;
-import com.nhatsinh.railwaybookingsystem.security.service.UserService;
+import com.nhatsinh.railwaybookingsystem.mappers.UserMapper;
 import com.nhatsinh.railwaybookingsystem.model.User;
-import com.nhatsinh.railwaybookingsystem.security.dto.AuthenticatedUserDto;
-import com.nhatsinh.railwaybookingsystem.security.dto.LoginRequest;
-import com.nhatsinh.railwaybookingsystem.security.dto.LoginResponse;
+import com.nhatsinh.railwaybookingsystem.dto.auth.AuthenticatedUserDto;
+import com.nhatsinh.railwaybookingsystem.dto.auth.request.LoginRequest;
+import com.nhatsinh.railwaybookingsystem.dto.auth.response.LoginResponse;
+import com.nhatsinh.railwaybookingsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
+	@Autowired
 	private final UserService userService;
 
 	private final JwtTokenManager jwtTokenManager;

@@ -4,6 +4,8 @@ import com.nhatsinh.railwaybookingsystem.dto.users.CreateUserRequest;
 import com.nhatsinh.railwaybookingsystem.dto.users.UpdateUserRequest;
 import com.nhatsinh.railwaybookingsystem.dto.users.UserResponse;
 import com.nhatsinh.railwaybookingsystem.model.User;
+import com.nhatsinh.railwaybookingsystem.dto.auth.AuthenticatedUserDto;
+import com.nhatsinh.railwaybookingsystem.dto.auth.request.RegistrationRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -26,4 +28,9 @@ public interface UserMapper {
     @Mapping(source = "userRole", target = "userRole")
     User convertToUser(UpdateUserRequest createUserRequest);
 
+    User convertToUser(RegistrationRequest registrationRequest);
+
+    AuthenticatedUserDto convertToAuthenticatedUserDto(User user);
+
+    User convertToUser(AuthenticatedUserDto authenticatedUserDto);
 }

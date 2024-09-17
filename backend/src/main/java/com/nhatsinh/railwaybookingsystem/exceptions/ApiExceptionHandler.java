@@ -106,7 +106,7 @@ public class ApiExceptionHandler {
         if (request != null) {
             log.error(ERROR_LOG_FORMAT, this.getServletPath(request), statusCode, message);
         }
-//        log.error(message, ex);
+        log.error(message, ex);
         return ResponseEntity.status(status).body(errorVm);
     }
 }

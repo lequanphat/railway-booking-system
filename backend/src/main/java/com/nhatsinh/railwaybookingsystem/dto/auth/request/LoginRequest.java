@@ -1,4 +1,4 @@
-package com.nhatsinh.railwaybookingsystem.security.dto;
+package com.nhatsinh.railwaybookingsystem.dto.auth.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -6,20 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
 @Getter
 @Setter
 @NoArgsConstructor
 public class LoginRequest {
 
-	@NotEmpty(message = "{login_username_not_empty}")
+	@NotEmpty(message = "Username is required")
 	private String username;
 
-	@NotEmpty(message = "{login_password_not_empty}")
+	@NotEmpty(message = "Password is required")
 	private String password;
 
 }
