@@ -40,14 +40,14 @@ logging:
 
 jwt:
   secretKey: secret
-  issuer: www.farukgenc.com
+  issuer: nhatsinh.id.vn
   expirationMinute: 10
 
 swagger:
-  contact-name: Faruk Genc
-  contact-mail: omer@farukgenc.com
-  contact-url: https://farukgenc.com
-  app-name: Spring Boot Boilerplate Project
+  contact-name: Tran Nhat Sinh
+  contact-mail: transinh085@gmail.com
+  contact-url: https://nhatsinh.id.vn
+  app-name: Railway Booking System
   app-description: "Spring Boot Boilerplate is a starter kit. This project includes : Spring Boot(3.3.1), Spring Data JPA, Spring Validation, Spring Security + JWT Token, PostgreSQL, Mapstruct, Lombok, Swagger (Open API)"
   app-version: 3.3.1
   app-license-url: https://www.apache.org/licenses/LICENSE-2.0.html
