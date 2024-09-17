@@ -23,6 +23,7 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
     },
   });
 
+  // effect
   useEffect(() => {
     if (selectedEmployee) {
       form.setFieldsValue({
@@ -34,11 +35,13 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
     }
   }, [selectedEmployee, form]);
 
+  // handle
   const onFinish = (values) => {
     mutation.mutate({
       data: { id: values?.id, name: values?.name },
     });
   };
+
   return (
     <Modal
       title="Update employee"
@@ -75,10 +78,18 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Flex justify="end" className="gap-3">
-            <Button type="default" htmlType="reset">
+            <Button
+              loading={mutation?.isPending}
+              type="default"
+              htmlType="reset"
+            >
               Reset
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button
+              loading={mutation?.isPending}
+              type="primary"
+              htmlType="submit"
+            >
               Submit
             </Button>
           </Flex>

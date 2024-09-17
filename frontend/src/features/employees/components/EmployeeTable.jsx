@@ -97,6 +97,7 @@ export const EmployeeTable = ({ handleDeleteItem, handleUpdateItem }) => {
               allowClear
               onSearch={(value) => {
                 setKeyword(value);
+                setPage(1);
               }}
             />
             <Button icon={<ExportOutlined />}>
@@ -111,4 +112,5 @@ export const EmployeeTable = ({ handleDeleteItem, handleUpdateItem }) => {
 
 EmployeeTable.propTypes = {
   handleDeleteItem: PropTypes.func,
+  handleUpdateItem: PropTypes.func,
 };

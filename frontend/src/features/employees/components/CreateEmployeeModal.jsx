@@ -3,6 +3,7 @@ import RULES from "~/config/rule";
 import { useCreateEmployee } from "../api/create-employee";
 import { MESSAGE_TYPES, USER_ROLES } from "~/config/constants";
 import { useMessage } from "~/hooks/useMessage";
+import PropTypes from "prop-types";
 
 const CreateEmployeeModal = ({ open, handleCancel }) => {
   const [form] = Form.useForm();
@@ -12,6 +13,7 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
     mutationConfig: {
       onSuccess: () => {
         showMessage("Create employee successfully", MESSAGE_TYPES.SUCCESS);
+        form.resetFields();
         handleCancel();
       },
       onError: (error) => {
@@ -61,10 +63,18 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Flex justify="end" className="gap-3">
-            <Button type="default" htmlType="reset">
+            <Button
+              loading={mutation?.isPending}
+              type="default"
+              htmlType="reset"
+            >
               Reset
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button
+              loading={mutation?.isPending}
+              type="primary"
+              htmlType="submit"
+            >
               Submit
             </Button>
           </Flex>
@@ -72,5 +82,10 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
       </Form>
     </Modal>
   );
+};
+
+CreateEmployeeModal.propTypes = {
+  open: PropTypes.bool,
+  handleCancel: PropTypes.func,
 };
 export default CreateEmployeeModal;
