@@ -1,24 +1,20 @@
-import { Button, Flex, Form, Input, Modal } from "antd";
-import { MESSAGE_TYPES } from "~/config/constants";
-import RULES from "~/config/rule";
-import { useMessage } from "~/hooks/useMessage";
-import { useUpdateEmployee } from "../api/update-employee";
+import { Button, Flex, Form, Input, message, Modal } from "antd";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
+import RULES from "~/config/rule";
+import { useUpdateEmployee } from "../api/update-employee";
 
 const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
   const [form] = Form.useForm();
-  const { showMessage, messageHolder } = useMessage();
 
   const mutation = useUpdateEmployee({
     mutationConfig: {
       onSuccess: () => {
-        showMessage("Update employee successfully", MESSAGE_TYPES.SUCCESS);
+        message.success("Update employee successfully");
         handleCancel();
       },
       onError: (error) => {
-        console.log(error);
-        showMessage(error?.response?.data?.detail, MESSAGE_TYPES.ERROR);
+        message.error(error?.response?.data?.detail);
       },
     },
   });
@@ -49,7 +45,6 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
       onCancel={handleCancel}
       footer={null}
     >
-      {messageHolder}
       <Form
         form={form}
         className="pt-4"
