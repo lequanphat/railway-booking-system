@@ -1,24 +1,21 @@
-import { Button, Flex, Form, Input, Modal } from "antd";
+import { Button, Flex, Form, Input, message, Modal } from "antd";
+import PropTypes from "prop-types";
+import { USER_ROLES } from "~/config/constants";
 import RULES from "~/config/rule";
 import { useCreateEmployee } from "../api/create-employee";
-import { MESSAGE_TYPES, USER_ROLES } from "~/config/constants";
-import { useMessage } from "~/hooks/useMessage";
-import PropTypes from "prop-types";
 
 const CreateEmployeeModal = ({ open, handleCancel }) => {
   const [form] = Form.useForm();
-  const { showMessage, messageHolder } = useMessage();
 
   const mutation = useCreateEmployee({
     mutationConfig: {
       onSuccess: () => {
-        showMessage("Create employee successfully", MESSAGE_TYPES.SUCCESS);
+        message.success("Create employee successfully");
         form.resetFields();
         handleCancel();
       },
       onError: (error) => {
-        console.log(error);
-        showMessage(error?.response?.data?.detail, MESSAGE_TYPES.ERROR);
+        message.error(error?.response?.data?.detail);
       },
     },
   });
@@ -33,7 +30,6 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
       onCancel={handleCancel}
       footer={null}
     >
-      {messageHolder}
       <Form form={form} className="pt-4" onFinish={onFinish} layout="vertical">
         <Flex vertical>
           <Form.Item label="Name" name="name" rules={RULES.createEmployee.name}>

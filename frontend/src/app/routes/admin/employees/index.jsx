@@ -1,17 +1,14 @@
 import { PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Flex, Space } from "antd";
+import { Button, Flex, message, Space } from "antd";
 import { useState } from "react";
 import ConfirmModal from "~/components/ui/modals/ConfirmModal";
 import PageHeader from "~/components/ui/page-header";
-import { MESSAGE_TYPES } from "~/config/constants";
 import { useDeleteEmployee } from "~/features/employees/api/delete-employee";
 import CreateEmployeeModal from "~/features/employees/components/CreateEmployeeModal";
 import { EmployeeTable } from "~/features/employees/components/EmployeeTable";
 import UpdateEmployeeModal from "~/features/employees/components/UpdateEmployeeModal";
-import { useMessage } from "~/hooks/useMessage";
 
 const EmployeePage = () => {
-  const { showMessage, messageHolder } = useMessage();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -20,11 +17,11 @@ const EmployeePage = () => {
   const mutation = useDeleteEmployee({
     mutationConfig: {
       onSuccess: () => {
-        showMessage("Delete employee successfully", MESSAGE_TYPES.SUCCESS);
+        message.success("Delete employee successfully");
         setOpenDeleteModal(false);
       },
       onError: () => {
-        showMessage("Something went wrong!", MESSAGE_TYPES.ERROR);
+        message.error("Something went wrong!");
       },
     },
   });
@@ -62,7 +59,6 @@ const EmployeePage = () => {
 
   return (
     <>
-      {messageHolder}
       <Flex align="center" justify="space-between" className="mb-2">
         <PageHeader
           heading="Quản lý nhân viên"

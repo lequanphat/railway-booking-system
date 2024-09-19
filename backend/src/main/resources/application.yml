@@ -5,17 +5,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_DB_SERVER_ADDRESS:localhost}:${POSTGRES_DB_SERVER_PORT:5432}/train_management
-    username: ${POSTGRES_USER:postgres} # change to your username
-    password: ${POSTGRES_PASSWORD:24112003} # change to your password
-    hikari:
-      pool-name: Railway Booking System
+    url: jdbc:mysql://localhost:3306/train_management
+    username: root  # change to your username
+    password: 24112003  # change to your password
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update # if database isn't mapped, change to 'create' at the first time you run the application
-    open-in-view: false
-  jta:
-    enabled: false
+      ddl-auto: update  # if you have problems with db, change to 'create' at the first time you run application
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 springdoc:
   show-actuator: true
@@ -34,7 +31,7 @@ management:
 logging:
   level:
     org.springframework: INFO
-    com.nhatsinh.railwaybookingsystem: INFO
+    com.backend.railwaybookingsystem: INFO
 
 ## FIXME : Customize JWT token and Swagger information for your application
 
