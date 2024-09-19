@@ -2,12 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "~/lib/api";
 import { getEmployeesQueryOptions } from "./get-employees";
 
-export const updateEmployee = ({ data }) => {
-  return api.put(`/api/admin/users/${data?.id}`, data);
+export const deleteEmployee = ({ data }) => {
+  return api.delete(`/api/admin/users/${data?.id}`);
 };
 
-export const useUpdateEmployee = ({ mutationConfig }) => {
+export const useDeleteEmployee = ({ mutationConfig }) => {
   const queryClient = useQueryClient();
+
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
@@ -18,6 +19,6 @@ export const useUpdateEmployee = ({ mutationConfig }) => {
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateEmployee,
+    mutationFn: deleteEmployee,
   });
 };

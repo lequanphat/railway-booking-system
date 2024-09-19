@@ -11,16 +11,16 @@ export const getEmployees = (page, size, keyword) => {
   });
 };
 
-export const useEmployeesQueryOptions = ({ page, size, keyword }) => {
+export const getEmployeesQueryOptions = ({ page, size, keyword }) => {
   return queryOptions({
-    queryKey: ["employees", { page, size, keyword }],
+    queryKey: page ? ["employees", { page, size, keyword }] : ["employees"],
     queryFn: () => getEmployees(page, size, keyword),
   });
 };
 
 export const useEmployees = ({ queryConfig, page, size, keyword }) => {
   return useQuery({
-    ...useEmployeesQueryOptions({ page, size, keyword }),
+    ...getEmployeesQueryOptions({ page, size, keyword }),
     ...queryConfig,
   });
 };
