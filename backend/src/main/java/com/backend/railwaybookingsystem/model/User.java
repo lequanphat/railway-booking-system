@@ -3,18 +3,13 @@ package com.backend.railwaybookingsystem.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-/**
- * Created on Ağustos, 2020
- *
- * @author Faruk
- */
 @Getter
 @Setter
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "USERS")
 public class User {
 

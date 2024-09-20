@@ -36,14 +36,14 @@ public class SecurityConfiguration {
 				.cors(CorsConfigurer::disable)
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(request -> request.requestMatchers(
-																		"/api/admin/**",
+//																		"/api/admin/**",
 																			"/api/auth/**",
 																	      "/v3/api-docs/**",
 																          "/swagger-ui/**",
 																	      "/swagger-ui.html",
 																	      "/actuator/**")
 													   .permitAll()
-//														.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+														.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 														.requestMatchers("/api/**").hasAuthority("USER")
 													   .anyRequest()
 													   .authenticated())

@@ -1,7 +1,6 @@
 package com.backend.railwaybookingsystem.security.service;
 
 import com.backend.railwaybookingsystem.model.UserRole;
-import com.backend.railwaybookingsystem.dto.auth.AuthenticatedUserDto;
 import com.backend.railwaybookingsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 
-		final AuthenticatedUserDto authenticatedUser = userService.findAuthenticatedUserByUsername(username);
+		final com.backend.railwaybookingsystem.model.User authenticatedUser = userService.findAuthenticatedUserByUsername(username);
 
 		if (Objects.isNull(authenticatedUser)) {
 			throw new UsernameNotFoundException(USERNAME_OR_PASSWORD_INVALID);

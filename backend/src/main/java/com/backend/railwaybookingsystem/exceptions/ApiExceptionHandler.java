@@ -39,7 +39,7 @@ public class ApiExceptionHandler {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> error.getField() + " " + error.getDefaultMessage())
+                .map(error -> error.getDefaultMessage())
                 .toList();
 
         return buildErrorResponse(status, "Request information is not valid", errors, ex, null, 0);
@@ -75,6 +75,11 @@ public class ApiExceptionHandler {
         ErrorResponse errorVm = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
         return ResponseEntity.internalServerError().body(errorVm);
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    protected ResponseEntity<ErrorResponse> handleTokenRefreshException(TokenRefreshException e) {
+        return handleBadRequest(e, false, null);
     }
 
     @ExceptionHandler(Exception.class)
