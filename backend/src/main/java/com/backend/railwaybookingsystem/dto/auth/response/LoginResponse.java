@@ -1,14 +1,14 @@
 package com.backend.railwaybookingsystem.dto.auth.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class LoginResponse {
-
 	private String token;
-
+	private String refreshToken;
+	private long expiresIn;
 }

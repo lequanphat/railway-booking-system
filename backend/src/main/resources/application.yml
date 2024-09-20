@@ -39,6 +39,7 @@ jwt:
   secretKey: secret
   issuer: nhatsinh.id.vn
   expirationMinute: 10
+  expirationRefreshMinute: 30
 
 swagger:
   contact-name: Tran Nhat Sinh
