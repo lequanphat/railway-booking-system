@@ -2,7 +2,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { api } from "~/lib/api";
 
 export const getEmployees = (page, size, keyword) => {
-  return api.get(`/api/admin/users`, {
+  return api.get(`/api/users`, {
     params: {
       page,
       size,
