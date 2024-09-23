@@ -1,6 +1,6 @@
 export const menuItems = [
   { title: "Home", href: "/" },
-  { title: "Schedule", href: "/schedule" },
+  { title: "Schedule", href: "/schedules" },
   { title: "Tickets", href: "/tickets" },
   { title: "Orders", href: "/orders" },
   { title: "Contact", href: "/contacts" },
