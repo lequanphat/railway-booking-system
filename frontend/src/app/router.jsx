@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminLayout from "~/components/layouts/admin-layout";
+import AuthLayout from "~/components/layouts/auth-layout";
 import MainLayout from "~/components/layouts/main-layout";
 
 const createAppRouter = () =>
@@ -78,11 +79,24 @@ const createAppRouter = () =>
     },
     // Auth routes
     {
-      path: "/auth/login",
-      lazy: async () => {
-        let LoginRoute = await import("./routes/auth/login");
-        return { Component: LoginRoute.default };
-      },
+      path: "/auth",
+      element: <AuthLayout />,
+      children: [
+        {
+          path: "login",
+          lazy: async () => {
+            let LoginRoute = await import("./routes/auth/login");
+            return { Component: LoginRoute.default };
+          },
+        },
+        {
+          path: "register",
+          lazy: async () => {
+            let RegisterRoute = await import("./routes/auth/register");
+            return { Component: RegisterRoute.default };
+          },
+        },
+      ],
     },
     // Not found route
     {
