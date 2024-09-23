@@ -6,7 +6,7 @@ export const ScheduleItem = () => {
       align="center"
       justify="space-between"
       gap={10}
-      className="border-[1px] border-[#ccc] p-4 rounded-xl"
+      className="border-[1px] border-[#ddd] p-4 rounded-xl bg-white"
     >
       <Flex vertical>
         <Typography level={3} className="text-[24px] font-bold text-primary">
@@ -53,13 +53,7 @@ export const ScheduleItem = () => {
             {Math.floor(Math.random() * 100)}%
           </Typography>
         </Flex>
-        <Button
-          type="primary"
-          className="rounded-full"
-          onClick={() => {
-            alert("=))");
-          }}
-        >
+        <Button type="primary" className="rounded-full" href="schedules/1">
           CHOOSE ROUTE
         </Button>
       </div>

@@ -6,6 +6,7 @@ import {
   Flex,
   Form,
   Input,
+  Pagination,
   Radio,
   Row,
 } from "antd";
@@ -75,6 +76,9 @@ const HomeRoute = () => {
         <ScheduleItem />
         <ScheduleItem />
         <ScheduleItem />
+      </Flex>
+      <Flex justify="end">
+        <Pagination defaultCurrent={1} total={50} />
       </Flex>
     </div>
   );

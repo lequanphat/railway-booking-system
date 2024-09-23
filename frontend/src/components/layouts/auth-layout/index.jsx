@@ -9,7 +9,9 @@ export default function AuthLayout() {
       justify="center"
       className="w-[100vw] h-[100vh]"
     >
-      <img src="/logo.png" alt="logo" className="w-[160px] h-auto mb-4" />
+      <a href="/">
+        <img src="/logo.png" alt="logo" className="w-[160px] h-auto mb-4" />
+      </a>
       <Outlet />
     </Flex>
   );
