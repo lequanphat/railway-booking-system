@@ -1,61 +1,36 @@
-import { Timeline, Typography } from "antd";
+import { Flex, Timeline } from "antd";
 import { useMemo } from "react";
 
 const RouteTab = () => {
   const items = useMemo(
     () => [
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">Sai Gon</Typography>
-        ),
+        children: <RouteItem name="Sai Gon" time="01:45 23/09/2024" />,
         color: "red",
       },
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">
-            Vung Tau
-          </Typography>
-        ),
+        children: <RouteItem name="Somewhere" time="02:30 23/09/2024" />,
       },
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">
-            Binh Thuan
-          </Typography>
-        ),
+        children: <RouteItem name="Somewhere" time="03:45 23/09/2024" />,
       },
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">
-            Nha Trang
-          </Typography>
-        ),
+        children: <RouteItem name="Somewhere" time="04:15 23/09/2024" />,
       },
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">
-            Khanh Hoa
-          </Typography>
-        ),
+        children: <RouteItem name="Da Nang" time="05:05 23/09/2024" />,
       },
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">
-            Thai Binh
-          </Typography>
-        ),
+        children: <RouteItem name="Somewhere" time="07:10 23/09/2024" />,
       },
       {
-        label: "03:40 12/09/2024",
-        children: (
-          <Typography className="text-[16px] font-semibold">Ha Noi</Typography>
-        ),
+        children: <RouteItem name="Somewhere" time="07:10 23/09/2024" />,
+      },
+      {
+        children: <RouteItem name="Somewhere" time="07:10 23/09/2024" />,
+      },
+      {
+        children: <RouteItem name="Ha Noi" time="09:30 23/09/2024" />,
         color: "green",
       },
     ],
@@ -67,4 +42,14 @@ const RouteTab = () => {
     </div>
   );
 };
+
+const RouteItem = ({ name, time }) => {
+  return (
+    <Flex vertical>
+      <p className="text-[16px] font-semibold">{name}</p>
+      <p className="text-[14px]">{time}</p>
+    </Flex>
+  );
+};
+
 export default RouteTab;

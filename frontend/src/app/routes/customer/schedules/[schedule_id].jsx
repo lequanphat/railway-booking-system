@@ -8,33 +8,34 @@ import {
   Input,
   Row,
   Tabs,
-  Typography,
 } from "antd";
 import Title from "antd/es/typography/Title";
 import { useMemo } from "react";
+import DetailsTab from "~/features/schedules/components/DetailsTab";
 import RouteTab from "~/features/schedules/components/RouteTab";
+import SeatsTab from "~/features/schedules/components/SeatsTab";
 
 const ScheduleDetailsPage = () => {
   const items = useMemo(
     () => [
       {
         key: "1",
-        label: <Typography className="text-[16px]">Schedule</Typography>,
+        label: <p className="text-[16px]">Schedule</p>,
         children: <RouteTab />,
       },
       {
         key: "2",
-        label: <Typography className="text-[16px]">Seats</Typography>,
-        children: "Seats tab",
+        label: <p className="text-[16px]">Seats</p>,
+        children: <SeatsTab />,
       },
       {
         key: "3",
-        label: <Typography className="text-[16px]">Details</Typography>,
-        children: "Details tab",
+        label: <p className="text-[16px]">Details</p>,
+        children: <DetailsTab />,
       },
       {
         key: "4",
-        label: <Typography className="text-[16px]">Description</Typography>,
+        label: <p className="text-[16px]">Description</p>,
         children: "Description tab",
       },
     ],
@@ -45,34 +46,28 @@ const ScheduleDetailsPage = () => {
       <Title level={4} className="text-center">
         SAI GON - HA NOI
       </Title>
-      <Row gutter={24} className="mt-8">
-        <Col span={24} md={12} xl={16}>
+      <Row gutter={24} className="mt-8 ">
+        <Col span={24} md={12} xl={16} className="mb-6">
           <Card className="rounded-xl border-[1px] border-[#ddd]">
             <Title level={5}>SCHEDULE INFORMATION</Title>
             <Row gutter={20}>
-              <Col span={24} md={12} xl={8} className="mt-2">
-                <Typography className="text-[16px]">Route:</Typography>
+              <Col span={8} className="mt-2">
+                <p className="text-[16px]">Route:</p>
               </Col>
-              <Col span={24} md={12} xl={16} className="mt-2">
-                <Typography className="text-[16px]">
-                  SAI GON - HA NOI
-                </Typography>
+              <Col span={16} className="mt-2">
+                <p className="text-[16px]">SAI GON - HA NOI</p>
               </Col>
-              <Col span={24} md={12} xl={8} className="mt-2">
-                <Typography className="text-[16px]">Departure date:</Typography>
+              <Col span={8} className="mt-2">
+                <p className="text-[16px]">Departure date:</p>
               </Col>
-              <Col span={24} md={12} xl={16} className="mt-2">
-                <Typography className="text-[16px]">
-                  11:45 12/09/2024
-                </Typography>
+              <Col span={16} className="mt-2">
+                <p className="text-[16px]">11:45 12/09/2024</p>
               </Col>
-              <Col span={24} md={12} xl={8} className="mt-2">
-                <Typography className="text-[16px]">Arrival date:</Typography>
+              <Col span={8} className="mt-2">
+                <p className="text-[16px]">Arrival date:</p>
               </Col>
-              <Col span={24} md={12} xl={16} className="mt-2">
-                <Typography className="text-[16px]">
-                  03:20 15/09/2024
-                </Typography>
+              <Col span={16} className="mt-2">
+                <p className="text-[16px]">03:20 15/09/2024</p>
               </Col>
             </Row>
             <Tabs
@@ -132,25 +127,23 @@ const ScheduleDetailsPage = () => {
             </Card>
             <Card className="rounded-xl border-[1px] border-[#ddd]">
               <Title level={5}>PRICE DETAILS</Title>
-              <Flex vertical gap={12} className="pt-2">
+              <Flex vertical gap={12} className="pt-2 text-[16px]">
                 <Flex justify="space-between">
-                  <Typography className="text-[16px]">A01 Seat</Typography>
-                  <Typography className="text-[16px]">$100.00</Typography>
+                  <p>A01 Seat</p>
+                  <p>$100.00</p>
                 </Flex>
                 <Flex justify="space-between">
-                  <Typography className="text-[16px]">A02 Seat</Typography>
-                  <Typography className="text-[16px]">$120.00</Typography>
+                  <p>A02 Seat</p>
+                  <p>$120.00</p>
                 </Flex>
                 <Flex justify="space-between">
-                  <Typography className="text-[16px]">S01 Seat</Typography>
-                  <Typography className="text-[16px]">$125.05</Typography>
+                  <p>S01 Seat</p>
+                  <p>$125.05</p>
                 </Flex>
                 <Divider />
                 <Flex justify="space-between">
-                  <Typography className="text-[16px]">Total</Typography>
-                  <Typography className="text-[16px] text-[red]">
-                    $345.05
-                  </Typography>
+                  <p>Total</p>
+                  <p className="text-[red]">$345.05</p>
                 </Flex>
               </Flex>
             </Card>

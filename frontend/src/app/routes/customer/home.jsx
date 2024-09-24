@@ -20,46 +20,48 @@ const HomeRoute = () => {
       shadow-primary shadow-sm"
       >
         <div>
-          <Radio.Group onChange={null} value={1} className="mb-4">
-            <Radio value={1}>One way</Radio>
-            <Radio value={2}>Round Trip</Radio>
-          </Radio.Group>
-          <Row gutter={24}>
-            <Col span={24} md={12} xl={6}>
-              <Form.Item label="Departure">
-                <Input placeholder="Ho Chi Minh" className="py-3" />
-              </Form.Item>
-            </Col>
-            <Col span={24} md={12} xl={6}>
-              <Form.Item label="Destination">
-                <Input placeholder="Ha Noi" className="py-3" />
-              </Form.Item>
-            </Col>
-            <Col span={24} md={12} xl={6}>
-              <Form.Item label="Departure Date">
-                <DatePicker
-                  format={{
-                    format: "YYYY-MM-DD",
-                    type: "mask",
-                  }}
-                  onChange={null}
-                  className="w-full py-3"
-                />
-              </Form.Item>
-            </Col>
-            <Col span={24} md={12} xl={6}>
-              <Form.Item label="Return date">
-                <DatePicker
-                  format={{
-                    format: "YYYY-MM-DD",
-                    type: "mask",
-                  }}
-                  onChange={null}
-                  className="w-full py-3"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form form={null} variant="filled" layout="vertical">
+            <Radio.Group onChange={null} value={1} className="mb-4">
+              <Radio value={1}>One way</Radio>
+              <Radio value={2}>Round Trip</Radio>
+            </Radio.Group>
+            <Row gutter={24}>
+              <Col span={24} md={12} xl={6}>
+                <Form.Item label="Departure">
+                  <Input placeholder="Ho Chi Minh" className="py-3" />
+                </Form.Item>
+              </Col>
+              <Col span={24} md={12} xl={6}>
+                <Form.Item label="Destination">
+                  <Input placeholder="Ha Noi" className="py-3" />
+                </Form.Item>
+              </Col>
+              <Col span={24} md={12} xl={6}>
+                <Form.Item label="Departure Date">
+                  <DatePicker
+                    format={{
+                      format: "YYYY-MM-DD",
+                      type: "mask",
+                    }}
+                    onChange={null}
+                    className="w-full py-3"
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24} md={12} xl={6}>
+                <Form.Item label="Return date">
+                  <DatePicker
+                    format={{
+                      format: "YYYY-MM-DD",
+                      type: "mask",
+                    }}
+                    onChange={null}
+                    className="w-full py-3"
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
         </div>
         <Flex justify="center">
           <Button
