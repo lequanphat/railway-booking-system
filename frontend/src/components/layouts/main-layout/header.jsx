@@ -19,13 +19,16 @@ const Header = () => {
         align="start"
       >
         <div className="py-4 ">
-          <Button className="hidden md:inline-flex py-1 px-4 rounded-3xl h-min">
+          <Button
+            className="hidden md:inline-flex border-none !p-2 gap-0"
+            shape="round"
+          >
             <img
               src="/download_app.svg"
               alt="download"
               className="w-[24px] h-auto"
             />
-            Download app
+            <span className="px-2">Download app</span>
           </Button>
           <Button
             className="block md:hidden text-white hover:text-white"
@@ -40,9 +43,9 @@ const Header = () => {
           <img src="/logo.png" alt="logo" className="w-[160px] h-auto" />
         </div>
         <div className="py-4">
-          <Button href="/auth/login" className="py-1 px-4 rounded-3xl h-min">
+          <Button href="/auth/login" className="!p-2 border-none" shape="round">
             <img src="/person.svg" alt="login" className="w-[20px] h-auto" />
-            Login/Register
+            <span className="px-[6px]">Login/Register</span>
           </Button>
         </div>
       </Flex>
