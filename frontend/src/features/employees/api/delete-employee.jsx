@@ -3,7 +3,7 @@ import { api } from "~/lib/api";
 import { getEmployeesQueryOptions } from "./get-employees";
 
 export const deleteEmployee = ({ data }) => {
-  return api.delete(`/api/admin/users/${data?.id}`);
+  return api.delete(`/ad/users/${data?.id}`);
 };
 
 export const useDeleteEmployee = ({ mutationConfig }) => {
