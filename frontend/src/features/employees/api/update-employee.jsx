@@ -3,7 +3,7 @@ import { api } from "~/lib/api";
 import { getEmployeesQueryOptions } from "./get-employees";
 
 export const updateEmployee = ({ data }) => {
-  return api.put(`/api/admin/users/${data?.id}`, data);
+  return api.put(`/ad/users/${data?.id}`, data);
 };
 
 export const useUpdateEmployee = ({ mutationConfig }) => {
