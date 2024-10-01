@@ -31,14 +31,27 @@ export const EmployeeTable = ({ handleDeleteItem, handleUpdateItem }) => {
         key: "name",
       },
       {
-        title: "Username",
-        dataIndex: "username",
-        key: "username",
+        title: "Gender",
+        dataIndex: "gender",
+        key: "gender",
+        render: (text) => (text ? text : 'N/A'),
+      },
+      {
+        title: "Phone",
+        dataIndex: "phone",
+        key: "phone",
+        render: (text) => (text ? text : 'N/A'),
       },
       {
         title: "Email",
         dataIndex: "email",
         key: "email",
+      },
+      {
+        title: "Address",
+        dataIndex: "address",
+        key: "address",
+        render: (text) => (text ? text : 'N/A'),
       },
       {
         title: "Role",
