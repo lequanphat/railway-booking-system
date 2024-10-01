@@ -25,7 +25,6 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
       form.setFieldsValue({
         id: selectedEmployee?.id,
         name: selectedEmployee?.name,
-        username: selectedEmployee?.username,
         email: selectedEmployee?.email,
       });
     }
@@ -34,7 +33,7 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
   // handle
   const onFinish = (values) => {
     mutation.mutate({
-      data: { id: values?.id, name: values?.name },
+      data: { id: values?.id, name: values?.name, phone: values?.phone, address: values?.address },
     });
   };
 
@@ -64,11 +63,14 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
           <Form.Item label="Name" name="name" rules={RULES.createEmployee.name}>
             <Input placeholder="Enter employee name..." />
           </Form.Item>
-          <Form.Item label="Username" name="username">
-            <Input disabled />
-          </Form.Item>
           <Form.Item label="Email" name="email">
             <Input disabled />
+          </Form.Item>
+          <Form.Item label="Phone" name="phone" rules={RULES.createEmployee.phone}>
+            <Input placeholder="Enter phone..." />
+          </Form.Item>
+          <Form.Item label="Address" name="address" rules={RULES.createEmployee.address}>
+            <Input placeholder="Enter address..." />
           </Form.Item>
         </Flex>
         <Form.Item className="pt-4 m-0">

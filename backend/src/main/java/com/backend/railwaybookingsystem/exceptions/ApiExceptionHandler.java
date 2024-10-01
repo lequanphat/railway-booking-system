@@ -1,6 +1,6 @@
 package com.backend.railwaybookingsystem.exceptions;
 
-import com.backend.railwaybookingsystem.dto.error.ErrorResponse;
+import com.backend.railwaybookingsystem.dtos.error.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

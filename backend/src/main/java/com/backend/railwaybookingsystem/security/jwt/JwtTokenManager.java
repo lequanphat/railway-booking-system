@@ -4,8 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.backend.railwaybookingsystem.model.User;
-import com.backend.railwaybookingsystem.model.UserRole;
+import com.backend.railwaybookingsystem.enums.UserRole;
+import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.security.utils.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class JwtTokenManager {
 
 	public String generateToken(User user) {
 
-		final String username = user.getUsername();
+		final String username = user.getEmail();
 		final UserRole role = user.getUserRole();
 
 		//@formatter:off

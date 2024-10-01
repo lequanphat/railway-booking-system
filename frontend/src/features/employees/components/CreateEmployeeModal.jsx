@@ -30,29 +30,41 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
       onCancel={handleCancel}
       footer={null}
     >
-      <Form form={form} className="pt-4" onFinish={onFinish} layout="vertical">
+      <Form form={form} className="pt-4" onFinish={onFinish} layout="vertical" >
         <Flex vertical>
-          <Form.Item label="Name" name="name" rules={RULES.createEmployee.name}>
+          
+          <Form.Item label="Name" name="name" rules={RULES.createEmployee.name} validateTrigger="onBlur">
             <Input placeholder="Enter employee name..." />
-          </Form.Item>
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={RULES.createEmployee.username}
-          >
-            <Input placeholder="Enter username..." />
           </Form.Item>
           <Form.Item
             label="Email"
             name="email"
             rules={RULES.createEmployee.email}
+            validateTrigger="onBlur"
           >
             <Input placeholder="Enter email address..." />
+          </Form.Item>
+          <Form.Item
+            label="Phone"
+            name="phone"
+            rules={RULES.createEmployee.phone}
+            validateTrigger="onBlur"
+          >
+            <Input placeholder="Enter phone number..." />
+          </Form.Item>
+          <Form.Item
+            label="Address"
+            name="address"
+            rules={RULES.createEmployee.address}
+            validateTrigger="onBlur"
+          >
+            <Input placeholder="Enter address..." />
           </Form.Item>
           <Form.Item
             label="Password"
             name="password"
             rules={RULES.createEmployee.password}
+            validateTrigger="onBlur"
           >
             <Input.Password placeholder="Enter password..." />
           </Form.Item>

@@ -1,7 +1,7 @@
 package com.backend.railwaybookingsystem.security.service;
 
-import com.backend.railwaybookingsystem.model.UserRole;
-import com.backend.railwaybookingsystem.service.UserService;
+import com.backend.railwaybookingsystem.enums.UserRole;
+import com.backend.railwaybookingsystem.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +25,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserService userService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) {
+	public UserDetails loadUserByUsername(String email) {
 
-		final com.backend.railwaybookingsystem.model.User authenticatedUser = userService.findAuthenticatedUserByUsername(username);
+		final com.backend.railwaybookingsystem.models.User authenticatedUser = userService.findAuthenticatedUserByEmail(email);
 
 		if (Objects.isNull(authenticatedUser)) {
 			throw new UsernameNotFoundException(USERNAME_OR_PASSWORD_INVALID);
 		}
 
-		final String authenticatedUsername = authenticatedUser.getUsername();
+		final String authenticatedEmail = authenticatedUser.getEmail();
 		final String authenticatedPassword = authenticatedUser.getPassword();
 		final UserRole userRole = authenticatedUser.getUserRole();
 		final SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userRole.name());
 
-		return new User(authenticatedUsername, authenticatedPassword, Collections.singletonList(grantedAuthority));
+		return new User(authenticatedEmail, authenticatedPassword, Collections.singletonList(grantedAuthority));
 	}
 }

@@ -1,11 +1,11 @@
 package com.backend.railwaybookingsystem.mappers;
 
-import com.backend.railwaybookingsystem.dto.users.CreateUserRequest;
-import com.backend.railwaybookingsystem.dto.users.UpdateUserRequest;
-import com.backend.railwaybookingsystem.dto.users.UserResponse;
-import com.backend.railwaybookingsystem.model.User;
-import com.backend.railwaybookingsystem.dto.auth.AuthenticatedUserDto;
-import com.backend.railwaybookingsystem.dto.auth.request.RegistrationRequest;
+import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
+import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
+import com.backend.railwaybookingsystem.dtos.users.UserResponse;
+import com.backend.railwaybookingsystem.models.User;
+import com.backend.railwaybookingsystem.dtos.auth.AuthenticatedUserDto;
+import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

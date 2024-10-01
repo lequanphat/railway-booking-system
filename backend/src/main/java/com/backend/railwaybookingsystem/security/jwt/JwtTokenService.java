@@ -1,13 +1,11 @@
 package com.backend.railwaybookingsystem.security.jwt;
 
-import com.backend.railwaybookingsystem.mappers.UserMapper;
-import com.backend.railwaybookingsystem.model.RefreshToken;
-import com.backend.railwaybookingsystem.model.User;
-import com.backend.railwaybookingsystem.dto.auth.AuthenticatedUserDto;
-import com.backend.railwaybookingsystem.dto.auth.request.LoginRequest;
-import com.backend.railwaybookingsystem.dto.auth.response.LoginResponse;
-import com.backend.railwaybookingsystem.service.RefreshTokenService;
-import com.backend.railwaybookingsystem.service.UserService;
+import com.backend.railwaybookingsystem.models.RefreshToken;
+import com.backend.railwaybookingsystem.models.User;
+import com.backend.railwaybookingsystem.dtos.auth.request.LoginRequest;
+import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
+import com.backend.railwaybookingsystem.services.RefreshTokenService;
+import com.backend.railwaybookingsystem.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +33,18 @@ public class JwtTokenService {
 
 	public LoginResponse getLoginResponse(LoginRequest loginRequest) {
 
-		final String username = loginRequest.getUsername();
+		final String email = loginRequest.getEmail();
 		final String password = loginRequest.getPassword();
 
-		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
 		authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-		final User user = userService.findAuthenticatedUserByUsername(username);
+		final User user = userService.findAuthenticatedUserByEmail(email);
 		final String token = jwtTokenManager.generateToken(user);
 		final RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
-		log.info("{} has successfully logged in!", user.getUsername());
+		log.info("{} has successfully logged in!", user.getEmail());
 
 		return LoginResponse.builder()
 				.token(token)
@@ -58,7 +56,7 @@ public class JwtTokenService {
 	public String generateTokenFromRefreshToken(RefreshToken refreshToken) {
 		final User user = refreshToken.getUser();
 		final String token = jwtTokenManager.generateToken(user);
-		log.info("{} has successfully refreshed the token!", user.getUsername());
+		log.info("{} has successfully refreshed the token!", user.getEmail());
 		return token;
 	}
 }
