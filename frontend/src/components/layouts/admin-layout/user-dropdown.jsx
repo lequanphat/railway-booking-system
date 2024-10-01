@@ -1,26 +1,26 @@
-import { Avatar, Dropdown } from "antd";
-import {
-  LogoutOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown } from 'antd';
 
 const UserDropdown = () => {
   const items = [
     {
-      key: "1",
-      label: "Account info",
+      key: '1',
+      label: 'Account info',
       icon: <UserOutlined />,
     },
     {
-      key: "2",
-      label: "Settings",
+      key: '2',
+      label: 'Settings',
       icon: <SettingOutlined />,
     },
     {
-      key: "3",
-      label: "Logout",
+      key: '3',
+      label: 'Logout',
       icon: <LogoutOutlined />,
+      onClick: () => {
+        localStorage.removeItem('token');
+        window.location.reload();
+      },
     },
   ];
   return (
@@ -28,15 +28,11 @@ const UserDropdown = () => {
       menu={{
         items,
       }}
-      trigger={["click"]}
+      trigger={['click']}
       placement="bottomLeft"
       arrow
     >
-      <Avatar
-        size="default"
-        src={"https://avatars.githubusercontent.com/u/45101901?v=4"}
-        className="cursor-pointer"
-      />
+      <Avatar size="default" src={'https://avatars.githubusercontent.com/u/45101901?v=4'} className="cursor-pointer" />
     </Dropdown>
   );
 };

@@ -1,59 +1,26 @@
-import { Button, Flex, Form, Input, message, Modal } from "antd";
-import PropTypes from "prop-types";
-import { useEffect } from "react";
-import RULES from "~/config/rule";
-import { useUpdateEmployee } from "../api/update-employee";
+import { Button, Flex, Form, Input, Modal } from 'antd';
+import PropTypes from 'prop-types';
+import RULES from '~/config/rule';
 
-const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
+const UpdateEmployeeModal = ({ mutation, open, handleCancel, selectedEmployee }) => {
   const [form] = Form.useForm();
 
-  const mutation = useUpdateEmployee({
-    mutationConfig: {
-      onSuccess: () => {
-        message.success("Update employee successfully");
-        handleCancel();
-      },
-      onError: (error) => {
-        message.error(error?.response?.data?.detail);
-      },
-    },
-  });
-
-  // effect
-  useEffect(() => {
-    if (selectedEmployee) {
-      form.setFieldsValue({
-        id: selectedEmployee?.id,
-        name: selectedEmployee?.name,
-        email: selectedEmployee?.email,
-      });
-    }
-  }, [selectedEmployee, form]);
-
-  // handle
-  const onFinish = (values) => {
+  const onFinish = () => {
     mutation.mutate({
-      data: { id: values?.id, name: values?.name, phone: values?.phone, address: values?.address },
+      data: form.getFieldsValue(),
     });
+    handleCancel();
   };
 
   return (
-    <Modal
-      title="Update employee"
-      open={open}
-      onCancel={handleCancel}
-      footer={null}
-    >
+    <Modal title="Update employee" open={open} onCancel={handleCancel} footer={null}>
       <Form
         form={form}
         className="pt-4"
         onFinish={onFinish}
         layout="vertical"
         initialValues={{
-          id: selectedEmployee?.id,
-          name: selectedEmployee?.name,
-          username: selectedEmployee?.username,
-          email: selectedEmployee?.email,
+          ...selectedEmployee,
         }}
       >
         <Flex vertical>
@@ -75,18 +42,10 @@ const UpdateEmployeeModal = ({ open, handleCancel, selectedEmployee }) => {
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Flex justify="end" className="gap-3">
-            <Button
-              loading={mutation?.isPending}
-              type="default"
-              htmlType="reset"
-            >
+            <Button loading={mutation?.isPending} type="default" htmlType="reset">
               Reset
             </Button>
-            <Button
-              loading={mutation?.isPending}
-              type="primary"
-              htmlType="submit"
-            >
+            <Button loading={mutation?.isPending} type="primary" htmlType="submit">
               Submit
             </Button>
           </Flex>

@@ -1,6 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ConfigProvider } from "antd";
-import { App as AntApp } from "antd";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { App as AntApp, ConfigProvider } from 'antd';
+import AuthProvider from './auth-provider';
 
 const queryClient = new QueryClient();
 const AppProvider = ({ children }) => {
@@ -8,14 +8,14 @@ const AppProvider = ({ children }) => {
     <ConfigProvider
       theme={{
         token: {
-          fontFamily: "Inter",
+          fontFamily: 'Inter',
           borderRadius: 4,
           controlHeight: 37,
         },
         components: {
           Table: {
             defaultProps: {
-              size: "middle",
+              size: 'middle',
               bordered: true,
               scroll: { x: true },
             },
@@ -25,7 +25,9 @@ const AppProvider = ({ children }) => {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <AntApp>{children}</AntApp>
+        <AuthProvider>
+          <AntApp>{children}</AntApp>
+        </AuthProvider>
       </QueryClientProvider>
     </ConfigProvider>
   );

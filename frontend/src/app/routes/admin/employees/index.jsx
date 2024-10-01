@@ -1,101 +1,89 @@
-import { PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Flex, message, Space } from "antd";
-import { useState } from "react";
-import ConfirmModal from "~/components/ui/modals/ConfirmModal";
-import PageHeader from "~/components/ui/page-header";
-import { useDeleteEmployee } from "~/features/employees/api/delete-employee";
-import CreateEmployeeModal from "~/features/employees/components/CreateEmployeeModal";
-import { EmployeeTable } from "~/features/employees/components/EmployeeTable";
-import UpdateEmployeeModal from "~/features/employees/components/UpdateEmployeeModal";
+import { PlusSquareOutlined } from '@ant-design/icons';
+import { Button, Flex, message, Space } from 'antd';
+import { useState } from 'react';
+import ConfirmModal from '~/components/ui/modals/ConfirmModal';
+import PageHeader from '~/components/ui/page-header';
+import { useUpdateEmployee } from '~/features/employees/api/update-employee';
+import CreateEmployeeModal from '~/features/employees/components/CreateEmployeeModal';
+import { EmployeeTable } from '~/features/employees/components/EmployeeTable';
+import UpdateEmployeeModal from '~/features/employees/components/UpdateEmployeeModal';
+import { useBoolean } from '~/hooks/useBoolean';
 
 const EmployeePage = () => {
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const {
+    value: isOpenUpdateStatusModal,
+    setFalse: closeUpdateStatusModal,
+    setTrue: openUpdateStatusModal,
+  } = useBoolean(false);
+  const { value: isOpenCreateModal, setFalse: closeCreateModal, setTrue: openCreateModal } = useBoolean(false);
+  const { value: isOpenUpdateModal, setFalse: closeUpdateModal, setTrue: openUpdateModal } = useBoolean(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const mutation = useDeleteEmployee({
+  const updateMutation = useUpdateEmployee({
     mutationConfig: {
       onSuccess: () => {
-        message.success("Delete employee successfully");
-        setOpenDeleteModal(false);
+        message.success('Cập nhật thành công!');
       },
-      onError: () => {
-        message.error("Something went wrong!");
+      onError: (error) => {
+        message.error(error?.response?.data?.detail);
       },
     },
   });
 
-  // handle
-  const handleDelete = (employee) => {
+  const handleUpdateStatus = (employee) => {
     setSelectedEmployee(employee);
-    setOpenDeleteModal(true);
-  };
-
-  const handleDeleteCancel = () => {
-    setOpenDeleteModal(false);
-  };
-
-  const handleDeleteOk = () => {
-    mutation.mutate({ data: { id: selectedEmployee?.id } });
-  };
-
-  const handleCreate = () => {
-    setOpenCreateModal(true);
-  };
-
-  const handleCreateCancel = () => {
-    setOpenCreateModal(false);
+    openUpdateStatusModal();
   };
 
   const handleUpdate = (employee) => {
     setSelectedEmployee(employee);
-    setOpenUpdateModal(true);
+    openUpdateModal();
   };
 
-  const handleUpdateCancel = () => {
-    setOpenUpdateModal(false);
+  const handleChangeStatus = () => {
+    if (selectedEmployee) {
+      updateMutation.mutate({
+        data: {
+          ...selectedEmployee,
+          is_deleted: !selectedEmployee?.is_deleted,
+        },
+      });
+      closeUpdateStatusModal();
+    }
   };
 
   return (
     <>
       <Flex align="center" justify="space-between" className="mb-2">
-        <PageHeader
-          heading="Quản lý nhân viên"
-          links={[{ title: "Home", href: "/" }, { title: "Nhân viên" }]}
-        />
+        <PageHeader heading="Quản lý nhân viên" links={[{ title: 'Trang chủ', href: '/' }, { title: 'Nhân viên' }]} />
         <Space>
-          <Button
-            onClick={handleCreate}
-            type="primary"
-            icon={<PlusSquareOutlined />}
-          >
+          <Button onClick={openCreateModal} type="primary" icon={<PlusSquareOutlined />}>
             Thêm mới
           </Button>
         </Space>
       </Flex>
       <div style={{ paddingTop: 20 }}>
-        <EmployeeTable
-          handleDeleteItem={handleDelete}
-          handleUpdateItem={handleUpdate}
-        />
+        <EmployeeTable handleUpdateItem={handleUpdate} handleUpdateStatus={handleUpdateStatus} />
       </div>
       <ConfirmModal
-        title={`Are you sure to delete employee ${selectedEmployee?.name}?`}
-        // content={<Tag color="blue">Coming Soon</Tag>}
-        open={openDeleteModal}
-        handleCancel={handleDeleteCancel}
-        handleOk={handleDeleteOk}
+        title={
+          selectedEmployee?.is_deleted
+            ? `Bạn chắc chắn muốn khôi phục nhân viên ${selectedEmployee?.name}?`
+            : `Bạn chắc chắn muốn vô hiệu nhân viên ${selectedEmployee?.name}?`
+        }
+        open={isOpenUpdateStatusModal}
+        handleCancel={closeUpdateStatusModal}
+        handleOk={handleChangeStatus}
       />
-      <CreateEmployeeModal
-        open={openCreateModal}
-        handleCancel={handleCreateCancel}
-      />
-      <UpdateEmployeeModal
-        open={openUpdateModal}
-        handleCancel={handleUpdateCancel}
-        selectedEmployee={selectedEmployee}
-      />
+      <CreateEmployeeModal open={isOpenCreateModal} handleCancel={closeCreateModal} />
+      {isOpenUpdateModal && (
+        <UpdateEmployeeModal
+          open={isOpenUpdateModal}
+          handleCancel={closeUpdateModal}
+          selectedEmployee={selectedEmployee}
+          mutation={updateMutation}
+        />
+      )}
     </>
   );
 };

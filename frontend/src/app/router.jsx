@@ -1,65 +1,70 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AdminLayout from "~/components/layouts/admin-layout";
-import AuthLayout from "~/components/layouts/auth-layout";
-import MainLayout from "~/components/layouts/main-layout";
+import { useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import AdminLayout from '~/components/layouts/admin-layout';
+import AuthLayout from '~/components/layouts/auth-layout';
+import MainLayout from '~/components/layouts/main-layout';
+import AdminRoutes from './guards/admin-routes';
+import AuthRoutes from './guards/auth-routes';
+import PrivateRoutes from './guards/private-routes';
 
 const createAppRouter = () =>
   createBrowserRouter([
     // Home route
     {
-      path: "/",
-      element: <MainLayout />,
+      path: '/',
+      element: (
+        <PrivateRoutes>
+          <MainLayout />
+        </PrivateRoutes>
+      ),
       children: [
         {
-          path: "/",
+          path: '/',
           lazy: async () => {
-            const HomeRoute = await import("./routes/customer/home");
+            const HomeRoute = await import('./routes/customer/home');
             return { Component: HomeRoute.default };
           },
         },
         {
-          path: "/schedules",
+          path: '/schedules',
           lazy: async () => {
-            const SchedulePage = await import("./routes/customer/schedules");
+            const SchedulePage = await import('./routes/customer/schedules');
             return { Component: SchedulePage.default };
           },
         },
         {
-          path: "/schedules/:id",
+          path: '/schedules/:id',
           lazy: async () => {
-            const SchedulePage = await import(
-              "./routes/customer/schedules/[schedule_id]"
-            );
+            const SchedulePage = await import('./routes/customer/schedules/[schedule_id]');
             return { Component: SchedulePage.default };
           },
         },
         {
-          path: "/tickets",
+          path: '/tickets',
           lazy: async () => {
-            const TicketsPage = await import("./routes/customer/tickets");
+            const TicketsPage = await import('./routes/customer/tickets');
             return { Component: TicketsPage.default };
           },
         },
         {
-          path: "/orders",
+          path: '/orders',
           lazy: async () => {
-            const OrdersPage = await import("./routes/customer/orders");
+            const OrdersPage = await import('./routes/customer/orders');
             return { Component: OrdersPage.default };
           },
         },
         {
-          path: "/contacts",
+          path: '/contacts',
           lazy: async () => {
-            const ContactPage = await import("./routes/customer/contact");
+            const ContactPage = await import('./routes/customer/contact');
             return { Component: ContactPage.default };
           },
         },
         {
-          path: "/about",
+          path: '/about',
           lazy: async () => {
-            const AboutPage = await import("./routes/customer/about");
+            const AboutPage = await import('./routes/customer/about');
             return { Component: AboutPage.default };
           },
         },
@@ -67,41 +72,56 @@ const createAppRouter = () =>
     },
     // Admin routes
     {
-      path: "/admin",
-      element: <AdminLayout />,
+      path: '/admin',
+      element: (
+        <AdminRoutes>
+          <AdminLayout />
+        </AdminRoutes>
+      ),
       children: [
         {
-          path: "",
+          path: '',
           lazy: async () => {
-            const HomeRoute = await import("./routes/admin/home");
+            const HomeRoute = await import('./routes/admin/home');
             return { Component: HomeRoute.default };
           },
         },
         {
-          path: "employees",
+          path: 'employees',
           lazy: async () => {
-            const EmployeePage = await import("./routes/admin/employees");
+            const EmployeePage = await import('./routes/admin/employees');
             return { Component: EmployeePage.default };
+          },
+        },
+        {
+          path: 'customers',
+          lazy: async () => {
+            const CustomerPage = await import('./routes/admin/customers');
+            return { Component: CustomerPage.default };
           },
         },
       ],
     },
     // Auth routes
     {
-      path: "/auth",
-      element: <AuthLayout />,
+      path: '/auth',
+      element: (
+        <AuthRoutes>
+          <AuthLayout />
+        </AuthRoutes>
+      ),
       children: [
         {
-          path: "login",
+          path: 'login',
           lazy: async () => {
-            let LoginRoute = await import("./routes/auth/login");
+            let LoginRoute = await import('./routes/auth/login');
             return { Component: LoginRoute.default };
           },
         },
         {
-          path: "register",
+          path: 'register',
           lazy: async () => {
-            let RegisterRoute = await import("./routes/auth/register");
+            let RegisterRoute = await import('./routes/auth/register');
             return { Component: RegisterRoute.default };
           },
         },
@@ -109,9 +129,9 @@ const createAppRouter = () =>
     },
     // Not found route
     {
-      path: "*",
+      path: '*',
       lazy: async () => {
-        let NotFoundRoute = await import("./routes/not-found");
+        let NotFoundRoute = await import('./routes/not-found');
         return { Component: NotFoundRoute.default };
       },
     },

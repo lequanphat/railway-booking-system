@@ -2,19 +2,24 @@ package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.auth.request.LoginRequest;
 import com.backend.railwaybookingsystem.dtos.auth.request.RefreshTokenRequest;
+import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
+import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.security.jwt.JwtTokenService;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
 import com.backend.railwaybookingsystem.services.UserService;
+import com.backend.railwaybookingsystem.utils.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,12 +65,17 @@ public class AuthenticationController {
 
     @GetMapping("/me")
     @Operation(tags = "Authentication", description = "You can get your own information by sending your token.")
-    public ResponseEntity<User> me() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (username == null) {
-            throw new RuntimeException("User not found");
+    public ResponseEntity<AuthenticationResponse> me() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
         }
-        User user = userService.findAuthenticatedUserByEmail(username);
-        return ResponseEntity.ok(user);
+        String email = authentication.getName();
+        User user = userService.findAuthenticatedUserByEmail(email);
+        String token = jwtTokenService.generateAccessToken(user);
+
+        AuthenticationResponse authResponse = new AuthenticationResponse(user, token);
+        return ResponseEntity.ok(authResponse);
     }
 }

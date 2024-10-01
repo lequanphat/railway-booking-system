@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.security.jwt;
 
+import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.models.RefreshToken;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.dtos.auth.request.LoginRequest;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,7 +41,14 @@ public class JwtTokenService {
 
 		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
-		authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		if (!userService.userExists(email)) {
+			throw new BadRequestException("Email does not exist");
+		}
+		try {
+			authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		}catch (Exception e){
+			throw new BadRequestException("Invalid password");
+		}
 
 		final User user = userService.findAuthenticatedUserByEmail(email);
 		final String token = jwtTokenManager.generateToken(user);
@@ -47,6 +57,7 @@ public class JwtTokenService {
 		log.info("{} has successfully logged in!", user.getEmail());
 
 		return LoginResponse.builder()
+				.user(user)
 				.token(token)
 				.refreshToken(refreshToken.getToken())
 				.expiresIn(jwtProperties.getExpirationMinute() * 60)
@@ -58,5 +69,9 @@ public class JwtTokenService {
 		final String token = jwtTokenManager.generateToken(user);
 		log.info("{} has successfully refreshed the token!", user.getEmail());
 		return token;
+	}
+
+	public String generateAccessToken(User user) {
+		return jwtTokenManager.generateToken(user);
 	}
 }

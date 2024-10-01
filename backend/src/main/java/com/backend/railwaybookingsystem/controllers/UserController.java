@@ -3,6 +3,7 @@ package com.backend.railwaybookingsystem.controllers;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UserResponse;
+import com.backend.railwaybookingsystem.enums.UserRole;
 import com.backend.railwaybookingsystem.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -29,8 +30,10 @@ public class UserController {
 	@Operation(tags = "User", description = "Return list of users with pagination")
 	public ResponseEntity<Page<UserResponse>> getAllUsers(@RequestParam(defaultValue = "1") int page,
 														  @RequestParam(defaultValue = "10") int size,
-															@RequestParam(defaultValue = "") String keyword) {
-		Page<UserResponse> users = userService.getUsers(page-1, size, keyword);
+															@RequestParam(defaultValue = "") String keyword,
+														  @RequestParam(defaultValue = "USER" ) UserRole role
+	) {
+		Page<UserResponse> users = userService.getUsers(role, keyword, page-1, size);
 		return ResponseEntity.ok(users);
 	}
 
