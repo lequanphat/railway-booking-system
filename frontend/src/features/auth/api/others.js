@@ -11,3 +11,17 @@ export const useAuthentication = () => {
     },
   });
 };
+
+export const useVerifyAccount = (id, token) => {
+  return useQuery({
+    queryKey: ['account-verification'],
+    queryFn: () =>
+      api.get(`/auth/verify-account/${id}`, {
+        params: { token },
+      }),
+    initialData: {
+      user: null,
+      token: null,
+    },
+  });
+};

@@ -1,18 +1,22 @@
 package com.backend.railwaybookingsystem.services.impl;
-
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UserResponse;
 import com.backend.railwaybookingsystem.enums.UserRole;
+import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.DuplicatedException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.UserMapper;
 import com.backend.railwaybookingsystem.models.User;
+import com.backend.railwaybookingsystem.models.UserVerification;
 import com.backend.railwaybookingsystem.repositories.UserRepository;
+import com.backend.railwaybookingsystem.services.EmailService;
 import com.backend.railwaybookingsystem.services.UserService;
+import com.backend.railwaybookingsystem.services.UserVerificationService;
 import com.backend.railwaybookingsystem.utils.ErrorCode;
+import com.backend.railwaybookingsystem.utils.Generator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +40,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UserVerificationService userVerificationService;
+
     public UserResponse saveUser(CreateUserRequest request) {
-        User existingUser = userRepository.findByEmail(request.getEmail());
+        User existingUser = this.findAuthenticatedUserByEmail(request.getEmail());
         if (existingUser != null) {
             throw new DuplicatedException(ErrorCode.USER_ALREADY_EXISTS, request.getEmail());
         }
@@ -45,6 +55,7 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         return UserMapper.INSTANCE.convertToUserResponse(savedUser);
     }
+
 
     public Page<UserResponse> getUsers(UserRole role, String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
@@ -90,30 +101,55 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegistrationResponse registration(RegistrationRequest registrationRequest) {
-
-        // userValidationService.validateUser(registrationRequest);
-
+        User existingUser = this.findAuthenticatedUserByEmail(registrationRequest.getEmail());
+        if (existingUser != null) {
+            throw new DuplicatedException(ErrorCode.USER_ALREADY_EXISTS, registrationRequest.getEmail());
+        }
         final User user = UserMapper.INSTANCE.convertToUser(registrationRequest);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setUserRole(UserRole.USER);
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
         final String email = registrationRequest.getEmail();
-        log.info("{} registered successfully!", email);
 
-        return new RegistrationResponse("Đăng ký thành công !");
+        String token = Generator.generateOtp(20);
+
+        UserVerification userVerification = userVerificationService.createUserVerification(savedUser, token);
+
+        emailService.sendVerificationEmail(email, savedUser.getId(), userVerification.getToken());
+
+        return new RegistrationResponse(email , "OK");
     }
 
     @Override
     public User findAuthenticatedUserByEmail(String email) {
-        final User user = userRepository.findByEmail(email);
-        return user;
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.orElse(null);
     }
 
     @Override
     public Boolean userExists(String email){
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public  User verifyAccount(Long userId, String token){
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()){
+            throw new NotFoundException(ErrorCode.USER_NOT_FOUND, userId);
+        }
+        if(!userVerificationService.validateToken(user.get(), token)){
+            throw new BadRequestException("Invalid token");
+        }
+        User existingUser = user.get();
+        existingUser.setIs_verified(true);
+        return userRepository.save(existingUser);
     }
 }
 

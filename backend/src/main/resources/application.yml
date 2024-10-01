@@ -13,7 +13,17 @@ spring:
     hibernate:
       ddl-auto: update  # if you have problems with db, change to 'create' at the first time you run application
     database-platform: org.hibernate.dialect.MySQLDialect
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lequanphat2003@gmail.com
+    password: ewnj fojp lfau vfsx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 springdoc:
   show-actuator: true
 

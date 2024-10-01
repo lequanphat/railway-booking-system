@@ -41,7 +41,8 @@ public class JwtTokenService {
 
 		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
-		if (!userService.userExists(email)) {
+		Optional<User> user = userService.findUserByEmail(email);
+		if (user.isEmpty()) {
 			throw new BadRequestException("Email does not exist");
 		}
 		try {
@@ -50,14 +51,15 @@ public class JwtTokenService {
 			throw new BadRequestException("Invalid password");
 		}
 
-		final User user = userService.findAuthenticatedUserByEmail(email);
-		final String token = jwtTokenManager.generateToken(user);
-		final RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+		if(!user.get().getIs_verified()){
+			throw new BadRequestException("This account haven't been verified!");
+		}
 
-		log.info("{} has successfully logged in!", user.getEmail());
+		final String token = jwtTokenManager.generateToken(user.get());
+		final RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.get());
 
 		return LoginResponse.builder()
-				.user(user)
+				.user(user.get())
 				.token(token)
 				.refreshToken(refreshToken.getToken())
 				.expiresIn(jwtProperties.getExpirationMinute() * 60)

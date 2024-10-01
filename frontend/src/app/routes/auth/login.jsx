@@ -56,7 +56,7 @@ const LoginRoute = () => {
           <a href="forgot-password" className="block text-end mb-3 ">
             Forgot password?
           </a>
-          <Button loading={false} type="primary" htmlType="submit" className="w-full">
+          <Button loading={mutation.isPending} type="primary" htmlType="submit" className="w-full">
             Login
           </Button>
         </Form.Item>

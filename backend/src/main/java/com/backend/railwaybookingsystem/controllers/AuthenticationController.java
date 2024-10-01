@@ -6,11 +6,13 @@ import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationRespons
 import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
+import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.security.jwt.JwtTokenService;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
 import com.backend.railwaybookingsystem.services.UserService;
+import com.backend.railwaybookingsystem.services.UserVerificationService;
 import com.backend.railwaybookingsystem.utils.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -77,5 +79,11 @@ public class AuthenticationController {
 
         AuthenticationResponse authResponse = new AuthenticationResponse(user, token);
         return ResponseEntity.ok(authResponse);
+    }
+    @GetMapping("/verify-account/{id}")
+    @Operation(tags = "Authentication", description = "You can get your own information by sending your token.")
+    public ResponseEntity<User> verifyAccount(@PathVariable Long id, @RequestParam(defaultValue = "") String token) {
+        User user = userService.verifyAccount(id, token);
+        return ResponseEntity.ok(user);
     }
 }
