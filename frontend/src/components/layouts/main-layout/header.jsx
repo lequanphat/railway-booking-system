@@ -4,6 +4,10 @@ import { MenuOutlined } from "@ant-design/icons";
 import MobileMenu from "./mobile-menu";
 import { useState } from "react";
 
+import downloadAppIcon from '~/assets/svg/download_app.svg'
+import personIcon from '~/assets/svg/download_app.svg'
+import logo from '~/assets/images/logo.png'
+
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   return (
@@ -24,7 +28,7 @@ const Header = () => {
             shape="round"
           >
             <img
-              src="/download_app.svg"
+              src={downloadAppIcon}
               alt="download"
               className="w-[24px] h-auto"
             />
@@ -40,11 +44,11 @@ const Header = () => {
           ></Button>
         </div>
         <div className="hidden md:block bg-white px-24 pt-[60px] rounded-full translate-y-[-50%]">
-          <img src="/logo.png" alt="logo" className="w-[160px] h-auto" />
+          <img src={logo} alt="logo" className="w-[160px] h-auto" />
         </div>
         <div className="py-4">
           <Button href="/auth/login" className="!p-2 border-none" shape="round">
-            <img src="/person.svg" alt="login" className="w-[20px] h-auto" />
+            <img src={personIcon} alt="login" className="w-[20px] h-auto" />
             <span className="px-[6px]">Login/Register</span>
           </Button>
         </div>

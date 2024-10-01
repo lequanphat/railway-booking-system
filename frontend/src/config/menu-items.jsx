@@ -77,7 +77,7 @@ const menuItems = [
       {
         key: "4-1",
         label: "Danh sách khách hàng",
-        path: "/customers/list",
+        path: "/admin/customers",
       },
       {
         key: "4-2",

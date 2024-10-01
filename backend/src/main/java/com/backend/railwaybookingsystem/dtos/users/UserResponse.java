@@ -27,4 +27,8 @@ public class UserResponse {
     private String address;
 
     private UserRole userRole;
+
+    private Boolean is_verified;
+
+    private Boolean is_deleted;
 }

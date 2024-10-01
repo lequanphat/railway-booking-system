@@ -37,4 +37,8 @@ public class User {
 
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
+
+	private Boolean is_verified = false;
+
+	private Boolean is_deleted = false;
 }

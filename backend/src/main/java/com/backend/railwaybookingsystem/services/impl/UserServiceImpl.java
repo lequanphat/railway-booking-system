@@ -24,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -45,14 +46,14 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.convertToUserResponse(savedUser);
     }
 
-    public Page<UserResponse> getUsers(int page, int size, String keyword) {
+    public Page<UserResponse> getUsers(UserRole role, String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<User> userPage;
         if (keyword != null && !keyword.isEmpty()) {
-            userPage = userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword,keyword, pageRequest);
+            userPage = userRepository.searchUserByFields(role, keyword, pageRequest);
         } else {
-            userPage = userRepository.findAll(pageRequest);
+            userPage = userRepository.findByUserRole(role, pageRequest);
         }
 
         List<UserResponse> userResponseList = UserMapper.INSTANCE.convertToUserResponses(userPage.getContent());
@@ -68,6 +69,10 @@ public class UserServiceImpl implements UserService {
         existingUser.setName(updateRequest.getName());
         existingUser.setPhone(updateRequest.getPhone());
         existingUser.setAddress(updateRequest.getAddress());
+
+        if(updateRequest.getIs_deleted() != null){
+            existingUser.setIs_deleted(updateRequest.getIs_deleted());
+        }
 
         User updatedUser = userRepository.save(existingUser);
         return UserMapper.INSTANCE.convertToUserResponse(updatedUser);
@@ -104,6 +109,11 @@ public class UserServiceImpl implements UserService {
     public User findAuthenticatedUserByEmail(String email) {
         final User user = userRepository.findByEmail(email);
         return user;
+    }
+
+    @Override
+    public Boolean userExists(String email){
+        return userRepository.existsByEmail(email);
     }
 }
 

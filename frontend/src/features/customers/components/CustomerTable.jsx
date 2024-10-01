@@ -1,14 +1,13 @@
-import { DeleteOutlined, EditOutlined, ExportOutlined, ToolOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
-import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
-import { useEmployees } from '../api/get-employees';
 import { ROW_PER_PAGE } from '~/config/constants';
+import { useCustomers } from '../api/get-customers';
 
-export const EmployeeTable = ({ handleUpdateItem, handleUpdateStatus }) => {
+export const CustomerTable = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
-  const { data: employees, isLoading } = useEmployees({
+  const { data: customers, isLoading } = useCustomers({
     page,
     keyword,
     size: ROW_PER_PAGE,
@@ -62,20 +61,10 @@ export const EmployeeTable = ({ handleUpdateItem, handleUpdateStatus }) => {
       {
         title: 'Action',
         key: 'action',
-        render: (data) => (
+        render: () => (
           <Space>
-            <Button
-              onClick={() => {
-                handleUpdateItem(data);
-              }}
-              icon={<EditOutlined />}
-              iconPosition={'end'}
-            />
-            <Button
-              onClick={() => handleUpdateStatus(data)}
-              icon={data?.is_deleted ? <ToolOutlined /> : <DeleteOutlined />}
-              iconPosition={'end'}
-            />
+            <Button disabled onClick={null} icon={<EditOutlined />} iconPosition={'end'} />
+            <Button disabled onClick={null} icon={<DeleteOutlined />} iconPosition={'end'} />
           </Space>
         ),
       },
@@ -87,12 +76,12 @@ export const EmployeeTable = ({ handleUpdateItem, handleUpdateStatus }) => {
     <>
       <Table
         columns={columns}
-        dataSource={employees?.content}
+        dataSource={customers?.content}
         size="middle"
         pagination={{
           current: page,
-          pageSize: employees?.size,
-          total: employees?.totalElements,
+          pageSize: customers?.size,
+          total: customers?.totalElements,
         }}
         loading={isLoading}
         onChange={(e) => {
@@ -109,7 +98,7 @@ export const EmployeeTable = ({ handleUpdateItem, handleUpdateStatus }) => {
                 setPage(1);
               }}
             />
-            <Button icon={<ExportOutlined />}>
+            <Button disabled icon={<ExportOutlined />}>
               Export<Tag color="blue">Coming Soon</Tag>
             </Button>
           </Flex>
@@ -117,9 +106,4 @@ export const EmployeeTable = ({ handleUpdateItem, handleUpdateStatus }) => {
       />
     </>
   );
-};
-
-EmployeeTable.propTypes = {
-  handleUpdateItem: PropTypes.func,
-  handleUpdateStatus: PropTypes.func,
 };

@@ -28,4 +28,6 @@ public class UpdateUserRequest {
     @Size(min = 8, max = 150, message = "Address must be between 3 and 30 characters")
     private String address;
 
+    private Boolean is_deleted;
+
 }
