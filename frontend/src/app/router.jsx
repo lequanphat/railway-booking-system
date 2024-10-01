@@ -125,6 +125,20 @@ const createAppRouter = () =>
             return { Component: RegisterRoute.default };
           },
         },
+        {
+          path: 'verify-account',
+          lazy: async () => {
+            let AccountVerification = await import('./routes/auth/verify-account');
+            return { Component: AccountVerification.default };
+          },
+        },
+        {
+          path: 'verify-account/:id',
+          lazy: async () => {
+            let AccountVerificationResult = await import('./routes/auth/verify-account-result');
+            return { Component: AccountVerificationResult.default };
+          },
+        },
       ],
     },
     // Not found route

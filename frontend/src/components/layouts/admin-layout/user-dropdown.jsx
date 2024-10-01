@@ -1,7 +1,11 @@
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '~/stores/auth-store';
 
 const UserDropdown = () => {
+  const navigate = useNavigate();
+  const { resetUser } = useAuthStore();
   const items = [
     {
       key: '1',
@@ -19,7 +23,8 @@ const UserDropdown = () => {
       icon: <LogoutOutlined />,
       onClick: () => {
         localStorage.removeItem('token');
-        window.location.reload();
+        resetUser();
+        navigate('/auth/login');
       },
     },
   ];

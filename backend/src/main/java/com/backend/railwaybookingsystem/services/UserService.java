@@ -20,4 +20,8 @@ public interface UserService {
     RegistrationResponse registration(RegistrationRequest registrationRequest);
     User findAuthenticatedUserByEmail(String email);
     Boolean userExists(String email);
+
+    Optional<User> findUserByEmail(String email);
+
+    User verifyAccount(Long id, String token);
 }

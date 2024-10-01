@@ -1,37 +1,35 @@
-import { Button, Flex } from "antd";
-import Menu from "./menu";
-import { MenuOutlined } from "@ant-design/icons";
-import MobileMenu from "./mobile-menu";
-import { useState } from "react";
+import { Avatar, Button, Flex } from 'antd';
+import Menu from './menu';
+import { MenuOutlined } from '@ant-design/icons';
+import MobileMenu from './mobile-menu';
+import { useState } from 'react';
 
-import downloadAppIcon from '~/assets/svg/download_app.svg'
-import personIcon from '~/assets/svg/download_app.svg'
-import logo from '~/assets/images/logo.png'
+import downloadAppIcon from '~/assets/svg/download_app.svg';
+import personIcon from '~/assets/svg/download_app.svg';
+import logo from '~/assets/images/logo.png';
+import useAuthStore from '~/stores/auth-store';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, resetUser } = useAuthStore();
   const [openMenu, setOpenMenu] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    resetUser();
+    navigate('/auth/login');
+  };
   return (
-    <Flex
-      className="bg-primary min-h-[160px]"
-      vertical
-      justify="start"
-      align="center"
-    >
+    <Flex className="bg-primary min-h-[160px]" vertical justify="start" align="center">
       <Flex
         className="h-[100px] mb-2 w-[90%] md:w-[90%] xl:w-[1128px] 2xl:w-[1128px]"
         justify="space-between"
         align="start"
       >
         <div className="py-4 ">
-          <Button
-            className="hidden md:inline-flex border-none !p-2 gap-0"
-            shape="round"
-          >
-            <img
-              src={downloadAppIcon}
-              alt="download"
-              className="w-[24px] h-auto"
-            />
+          <Button className="hidden md:inline-flex border-none !p-2 gap-0" shape="round">
+            <img src={downloadAppIcon} alt="download" className="w-[24px] h-auto" />
             <span className="px-2">Download app</span>
           </Button>
           <Button
@@ -47,10 +45,20 @@ const Header = () => {
           <img src={logo} alt="logo" className="w-[160px] h-auto" />
         </div>
         <div className="py-4">
-          <Button href="/auth/login" className="!p-2 border-none" shape="round">
-            <img src={personIcon} alt="login" className="w-[20px] h-auto" />
-            <span className="px-[6px]">Login/Register</span>
-          </Button>
+          {isAuthenticated ? (
+            <Flex gap={10} align="center">
+              <p className="text-[red] font-semibold cursor-pointer" onClick={handleLogout}>
+                Logout
+              </p>
+              <p className="text-white font-semibold">{user?.name}</p>
+              <Avatar>P</Avatar>
+            </Flex>
+          ) : (
+            <Button href="/auth/login" className="!p-2 border-none" shape="round">
+              <img src={personIcon} alt="login" className="w-[20px] h-auto" />
+              <span className="px-[6px]">Login/Register</span>
+            </Button>
+          )}
         </div>
       </Flex>
       <div className="hidden md:block">
