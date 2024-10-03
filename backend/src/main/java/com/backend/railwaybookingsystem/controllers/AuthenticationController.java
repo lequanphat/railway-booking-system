@@ -80,10 +80,10 @@ public class AuthenticationController {
         AuthenticationResponse authResponse = new AuthenticationResponse(user, token);
         return ResponseEntity.ok(authResponse);
     }
-    @GetMapping("/verify-account/{id}")
-    @Operation(tags = "Authentication", description = "You can get your own information by sending your token.")
-    public ResponseEntity<User> verifyAccount(@PathVariable Long id, @RequestParam(defaultValue = "") String token) {
-        User user = userService.verifyAccount(id, token);
+    @GetMapping("/verify-account/{token}")
+    @Operation(tags = "Verify account", description = "Verify account by token.")
+    public ResponseEntity<User> verifyAccount(@PathVariable String token) {
+        User user = userService.verifyAccount(token);
         return ResponseEntity.ok(user);
     }
 }

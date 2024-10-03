@@ -1,5 +1,6 @@
 import { Button, Flex } from 'antd';
 import { useLocation } from 'react-router-dom';
+import emailImage from '~/assets/images/email.png';
 
 const AccountVerification = () => {
   const location = useLocation();
@@ -12,11 +13,12 @@ const AccountVerification = () => {
         boxShadow: 'rgba(0, 0, 0, 0.15) 0px 2px 8px',
       }}
     >
-      <Flex vertical gap={10}>
-        <h1 className="text-center ">
+      <Flex vertical gap={20}>
+        <img src={emailImage} alt="email" className="w-[100px] h-auto mx-auto" />
+        <h1 className="text-center text-[15px]">
           Chúng tôi đã gửi email xác nhận đến địa chỉ <p className="text-primary">{email}</p>
         </h1>
-        <h1 className="text-center">Vui lòng kiểm tra email của bạn để xác nhận tài khoản</h1>
+        <h1 className="text-center text-[15px]">Vui lòng kiểm tra email của bạn để xác nhận tài khoản</h1>
         <Button type="primary" href="https://mail.google.com/">
           Open Mail
         </Button>
