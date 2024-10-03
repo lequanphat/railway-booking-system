@@ -3,13 +3,11 @@ package com.backend.railwaybookingsystem.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table(name = "USERS")
 public class User {
 
