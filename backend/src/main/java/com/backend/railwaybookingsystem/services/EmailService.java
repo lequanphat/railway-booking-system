@@ -15,14 +15,14 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendVerificationEmail(String to, Long id, String token) {
+    public void sendVerificationEmail(String to, String token) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(to);
             helper.setSubject("Railway Booking System - Email Verification");
 
-            String link = "http://localhost:3000/auth/verify-account/" + id + "?token=" + token;
+            String link = "http://localhost:3000/auth/verify-account/" + token;
             String emailContent = EmailTemplates.ACCOUNT_VERIFICATION(link);
 
             helper.setText(emailContent, true);

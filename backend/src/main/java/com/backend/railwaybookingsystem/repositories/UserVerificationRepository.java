@@ -13,4 +13,7 @@ import java.util.Optional;
 public interface UserVerificationRepository extends JpaRepository<UserVerification, Long> {
 
         Optional<UserVerification> findByUserAndToken(User user, String token);
+
+        Optional<UserVerification> findByToken(String token);
+
 }

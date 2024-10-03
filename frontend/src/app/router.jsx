@@ -18,6 +18,10 @@ const createAppRouter = () =>
           <MainLayout />
         </PrivateRoutes>
       ),
+      errorElement: async () => {
+        let NotFoundRoute = await import('./routes/not-found');
+        return { Component: NotFoundRoute.default };
+      },
       children: [
         {
           path: '/',
@@ -133,7 +137,7 @@ const createAppRouter = () =>
           },
         },
         {
-          path: 'verify-account/:id',
+          path: 'verify-account/:token',
           lazy: async () => {
             let AccountVerificationResult = await import('./routes/auth/verify-account-result');
             return { Component: AccountVerificationResult.default };

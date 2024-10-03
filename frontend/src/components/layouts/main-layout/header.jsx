@@ -1,25 +1,17 @@
-import { Avatar, Button, Flex } from 'antd';
-import Menu from './menu';
 import { MenuOutlined } from '@ant-design/icons';
-import MobileMenu from './mobile-menu';
+import { Button, Flex } from 'antd';
 import { useState } from 'react';
-
-import downloadAppIcon from '~/assets/svg/download_app.svg';
-import personIcon from '~/assets/svg/download_app.svg';
+import Menu from './menu';
+import MobileMenu from './mobile-menu';
 import logo from '~/assets/images/logo.png';
+import { default as downloadAppIcon, default as personIcon } from '~/assets/svg/download_app.svg';
+import UserDropdown from './user-dropdown';
 import useAuthStore from '~/stores/auth-store';
-import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const navigate = useNavigate();
-  const { user, isAuthenticated, resetUser } = useAuthStore();
   const [openMenu, setOpenMenu] = useState(false);
+  const { isAuthenticated } = useAuthStore();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    resetUser();
-    navigate('/auth/login');
-  };
   return (
     <Flex className="bg-primary min-h-[160px]" vertical justify="start" align="center">
       <Flex
@@ -46,13 +38,7 @@ const Header = () => {
         </div>
         <div className="py-4">
           {isAuthenticated ? (
-            <Flex gap={10} align="center">
-              <p className="text-[red] font-semibold cursor-pointer" onClick={handleLogout}>
-                Logout
-              </p>
-              <p className="text-white font-semibold">{user?.name}</p>
-              <Avatar>P</Avatar>
-            </Flex>
+            <UserDropdown />
           ) : (
             <Button href="/auth/login" className="!p-2 border-none" shape="round">
               <img src={personIcon} alt="login" className="w-[20px] h-auto" />

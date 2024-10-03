@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -52,6 +53,8 @@ public class UserServiceImpl implements UserService {
             throw new DuplicatedException(ErrorCode.USER_ALREADY_EXISTS, request.getEmail());
         }
         User user = UserMapper.INSTANCE.convertToUser(request);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setIs_verified(true);
         User savedUser = userRepository.save(user);
         return UserMapper.INSTANCE.convertToUserResponse(savedUser);
     }
@@ -113,11 +116,11 @@ public class UserServiceImpl implements UserService {
 
         final String email = registrationRequest.getEmail();
 
-        String token = Generator.generateOtp(20);
+        String token = UUID.randomUUID().toString();
 
-        UserVerification userVerification = userVerificationService.createUserVerification(savedUser, token);
+        userVerificationService.createUserVerification(savedUser, token);
 
-        emailService.sendVerificationEmail(email, savedUser.getId(), userVerification.getToken());
+        emailService.sendVerificationEmail(email, token);
 
         return new RegistrationResponse(email , "OK");
     }
@@ -139,17 +142,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public  User verifyAccount(Long userId, String token){
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isEmpty()){
-            throw new NotFoundException(ErrorCode.USER_NOT_FOUND, userId);
-        }
-        if(!userVerificationService.validateToken(user.get(), token)){
+    public  User verifyAccount(String token){
+        User user = userVerificationService.validateToken(token);
+        if(user == null){
             throw new BadRequestException("Invalid token");
         }
-        User existingUser = user.get();
-        existingUser.setIs_verified(true);
-        return userRepository.save(existingUser);
+        user.setIs_verified(true);
+        return userRepository.save(user);
     }
 }
 
