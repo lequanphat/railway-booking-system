@@ -104,6 +104,27 @@ const createAppRouter = () =>
             return { Component: CustomerPage.default };
           },
         },
+        {
+          path: 'trains',
+          lazy: async () => {
+            const TrainsManagement = await import('./routes/admin/trains');
+            return { Component: TrainsManagement.default };
+          },
+        },
+        {
+          path: 'carriages',
+          lazy: async () => {
+            const CarriagesManagement = await import('./routes/admin/carriages');
+            return { Component: CarriagesManagement.default };
+          },
+        },
+        {
+          path: 'carriages/create',
+          lazy: async () => {
+            const CreateCarriage = await import('./routes/admin/carriages/create');
+            return { Component: CreateCarriage.default };
+          },
+        },
       ],
     },
     // Auth routes
