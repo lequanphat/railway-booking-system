@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/provinces")
+@RequestMapping("api/public/provinces")
 public class ProvinceController {
     @Autowired
     private ProvinceService provinceService;

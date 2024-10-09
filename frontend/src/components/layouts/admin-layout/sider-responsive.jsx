@@ -1,17 +1,14 @@
-import { Drawer, Grid } from "antd";
-import Sider from "antd/es/layout/Sider";
-import MenuCustom from "~/components/layouts/admin-layout/menu";
-import useMenuStore from "~/stores/menu-store";
+import { Drawer, Grid } from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import { Link } from 'react-router-dom';
+import MenuCustom from '~/components/layouts/admin-layout/menu';
+import useMenuStore from '~/stores/menu-store';
 
 const SiderResponsive = () => {
   const breakpoint = Grid.useBreakpoint();
-  const isMobile =
-    typeof breakpoint.lg === "undefined" ? false : !breakpoint.lg;
+  const isMobile = typeof breakpoint.lg === 'undefined' ? false : !breakpoint.lg;
 
-  const {
-    siderVisible,
-    setSiderVisible,
-  } = useMenuStore();
+  const { siderVisible, setSiderVisible } = useMenuStore();
 
   return (
     <>
@@ -20,15 +17,10 @@ const SiderResponsive = () => {
           open={siderVisible}
           onClose={() => setSiderVisible(false)}
           placement="left"
-          styles={{ header: { display: "none" }, body: { padding: "10px" } }}
+          styles={{ header: { display: 'none' }, body: { padding: '10px' } }}
           width={300}
         >
-          <MenuCustom
-            mode="inline"
-            isMobile={isMobile}
-            theme="light"
-            onClose={() => setSiderVisible(false)}
-          />
+          <MenuCustom mode="inline" isMobile={isMobile} theme="light" onClose={() => setSiderVisible(false)} />
         </Drawer>
       ) : (
         <Sider
@@ -39,17 +31,10 @@ const SiderResponsive = () => {
           width="240"
         >
           <>
-            <img
-              src="/src/assets/logo-dsvn.png"
-              alt="logo"
-              className="h-16 mx-auto mb-4 object-contain"
-            />
-            <MenuCustom
-              mode="inline"
-              theme="light"
-              isMobile={isMobile}
-              onClose={() => setSiderVisible(false)}
-            />
+            <Link to="/">
+              <img src="/src/assets/logo-dsvn.png" alt="logo" className="h-16 mx-auto mb-4 object-contain" />
+            </Link>
+            <MenuCustom mode="inline" theme="light" isMobile={isMobile} onClose={() => setSiderVisible(false)} />
           </>
         </Sider>
       )}

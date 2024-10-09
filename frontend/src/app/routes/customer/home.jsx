@@ -1,18 +1,13 @@
-import {
-  Button,
-  Card,
-  Col,
-  DatePicker,
-  Flex,
-  Form,
-  Input,
-  Pagination,
-  Radio,
-  Row,
-} from "antd";
-import { ScheduleItem } from "~/features/home/components/ScheduleItem";
+import { Button, Card, Col, DatePicker, Flex, Form, Input, Pagination, Radio, Row } from 'antd';
+import { useStations } from '~/features/home/api/get-stations';
+import { ScheduleItem } from '~/features/home/components/ScheduleItem';
 
 const HomeRoute = () => {
+  const { data, isLoading } = useStations({});
+
+  console.log(data);
+  console.log(isLoading);
+
   return (
     <div className="py-6">
       <Card
@@ -40,8 +35,8 @@ const HomeRoute = () => {
                 <Form.Item label="Departure Date">
                   <DatePicker
                     format={{
-                      format: "YYYY-MM-DD",
-                      type: "mask",
+                      format: 'YYYY-MM-DD',
+                      type: 'mask',
                     }}
                     onChange={null}
                     className="w-full py-3"
@@ -52,8 +47,8 @@ const HomeRoute = () => {
                 <Form.Item label="Return date">
                   <DatePicker
                     format={{
-                      format: "YYYY-MM-DD",
-                      type: "mask",
+                      format: 'YYYY-MM-DD',
+                      type: 'mask',
                     }}
                     onChange={null}
                     className="w-full py-3"
@@ -64,10 +59,7 @@ const HomeRoute = () => {
           </Form>
         </div>
         <Flex justify="center">
-          <Button
-            type="primary"
-            className="py-6 px-8 min-w-[220px] rounded-full translate-y-[48px] text-[18px]"
-          >
+          <Button type="primary" className="py-6 px-8 min-w-[220px] rounded-full translate-y-[48px] text-[18px]">
             Find a train
           </Button>
         </Flex>
