@@ -30,12 +30,7 @@ const LoginRoute = () => {
   };
 
   return (
-    <div
-      className="p-8 rounded-[8px] w-[90%] md:w-[460px]"
-      style={{
-        boxShadow: 'rgba(0, 0, 0, 0.15) 0px 2px 8px',
-      }}
-    >
+    <div className="p-8 rounded-[8px] w-[90%] md:w-[460px] bg-white border shadow-sm">
       <Typography className="text-[22px] font-semibold">Login</Typography>
       <Form form={form} className="pt-4" onFinish={handleLogin} layout="vertical">
         <Flex vertical>
@@ -52,8 +47,8 @@ const LoginRoute = () => {
             <Input.Password placeholder="Enter password..." />
           </Form.Item>
         </Flex>
-        <Form.Item className="pt-4 m-0">
-          <a href="forgot-password" className="block text-end mb-3 ">
+        <Form.Item className="pt-2 m-0">
+          <a href="forgot-password" className="block mb-3">
             Forgot password?
           </a>
           <Button loading={mutation.isPending} type="primary" htmlType="submit" className="w-full">
