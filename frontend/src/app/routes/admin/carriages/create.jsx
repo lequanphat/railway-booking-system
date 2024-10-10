@@ -1,54 +1,33 @@
-import { PlusSquareOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input, Select, Space } from 'antd';
-import PageHeader from '~/components/ui/page-header';
 import { useEffect, useState } from 'react';
+import CustomAsyncSelect from '~/components/ui/CustomAsyncSelect';
+import PageHeader from '~/components/ui/page-header';
 import CarriagesContainer from '~/features/carriages/components/CarriagesContainer';
 import SeatItem from '~/features/carriages/components/SeatItem';
+import { useSeatTypes } from '~/features/seat-types/api/get-seat-types';
 
 const CreateCarriage = () => {
   const [form] = Form.useForm();
+  const [seats, setSeats] = useState([]);
+
+  const [selectedSeatType, setSelectedSeatType] = useState(null);
+
+  const [selectedSeatTypes, setSelectedSeatTypes] = useState([]);
+
   const nameValue = Form.useWatch('name', form);
-  const [seats, setSeats] = useState({
-    I: 6,
-    II: 0,
-    III: 0,
-    IV: 0,
-    V: 0,
-  });
-  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const seatsI = Array.from({ length: seats.I }).map((_, index) => ({
-      id: Math.random(),
-      name: `I-${index + 1}`,
-      type: 'I',
-    }));
+    const newSeats = selectedSeatTypes.reduce((acc, item) => {
+      console.log(item);
+      const newSeats = Array.from({ length: item.quantity }, (_, index) => ({
+        name: `${item.children} ${index + 1}`,
+      }));
+      return [...acc, ...newSeats];
+    }, []);
 
-    const seatsII = Array.from({ length: seats.II }).map((_, index) => ({
-      id: Math.random(),
-      name: `II-${index + 1}`,
-      type: 'II',
-    }));
-
-    const seatsIII = Array.from({ length: seats.III }).map((_, index) => ({
-      id: Math.random(),
-      name: `III-${index + 1}`,
-      type: 'III',
-    }));
-
-    const seatsIV = Array.from({ length: seats.IV }).map((_, index) => ({
-      id: Math.random(),
-      name: `IV-${index + 1}`,
-      type: 'IV',
-    }));
-
-    const seatsV = Array.from({ length: seats.V }).map((_, index) => ({
-      id: Math.random(),
-      name: `V-${index + 1}`,
-      type: 'V',
-    }));
-    setItems([...seatsI, ...seatsII, ...seatsIII, ...seatsIV, ...seatsV]);
-  }, [seats]);
+    setSeats(newSeats);
+  }, [selectedSeatTypes]);
 
   function moveArrayItem(arr, fromIndex, toIndex) {
     const updatedArray = [...arr];
@@ -66,15 +45,24 @@ const CreateCarriage = () => {
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    setItems(moveArrayItem(items, oldIndex, newIndex));
+    setSeats(moveArrayItem(seats, oldIndex, newIndex));
   };
 
   const handleSave = () => {
     const data = {
       ...form.getFieldsValue(),
-      items,
+      seats,
     };
     console.log(data);
+  };
+
+  const handleSelectSeatType = () => {
+    if (selectedSeatType) {
+      setSelectedSeatTypes((prev) => [
+        ...prev,
+        { ...selectedSeatType, quantity: form.getFieldValue('number_of_seats') },
+      ]);
+    }
   };
 
   return (
@@ -89,17 +77,16 @@ const CreateCarriage = () => {
           ]}
         />
         <Space>
-          <Button onClick={handleSave} type="primary" icon={<PlusSquareOutlined />}>
-            Lưu
+          <Button onClick={handleSave} type="primary" icon={<PlusOutlined />}>
+            Tạo ngay
           </Button>
         </Space>
       </Flex>
       <Flex className="" gap={20}>
-        <Flex vertical align="center" className="w-[70%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
-          <h1 className="text-[18px] font-semibold">Toa tàu</h1>
+        <Flex vertical align="center" className="w-[65%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
           <div className="py-4">
             <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd} name={nameValue}>
-              {items.map((item, index) => (
+              {seats.map((item, index) => (
                 <SeatItem key={index} index={index} title={item.name} />
               ))}
             </CarriagesContainer>
@@ -111,9 +98,10 @@ const CreateCarriage = () => {
           initialValues={{
             name: '',
             type: 'seat',
+            number_of_seats: 1,
           }}
           layout="vertical"
-          className="w-[30%] bg-white border-[1px] border-[#ccc] rounded-lg p-4"
+          className="w-[35%] bg-white border-[1px] border-[#ccc] rounded-lg p-4"
         >
           <h1 className="text-[18px] font-semibold text-center">Thông tin toa tàu</h1>
           <Form.Item label="Tên toa tàu" name="name" rules={null} required={false} validateTrigger="onChange">
@@ -142,8 +130,8 @@ const CreateCarriage = () => {
               defaultValue={'seat'}
             ></Select>
           </Form.Item>
-          <Form.Item label="Chọn ghế" name="seats">
-            <Flex vertical gap={10} className="w-full px-4 mt-4">
+          <Form.Item label="Chọn loại ghế" name="number_of_seats">
+            {/* <Flex vertical gap={10} className="w-full px-4 mt-4">
               <Flex justify="space-between" align="center">
                 <div className="flex-1">
                   <p className="text-[15px] font-semibold">Ghế loại I</p>
@@ -209,6 +197,12 @@ const CreateCarriage = () => {
                   }}
                 />
               </Flex>
+            </Flex> */}
+
+            <Flex gap={8}>
+              <CustomAsyncSelect loadQuery={useSeatTypes} setValue={setSelectedSeatType} />
+              <Input className="w-[80px]" type="number" />
+              <Button onClick={handleSelectSeatType} type="primary" icon={<PlusOutlined />} />
             </Flex>
           </Form.Item>
         </Form>
