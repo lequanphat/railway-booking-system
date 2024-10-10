@@ -26,12 +26,13 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     }
 
     @Override
-    public Boolean validateToken(User user, String token){
-        Optional<UserVerification> userVerification = userVerificationRepository.findByUserAndToken(user, token);
-        Boolean result = userVerification.isPresent();
-        if(result) {
+    public User validateToken(String token){
+        Optional<UserVerification> userVerification = userVerificationRepository.findByToken(token);
+
+        if(userVerification.isPresent()) {
             userVerificationRepository.delete(userVerification.get());
+            return userVerification.get().getUser();
         }
-        return result;
+        return null;
     }
 }

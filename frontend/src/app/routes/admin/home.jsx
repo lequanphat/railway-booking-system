@@ -1,5 +1,5 @@
-import { Button, Space } from "antd";
-import React from "react";
+import { Button, Space } from 'antd';
+import React from 'react';
 
 const HomeRoute = () => {
   return (
@@ -14,7 +14,7 @@ const HomeRoute = () => {
       <p className="text-center">
         {Array.from({ length: 100 }, (_, index) => (
           <React.Fragment key={index}>
-            {index % 20 === 0 && index ? "more" : "..."}
+            {index % 20 === 0 && index ? 'more' : '...'}
             <br />
           </React.Fragment>
         ))}

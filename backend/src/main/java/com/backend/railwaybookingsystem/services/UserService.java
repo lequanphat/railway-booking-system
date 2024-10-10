@@ -23,5 +23,5 @@ public interface UserService {
 
     Optional<User> findUserByEmail(String email);
 
-    User verifyAccount(Long id, String token);
+    User verifyAccount(String token);
 }

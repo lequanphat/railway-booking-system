@@ -12,16 +12,11 @@ export const useAuthentication = () => {
   });
 };
 
-export const useVerifyAccount = (id, token) => {
+export const useVerifyAccount = (token, options) => {
   return useQuery({
     queryKey: ['account-verification'],
-    queryFn: () =>
-      api.get(`/auth/verify-account/${id}`, {
-        params: { token },
-      }),
-    initialData: {
-      user: null,
-      token: null,
-    },
+    queryFn: () => api.get(`/auth/verify-account/${token}`),
+    ...options,
+    initialData: {},
   });
 };
