@@ -24,32 +24,32 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
     mutation.mutate({ data: { ...values, userRole: USER_ROLES.ADMIN } });
   };
   return (
-    <Modal title="Create employee" open={open} onCancel={handleCancel} footer={null}>
+    <Modal title="Thêm nhân viên mới" open={open} onCancel={handleCancel} footer={null}>
       <Form form={form} className="pt-4" onFinish={onFinish} layout="vertical">
         <Flex vertical>
-          <Form.Item label="Name" name="name" rules={RULES.createEmployee.name} validateTrigger="onBlur">
-            <Input placeholder="Enter employee name..." />
+          <Form.Item label="Tên nhân viên" name="name" rules={RULES.createEmployee.name} validateTrigger="onBlur">
+            <Input placeholder="Nhập tên nhân viên..." />
           </Form.Item>
           <Form.Item label="Email" name="email" rules={RULES.createEmployee.email} validateTrigger="onBlur">
-            <Input placeholder="Enter email address..." />
+            <Input placeholder="Nhập địa chỉ email..." />
           </Form.Item>
-          <Form.Item label="Phone" name="phone" rules={RULES.createEmployee.phone} validateTrigger="onBlur">
-            <Input placeholder="Enter phone number..." />
+          <Form.Item label="Số điện thoại" name="phone" rules={RULES.createEmployee.phone} validateTrigger="onBlur">
+            <Input placeholder="Nhập số điện thoại..." />
           </Form.Item>
-          <Form.Item label="Address" name="address" rules={RULES.createEmployee.address} validateTrigger="onBlur">
-            <Input placeholder="Enter address..." />
+          <Form.Item label="Địa chỉ" name="address" rules={RULES.createEmployee.address} validateTrigger="onBlur">
+            <Input placeholder="Nhập địa chỉ..." />
           </Form.Item>
-          <Form.Item label="Password" name="password" rules={RULES.createEmployee.password} validateTrigger="onBlur">
-            <Input.Password placeholder="Enter password..." />
+          <Form.Item label="Mật khẩu" name="password" rules={RULES.createEmployee.password} validateTrigger="onBlur">
+            <Input.Password placeholder="Nhập mật khẩu..." />
           </Form.Item>
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Flex justify="end" className="gap-3">
             <Button loading={mutation?.isPending} type="default" htmlType="reset">
-              Reset
+              Hoàn tác
             </Button>
             <Button loading={mutation?.isPending} type="primary" htmlType="submit">
-              Submit
+              Tạo mới
             </Button>
           </Flex>
         </Form.Item>

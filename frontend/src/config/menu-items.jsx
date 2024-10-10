@@ -128,13 +128,18 @@ const menuItems = [
     children: [
       {
         key: '7-1',
-        label: 'Quản lý tàu hỏa',
-        path: '/admin/trains',
+        label: 'Quản lý ghế ngồi',
+        path: '/admin/seats',
       },
       {
         key: '7-2',
         label: 'Quản lý toa tàu',
         path: '/admin/carriages',
+      },
+      {
+        key: '7-3',
+        label: 'Quản lý tàu hỏa',
+        path: '/admin/trains',
       },
     ],
   },

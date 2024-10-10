@@ -51,6 +51,8 @@
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
+  text-align: center;
+  padding: 4px;
 }
 
 @keyframes trainRunning {
