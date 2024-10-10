@@ -1,11 +1,13 @@
 import { PlusSquareOutlined } from '@ant-design/icons';
-import { Button, Flex, Input, Space } from 'antd';
+import { Button, Flex, Form, Input, Select, Space } from 'antd';
 import PageHeader from '~/components/ui/page-header';
 import { useEffect, useState } from 'react';
 import CarriagesContainer from '~/features/carriages/components/CarriagesContainer';
 import SeatItem from '~/features/carriages/components/SeatItem';
 
 const CreateCarriage = () => {
+  const [form] = Form.useForm();
+  const nameValue = Form.useWatch('name', form);
   const [seats, setSeats] = useState({
     I: 6,
     II: 0,
@@ -68,8 +70,13 @@ const CreateCarriage = () => {
   };
 
   const handleSave = () => {
-    console.log(items);
+    const data = {
+      ...form.getFieldsValue(),
+      items,
+    };
+    console.log(data);
   };
+
   return (
     <>
       <Flex align="center" justify="space-between" className="mb-2">
@@ -91,83 +98,120 @@ const CreateCarriage = () => {
         <Flex vertical align="center" className="w-[70%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
           <h1 className="text-[18px] font-semibold">Toa tàu</h1>
           <div className="py-4">
-            <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
+            <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd} name={nameValue}>
               {items.map((item, index) => (
                 <SeatItem key={index} index={index} title={item.name} />
               ))}
             </CarriagesContainer>
           </div>
         </Flex>
-        <Flex vertical align="center" className="w-[30%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
-          <h1 className="text-[18px] font-semibold">Loại ghế</h1>
-          <Flex vertical gap={10} className="w-full px-4 mt-4">
-            <Flex justify="space-between" align="center">
-              <div className="flex-1">
-                <p className="text-[15px] font-semibold">Ghế loại I</p>
-              </div>
-              <Input
-                placeholder="Số lượng"
-                className="w-[100px]"
-                value={seats.I}
-                onChange={(e) => {
-                  setSeats((prev) => ({ ...prev, I: e.target.value }));
-                }}
-              />
+        <Form
+          form={form}
+          onFinish={null}
+          initialValues={{
+            name: '',
+            type: 'seat',
+          }}
+          layout="vertical"
+          className="w-[30%] bg-white border-[1px] border-[#ccc] rounded-lg p-4"
+        >
+          <h1 className="text-[18px] font-semibold text-center">Thông tin toa tàu</h1>
+          <Form.Item label="Tên toa tàu" name="name" rules={null} required={false} validateTrigger="onChange">
+            <Input placeholder="Nhập tên toa tàu..." />
+          </Form.Item>
+          <Form.Item label="Loại toa" name="type" rules={null} required={false} validateTrigger="onBlur">
+            <Select
+              options={[
+                {
+                  label: 'Toa ghế ngồi có điều hòa',
+                  value: 'seat',
+                },
+                {
+                  label: 'Toa ghế ngồi không điều hòa',
+                  value: 'seat-no-ac',
+                },
+                {
+                  label: 'Toa giường nằm có điều hòa',
+                  value: 'bed',
+                },
+                {
+                  label: 'Toa giường nằm không điều hòa',
+                  value: 'bed-no-ac',
+                },
+              ]}
+              defaultValue={'seat'}
+            ></Select>
+          </Form.Item>
+          <Form.Item label="Chọn ghế" name="seats">
+            <Flex vertical gap={10} className="w-full px-4 mt-4">
+              <Flex justify="space-between" align="center">
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold">Ghế loại I</p>
+                </div>
+                <Input
+                  placeholder="Số lượng"
+                  className="w-[100px]"
+                  value={seats.I}
+                  onChange={(e) => {
+                    setSeats((prev) => ({ ...prev, I: e.target.value }));
+                  }}
+                />
+              </Flex>
+              <Flex justify="space-between" align="center">
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold">Ghế loại II</p>
+                </div>
+                <Input
+                  placeholder="Số lượng"
+                  className="w-[100px]"
+                  value={seats.II}
+                  onChange={(e) => {
+                    setSeats((prev) => ({ ...prev, II: e.target.value }));
+                  }}
+                />
+              </Flex>
+              <Flex justify="space-between" align="center">
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold">Ghế loại III</p>
+                </div>
+                <Input
+                  placeholder="Số lượng"
+                  className="w-[100px]"
+                  value={seats.III}
+                  onChange={(e) => {
+                    setSeats((prev) => ({ ...prev, III: e.target.value }));
+                  }}
+                />
+              </Flex>
+              <Flex justify="space-between" align="center">
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold">Ghế loại IV</p>
+                </div>
+                <Input
+                  placeholder="Số lượng"
+                  className="w-[100px]"
+                  value={seats.IV}
+                  onChange={(e) => {
+                    setSeats((prev) => ({ ...prev, IV: e.target.value }));
+                  }}
+                />
+              </Flex>
+              <Flex justify="space-between" align="center">
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold">Ghế loại V</p>
+                </div>
+                <Input
+                  placeholder="Số lượng"
+                  className="w-[100px]"
+                  value={seats.V}
+                  onChange={(e) => {
+                    setSeats((prev) => ({ ...prev, V: e.target.value }));
+                  }}
+                />
+              </Flex>
             </Flex>
-            <Flex justify="space-between" align="center">
-              <div className="flex-1">
-                <p className="text-[15px] font-semibold">Ghế loại II</p>
-              </div>
-              <Input
-                placeholder="Số lượng"
-                className="w-[100px]"
-                value={seats.II}
-                onChange={(e) => {
-                  setSeats((prev) => ({ ...prev, II: e.target.value }));
-                }}
-              />
-            </Flex>
-            <Flex justify="space-between" align="center">
-              <div className="flex-1">
-                <p className="text-[15px] font-semibold">Ghế loại III</p>
-              </div>
-              <Input
-                placeholder="Số lượng"
-                className="w-[100px]"
-                value={seats.III}
-                onChange={(e) => {
-                  setSeats((prev) => ({ ...prev, III: e.target.value }));
-                }}
-              />
-            </Flex>
-            <Flex justify="space-between" align="center">
-              <div className="flex-1">
-                <p className="text-[15px] font-semibold">Ghế loại IV</p>
-              </div>
-              <Input
-                placeholder="Số lượng"
-                className="w-[100px]"
-                value={seats.IV}
-                onChange={(e) => {
-                  setSeats((prev) => ({ ...prev, IV: e.target.value }));
-                }}
-              />
-            </Flex>
-            <Flex justify="space-between" align="center">
-              <div className="flex-1">
-                <p className="text-[15px] font-semibold">Ghế loại V</p>
-              </div>
-              <Input
-                placeholder="Số lượng"
-                className="w-[100px]"
-                value={seats.V}
-                onChange={(e) => {
-                  setSeats((prev) => ({ ...prev, V: e.target.value }));
-                }}
-              />
-            </Flex>
-          </Flex>
-        </Flex>
+          </Form.Item>
+        </Form>
       </Flex>
     </>
   );
