@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,5 +17,6 @@ public class Station {
 
     @ManyToOne
     @JoinColumn(name = "province_id", referencedColumnName = "id")
+    @JsonBackReference
     private Province province;
 }
