@@ -125,6 +125,13 @@ const createAppRouter = () =>
             return { Component: CreateCarriage.default };
           },
         },
+        {
+          path: 'seats',
+          lazy: async () => {
+            const SeatsManagement = await import('./routes/admin/seat-types');
+            return { Component: SeatsManagement.default };
+          },
+        },
       ],
     },
     // Auth routes

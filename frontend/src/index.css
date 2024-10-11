@@ -49,5 +49,17 @@
   width: 100%;
   height: 100%;
   background: #fff;
-  border: 1px solid #efefef;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  padding: 4px;
+}
+
+@keyframes trainRunning {
+  0% {
+    left: -540px;
+  }
+  100% {
+    left: 100%;
+  }
 }
