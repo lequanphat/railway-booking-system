@@ -1,4 +1,6 @@
-import { Button, Col, Flex, Row, Typography } from "antd";
+import { Button, Col, Flex, Row, Typography } from 'antd';
+import PickupIcon from '~/assets/svg/pickup.svg';
+import StationIcon from '~/assets/svg/station.svg';
 
 export const ScheduleItem = () => {
   return (
@@ -12,10 +14,7 @@ export const ScheduleItem = () => {
         <Typography level={3} className="text-[24px] font-bold text-primary">
           SE06
         </Typography>
-        <Typography
-          level={3}
-          className="text-[18px] font-semibold text-[#5e5e5e]"
-        >
+        <Typography level={3} className="text-[18px] font-semibold text-[#5e5e5e]">
           #123123123
         </Typography>
       </Flex>
@@ -23,14 +22,14 @@ export const ScheduleItem = () => {
         <Flex align="center">
           <Typography className="text-[22px] font-medium">07:45</Typography>
           <Flex align="center" className="mx-4">
-            <img src="/pickup.svg" alt="" />
+            <img src={PickupIcon} alt="" />
             <div className="border-b-[2px] border-[#ccc] border-dotted w-[100px]"></div>
             <Flex vertical justify="center" align="center">
               <Typography className="text-[16px]">12 hours</Typography>
               <Typography>(Asian/Ho Chi Minh)</Typography>
             </Flex>
             <div className="border-b-[2px] border-[#ccc] border-dotted w-[100px]"></div>
-            <img src="/station.svg" alt="" />
+            <img src={StationIcon} alt="" />
           </Flex>
           <Typography className="text-[22px] font-medium">03:50</Typography>
         </Flex>
@@ -49,9 +48,7 @@ export const ScheduleItem = () => {
       <div>
         <Flex gap={8} align="center" className="mb-2">
           <Typography className="text-[18px] font-medium">Discount</Typography>
-          <Typography className="text-[24px] font-medium text-primary">
-            {Math.floor(Math.random() * 100)}%
-          </Typography>
+          <Typography className="text-[24px] font-medium text-primary">{Math.floor(Math.random() * 100)}%</Typography>
         </Flex>
         <Button type="primary" className="rounded-full" href="schedules/1">
           CHOOSE ROUTE

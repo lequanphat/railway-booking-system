@@ -55,13 +55,14 @@ public class SecurityConfiguration {
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(request -> request.requestMatchers(
 																			"/api/auth/**",
+																		  "api/public/**",
 																	      "/v3/api-docs/**",
 																          "/swagger-ui/**",
 																	      "/swagger-ui.html",
 																	      "/actuator/**")
 													   .permitAll()
-														.requestMatchers("/api/ad/**").hasAuthority("ADMIN")
-														.requestMatchers("/api/pv/**").hasAuthority("USER")
+														.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+														.requestMatchers("/api/user/**").hasAuthority("USER")
 													   .anyRequest()
 													   .authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

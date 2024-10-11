@@ -24,7 +24,11 @@ public class ProvinceController {
     @GetMapping()
     public ResponseEntity<List<Province>> getAllProvinces() {
         List<Province> provinces = provinceService.getAllProvinces();
-        return ResponseEntity.ok(provinces);
+        return ResponseEntity.ok(
+                provinces.stream().filter(
+                        province -> province.getStations().size() > 0F
+                ).toList()
+        );
     }
 
     @GetMapping("/{id}")

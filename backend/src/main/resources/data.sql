@@ -1,3 +1,10 @@
+-- Data for table `users`
+-- Password: 123456
+INSERT INTO users (id, email, name, password, provider, user_role, is_verified, is_deleted) VALUES (1, "user@gmail.com", "Tran Nhat Sinh", "$2a$10$4UBL7hzqFHLNRswL67ffR.V25uGBD1WnnEGwv6Wlk.cMnlJmGjmnu", "EMAIL", "USER", 1, 0);
+
+INSERT INTO users (id, email, name, password, provider, user_role, is_verified, is_deleted) VALUES (2, "admin@gmail.com", "Le Quan Phat", "$2a$10$4UBL7hzqFHLNRswL67ffR.V25uGBD1WnnEGwv6Wlk.cMnlJmGjmnu", "EMAIL", "ADMIN", 1, 0);
+
+
 -- Data for table `provinces`
 INSERT INTO provinces (id, name) VALUES (1, "An Giang");
 INSERT INTO provinces (id, name) VALUES (2, "Bà Rịa - Vũng Tàu");
@@ -65,7 +72,7 @@ INSERT INTO provinces (id, name) VALUES (63, "Đồng Tháp");
 
 -- Data for table `stations`
 -- Ho Chi Minh
-INSERT INTO stations (id, name, province_id) VALUES (1, "Ga Sài Gòn", 23);
+INSERT INTO stations (id, name, province_id) VALUES (1, "Sài Gòn", 23);
 -- Quang Ngai
 INSERT INTO stations (id, name, province_id) VALUES (2, "Quảng Ngãi", 42);
 INSERT INTO stations (id, name, province_id) VALUES (3, "Đức Phổ", 42);
@@ -270,3 +277,26 @@ INSERT INTO stations (id, name, province_id) VALUES (171, "Núi Thành", 41);
 -- Ninh Thuận
 INSERT INTO stations (id, name, province_id) VALUES (172, "Tháp Chàm", 37);
 INSERT INTO stations (id, name, province_id) VALUES (173, "Cà Ná", 37);
+
+-- Route
+INSERT INTO routes (id, name) VALUES (1, "Sài Gòn - Hà Nội");
+INSERT INTO routes (id, name) VALUES (2, "Hà Nội - Sài Gòn");
+INSERT INTO routes (id, name) VALUES (3, "Sài Gòn - Đà Nẵng");
+INSERT INTO routes (id, name) VALUES (4, "Đà Nẵng - Sài Gòn");
+
+-- Train
+-- SG - HN
+INSERT INTO trains(id, name) VALUES (1, "SE1");
+INSERT INTO trains(id, name) VALUES (2, "SE2");
+INSERT INTO trains(id, name) VALUES (3, "SE3");
+INSERT INTO trains(id, name) VALUES (4, "SE4");
+INSERT INTO trains(id, name) VALUES (5, "SE5");
+INSERT INTO trains(id, name) VALUES (6, "SE6");
+INSERT INTO trains(id, name) VALUES (7, "SE7");
+INSERT INTO trains(id, name) VALUES (8, "SE8");
+-- HN - Vinh
+INSERT INTO trains(id, name) VALUES (9, "NA1");
+INSERT INTO trains(id, name) VALUES (10, "NA2");
+INSERT INTO trains(id, name) VALUES (11, "SE35");
+INSERT INTO trains(id, name) VALUES (12, "SE36");
+
