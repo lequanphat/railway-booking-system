@@ -32,8 +32,8 @@ const CreateSeatTypeModal = ({ open, handleCancel }) => {
           <Form.Item label="Mô tả" name="description" rules={null} validateTrigger="onBlur">
             <Input placeholder="Nhập mô tả..." />
           </Form.Item>
-          <Form.Item label="Kích thước" name="size" rules={null} validateTrigger="onBlur">
-            <Input placeholder="Nhập kích thước..." />
+          <Form.Item label="Mã ghế" name="code" rules={null} validateTrigger="onBlur">
+            <Input placeholder="Nhập mã ghế..." />
           </Form.Item>
         </Flex>
         <Form.Item className="pt-4 m-0">

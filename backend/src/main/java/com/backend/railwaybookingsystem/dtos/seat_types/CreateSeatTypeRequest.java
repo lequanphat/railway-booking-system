@@ -23,6 +23,6 @@ public class CreateSeatTypeRequest {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @NotBlank(message = "Size is required")
-    private String size;
+    @NotBlank(message = "Code is required")
+    private String code;
 }

@@ -14,7 +14,7 @@ import {
   TruckOutlined,
 } from '@ant-design/icons';
 
-const menuItems = [
+const adminMenu = Object.freeze([
   {
     key: '1',
     icon: <HomeOutlined />,
@@ -128,7 +128,7 @@ const menuItems = [
     children: [
       {
         key: '7-1',
-        label: 'Quản lý ghế ngồi',
+        label: 'Quản lý loại ghế',
         path: '/admin/seats',
       },
       {
@@ -227,6 +227,15 @@ const menuItems = [
       },
     ],
   },
-];
+]);
 
-export default menuItems;
+const userMenu = Object.freeze([
+  { title: 'Home', href: '/' },
+  { title: 'Schedule', href: '/schedules' },
+  { title: 'Tickets', href: '/tickets' },
+  { title: 'Orders', href: '/orders' },
+  { title: 'Contact', href: '/contacts' },
+  { title: 'About', href: '/about' },
+]);
+
+export { adminMenu, userMenu };

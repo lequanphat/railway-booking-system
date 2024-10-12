@@ -300,3 +300,43 @@ INSERT INTO trains(id, name) VALUES (10, "NA2");
 INSERT INTO trains(id, name) VALUES (11, "SE35");
 INSERT INTO trains(id, name) VALUES (12, "SE36");
 
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (1,
+                                                                   "Ghế ngồi cứng, không điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, không có điều hòa.",
+                                                                   "NCKDH",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (2,
+                                                                   "Ghế ngồi cứng, có điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, có điều hòa.",
+                                                                   "NCCDH",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (3,
+                                                                   "Ghế ngồi mềm, không điều hòa", "Giá và chất lượng tầm trung, tương đối rộng rãi, có thể điều chỉnh nghiên 15 độ để nghỉ ngơi, phù hợp với lộ trình kéo dài dưới 6 tiếng, không có điều hòa.",
+                                                                   "NMKDH",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (4,
+                                                                   "Ghế ngồi mềm, có điều hòa", "Giá và chất lượng tầm trung, tương đối rộng rãi, có thể điều chỉnh nghiên 15 độ để nghỉ ngơi, phù hợp với lộ trình kéo dài dưới 6 tiếng, có điều hòa.",
+                                                                   "NMCDH",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (5,
+                                                                   "Giường nằm khoang 4", "Giá vé cao, đầy đủ tiện nghi: điều hòa, chăn, ga gối đệm, ổ điện, nước uống miễn phí, không gian riêng tư, phù hợp với chuyến đi xa, đi qua đêm",
+                                                                   "GK4",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (6,
+                                                                   "Giường nằm khoang 6", "Giá vé phải chăng, diện tích hẹp hơn so với khoang 4, khó ngồi thẳng vì chiều cao hạn chế của trần tàu, trang bị chăn gối nệm để hành khách nghỉ ngơi thoải mái, phù hợp với chuyến đi xa, đi qua đêm",
+                                                                   "GK6",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (7,
+                                                                   "Giường nằm khoang 2 VIP", "Giá vé cao nhất trong các loại vé tàu hỏa, được phục vụ nước uống và bữa ăn miễn phí, không gian cực kì rộng rãi, đảm bảo tính riêng tư tuyệt đối, nội thất tốt nhất, hiện đại nhất, số lượng ít nên khó mua được vé",
+                                                                   "GK2V",
+                                                                   1);
+
+INSERT INTO seat_type(id, name, description, code, active) VALUES (8,
+                                                                   "Ghế phụ", "Giá thành rẻ nhất, dễ dàng đặt vé, ghế nhựa cứng, không thoải mái cho việc nghỉ ngơi, không có không gian để cất hành lý, không được cung cấp các tiện nghi như các loại ghế tàu hỏa khác",
+                                                                   "GP",
+                                                                   1);

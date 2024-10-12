@@ -126,6 +126,13 @@ const createAppRouter = () =>
           },
         },
         {
+          path: 'carriages/:id',
+          lazy: async () => {
+            const CarriageDetails = await import('./routes/admin/carriages/[id]');
+            return { Component: CarriageDetails.default };
+          },
+        },
+        {
           path: 'seats',
           lazy: async () => {
             const SeatsManagement = await import('./routes/admin/seat-types');

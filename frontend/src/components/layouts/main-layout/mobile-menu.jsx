@@ -1,19 +1,13 @@
-import { Drawer } from "antd";
-import { useNavigate } from "react-router-dom";
-import { menuItems } from "~/config/main-menu";
+import { Drawer } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { userMenu } from '~/config/menu';
 
 const MobileMenu = ({ open, handleClose }) => {
   const navigate = useNavigate();
   return (
-    <Drawer
-      placement={"left"}
-      closable={false}
-      onClose={handleClose}
-      open={open}
-      key={"left"}
-    >
+    <Drawer placement={'left'} closable={false} onClose={handleClose} open={open} key={'left'}>
       <div>
-        {menuItems.map((item, index) => (
+        {userMenu.map((item, index) => (
           <div
             key={index}
             onClick={() => {

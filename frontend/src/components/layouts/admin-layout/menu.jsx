@@ -1,11 +1,11 @@
-import { ConfigProvider, Menu } from "antd";
-import SimpleBar from "simplebar-react";
-import menuItems from "~/config/menu-items";
-import "simplebar-react/dist/simplebar.min.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useMemo } from "react";
+import { ConfigProvider, Menu } from 'antd';
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useMemo } from 'react';
+import { adminMenu } from '~/config/menu';
 
-const MenuCustom = ({ isMobile, onClose, theme = "light", ...props }) => {
+const MenuCustom = ({ isMobile, onClose, theme = 'light', ...props }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,7 +22,7 @@ const MenuCustom = ({ isMobile, onClose, theme = "light", ...props }) => {
   }, []);
 
   const selectedKeys = useMemo(() => {
-    const item = findItemByPath(menuItems, location.pathname);
+    const item = findItemByPath(adminMenu, location.pathname);
     return item ? [item.key] : [];
   }, [location.pathname, findItemByPath]);
 
@@ -33,7 +33,7 @@ const MenuCustom = ({ isMobile, onClose, theme = "light", ...props }) => {
       }
       navigate(e.item.props.path);
     },
-    [isMobile, onClose, navigate]
+    [isMobile, onClose, navigate],
   );
 
   return (
@@ -44,12 +44,12 @@ const MenuCustom = ({ isMobile, onClose, theme = "light", ...props }) => {
         },
       }}
     >
-      <SimpleBar style={{ maxHeight: "calc(100vh - 80px)" }}>
+      <SimpleBar style={{ maxHeight: 'calc(100vh - 80px)' }}>
         <Menu
           mode="vertical"
           theme={theme}
           selectedKeys={selectedKeys}
-          items={menuItems}
+          items={adminMenu}
           rootClassName="!border-none"
           onClick={handleMenuClick}
           {...props}

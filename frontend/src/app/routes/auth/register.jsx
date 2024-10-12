@@ -28,25 +28,25 @@ const RegisterRoute = () => {
         boxShadow: 'rgba(0, 0, 0, 0.15) 0px 2px 8px',
       }}
     >
-      <Typography className="text-[22px] font-semibold">Sign up</Typography>
+      <Typography className="text-[22px] font-semibold">Đăng ký</Typography>
       <Form form={form} className="pt-4" onFinish={handleRegister} layout="vertical">
         <Flex vertical>
-          <Form.Item label="Name" name="name" rules={RULES.register.name} required={false}>
-            <Input placeholder="Enter full name..." />
+          <Form.Item label="Họ tên" name="name" rules={RULES.register.name} required={false}>
+            <Input placeholder="Nhập họ tên..." />
           </Form.Item>
           <Form.Item label="Email" name="email" rules={RULES.register.email} required={false}>
-            <Input placeholder="Enter email address..." />
+            <Input placeholder="Nhập email..." />
           </Form.Item>
-          <Form.Item label="Password" name="password" rules={RULES.register.password} required={false}>
-            <Input.Password placeholder="Enter password..." />
+          <Form.Item label="Mật khẩu" name="password" rules={RULES.register.password} required={false}>
+            <Input.Password placeholder="Nhập mật khẩu..." />
           </Form.Item>
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Button loading={mutation.isPending} type="primary" htmlType="submit" className="w-full">
-            Create Account
+            Tạo tài khoản
           </Button>
           <Typography className="text-center mt-6">
-            You already have an account? <a href="login">Login</a>
+            Bạn đã có tài khoản? <a href="login">Đăng nhập</a>
           </Typography>
         </Form.Item>
       </Form>

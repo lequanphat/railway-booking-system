@@ -15,6 +15,8 @@ import java.util.Optional;
 @Repository
 public interface SeatTypeRepository extends JpaRepository<SeatType, Long> {
 
+	SeatType findById(long id);
+
 	Page<SeatType> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String name, String description, Pageable pageable);
 
 }

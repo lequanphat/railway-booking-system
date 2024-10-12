@@ -31,33 +31,33 @@ const LoginRoute = () => {
 
   return (
     <div className="p-8 rounded-[8px] w-[90%] md:w-[460px] bg-white border shadow-sm">
-      <Typography className="text-[22px] font-semibold">Login</Typography>
+      <Typography className="text-[22px] font-semibold">Đăng nhập</Typography>
       <Form form={form} className="pt-4" onFinish={handleLogin} layout="vertical">
         <Flex vertical>
           <Form.Item label="Email" name="email" rules={RULES.login.email} required={false} validateTrigger="onBlur">
-            <Input placeholder="Enter email..." />
+            <Input placeholder="Nhập email..." />
           </Form.Item>
           <Form.Item
-            label="Password"
+            label="Mật khẩu"
             name="password"
             rules={RULES.login.password}
             required={false}
             validateTrigger="onBlur"
           >
-            <Input.Password placeholder="Enter password..." />
+            <Input.Password placeholder="Nhập mật khẩu..." />
           </Form.Item>
         </Flex>
         <Form.Item className="pt-2 m-0">
           <a href="forgot-password" className="block mb-3">
-            Forgot password?
+            Quên mật khẩu?
           </a>
           <Button loading={mutation.isPending} type="primary" htmlType="submit" className="w-full">
-            Login
+            Đăng nhập
           </Button>
         </Form.Item>
         <Form.Item className="pt-4 m-0">
           <Divider>
-            <Typography className="text-[#333] mb-2">Login with</Typography>
+            <Typography className="text-[#333] mb-2">Hoặc</Typography>
           </Divider>
           <Row gutter={12}>
             <Col span={8}>
@@ -80,7 +80,7 @@ const LoginRoute = () => {
             </Col>
           </Row>
           <Typography className="text-center mt-6">
-            You do not have an account? <a href="register">Register</a>
+            Bạn chưa có tài khoản? <a href="register">Đăng ký</a>
           </Typography>
         </Form.Item>
       </Form>
