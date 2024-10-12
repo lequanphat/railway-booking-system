@@ -23,25 +23,28 @@ const CarriageLayoutTable = () => {
         key: 'name',
       },
       {
-        title: 'Số tầng',
-        dataIndex: 'floors',
+        title: 'Kết cấu toa',
         key: 'floors',
+        render: (value) => `${value.floors} tầng, ${value.row_count} hàng`,
       },
       {
-        title: 'Số hàng',
-        dataIndex: 'row_count',
-        key: 'row_count',
+        title: 'Số chỗ',
+        dataIndex: 'seats',
+        key: 'seats',
+        render: (seats) => `${seats.length} chỗ`,
       },
       {
         title: 'Trạng thái',
         dataIndex: 'active',
         key: 'active',
+        align: 'center',
         render: (value) => (value ? <Tag color="success">Hoạt động</Tag> : <Tag color="default">Vô hiệu</Tag>),
       },
       {
         title: 'Hành động',
         dataIndex: 'id',
         key: 'id',
+        align: 'center',
         render: (value) => (
           <Space>
             <Link to={`${value}`} type="default">
@@ -76,6 +79,7 @@ const CarriageLayoutTable = () => {
               className="w-[250px]"
               allowClear
               onSearch={(value) => {
+                console.log(value);
                 setKeyword(value);
                 setPage(1);
               }}

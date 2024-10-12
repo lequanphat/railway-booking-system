@@ -14,7 +14,7 @@ const CarriageDetails = () => {
           heading="Quản lý toa tàu"
           links={[
             { title: 'Trang chủ', href: '/admin' },
-            { title: 'Toa tàu', href: '/admin/carriages' },
+            { title: 'Toa tàu', href: '/admin/carriage-layouts' },
             { title: data?.name || 'Chi tiết' },
           ]}
         />
@@ -30,8 +30,8 @@ const CarriageDetails = () => {
           {data?.seats?.map((seat) => (
             <Col key={seat.id} span={24 / (data?.floors * data?.row_count)} className="mt-4">
               <Flex vertical align="center" className="border-[1px] border-[#ccc] p-2 rounded-md">
-                <h1 className="font-semibold text-[16px]">{seat?.position}</h1>
-                <p className="text-[16px]">{seat?.seatType?.code}</p>
+                <h1 className="font-semibold text-[18px]">{seat?.position}</h1>
+                <p className="text-[12px]">{seat?.seatType?.code}</p>
               </Flex>
             </Col>
           ))}

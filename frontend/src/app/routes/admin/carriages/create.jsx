@@ -25,7 +25,7 @@ const CreateCarriage = () => {
   const mutation = useCreateCarriageLayout({
     mutationConfig: {
       onSuccess: ({ id }) => {
-        navigate(`/admin/carriages/${id}`);
+        navigate(`/admin/carriage-layouts/${id}`);
         message.success('OK bro!');
       },
       onError: () => {
@@ -112,7 +112,7 @@ const CreateCarriage = () => {
           heading="Quản lý toa tàu"
           links={[
             { title: 'Trang chủ', href: '/admin' },
-            { title: 'Toa tàu', href: '/admin/carriages' },
+            { title: 'Toa tàu', href: '/admin/carriage-layouts' },
             { title: 'Tạo toa tàu' },
           ]}
         />

@@ -2,9 +2,19 @@ import { Button, Flex, Form, Input, message, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { USER_ROLES } from '~/config/constants';
 import { useCreateSeatType } from '../api/create-seat-type';
+import { useEffect } from 'react';
+import { convertToAbbreviation } from '~/utils/convert';
 
 const CreateSeatTypeModal = ({ open, handleCancel }) => {
   const [form] = Form.useForm();
+
+  const seatName = Form.useWatch('name', form);
+
+  useEffect(() => {
+    if (seatName && form) {
+      form.setFieldsValue({ code: convertToAbbreviation(seatName) });
+    }
+  }, [seatName, form]);
 
   const mutation = useCreateSeatType({
     mutationConfig: {

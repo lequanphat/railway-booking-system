@@ -13,7 +13,7 @@ export const getCarriageLayouts = (page, size, keyword) => {
 
 export const getCarriageLayoutQueryOptions = ({ page, size, keyword }) => {
   return queryOptions({
-    queryKey: page ? ['useCarriageLayouts', { page, size, keyword }] : ['useCarriageLayouts'],
+    queryKey: ['useCarriageLayouts', { page, size, keyword }],
     queryFn: () => getCarriageLayouts(page, size, keyword),
   });
 };

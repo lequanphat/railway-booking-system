@@ -105,28 +105,21 @@ const createAppRouter = () =>
           },
         },
         {
-          path: 'trains',
-          lazy: async () => {
-            const TrainsManagement = await import('./routes/admin/trains');
-            return { Component: TrainsManagement.default };
-          },
-        },
-        {
-          path: 'carriages',
+          path: 'carriage-layouts',
           lazy: async () => {
             const CarriagesManagement = await import('./routes/admin/carriages');
             return { Component: CarriagesManagement.default };
           },
         },
         {
-          path: 'carriages/create',
+          path: 'carriage-layouts/create',
           lazy: async () => {
             const CreateCarriage = await import('./routes/admin/carriages/create');
             return { Component: CreateCarriage.default };
           },
         },
         {
-          path: 'carriages/:id',
+          path: 'carriage-layouts/:id',
           lazy: async () => {
             const CarriageDetails = await import('./routes/admin/carriages/[id]');
             return { Component: CarriageDetails.default };
@@ -137,6 +130,20 @@ const createAppRouter = () =>
           lazy: async () => {
             const SeatsManagement = await import('./routes/admin/seat-types');
             return { Component: SeatsManagement.default };
+          },
+        },
+        {
+          path: 'trains',
+          lazy: async () => {
+            const TrainsManagement = await import('./routes/admin/trains');
+            return { Component: TrainsManagement.default };
+          },
+        },
+        {
+          path: 'trains/create',
+          lazy: async () => {
+            const CreateTrain = await import('./routes/admin/trains/create');
+            return { Component: CreateTrain.default };
           },
         },
       ],
