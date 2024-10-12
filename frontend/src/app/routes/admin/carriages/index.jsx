@@ -9,7 +9,7 @@ const CarriagesManagement = () => {
       <Flex align="center" justify="space-between" className="mb-2">
         <PageHeader heading="Quản lý toa tàu" links={[{ title: 'Trang chủ', href: '/admin' }, { title: 'Toa tàu' }]} />
         <Space>
-          <Button href="carriages/create" type="primary" icon={<PlusSquareOutlined />}>
+          <Button href="trains/create" type="primary" icon={<PlusSquareOutlined />}>
             Thêm mới
           </Button>
         </Space>

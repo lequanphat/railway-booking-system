@@ -133,8 +133,8 @@ const adminMenu = Object.freeze([
       },
       {
         key: '7-2',
-        label: 'Quản lý toa tàu',
-        path: '/admin/carriages',
+        label: 'Quản lý loại toa tàu',
+        path: '/admin/carriage-layouts',
       },
       {
         key: '7-3',
