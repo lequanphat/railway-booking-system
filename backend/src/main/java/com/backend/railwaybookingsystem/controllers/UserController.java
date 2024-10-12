@@ -40,7 +40,6 @@ public class UserController {
 	@PutMapping("ad/users/{id}")
 	@Operation(tags = "User", description = "Update an existing user")
 	public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest userRequest) {
-		System.out.println("enter ->");
 		UserResponse updatedUser = userService.updateUser(id, userRequest);
 		return ResponseEntity.ok(updatedUser);
 	}

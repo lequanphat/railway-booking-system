@@ -1,0 +1,44 @@
+import { Button, Col, Flex, Row, Space } from 'antd';
+import { useParams } from 'react-router-dom';
+import PageHeader from '~/components/ui/page-header';
+import { useCarriageLayout } from '~/features/carriages/api/get-layout';
+import { PlusSquareOutlined } from '@ant-design/icons';
+
+const CarriageDetails = () => {
+  const { id } = useParams();
+  const { data } = useCarriageLayout({ id });
+  return (
+    <div>
+      <Flex align="center" justify="space-between" className="mb-2">
+        <PageHeader
+          heading="Quản lý toa tàu"
+          links={[
+            { title: 'Trang chủ', href: '/admin' },
+            { title: 'Toa tàu', href: '/admin/carriages' },
+            { title: data?.name || 'Chi tiết' },
+          ]}
+        />
+        <Space>
+          <Button href="carriages/create" type="primary" icon={<PlusSquareOutlined />}>
+            Thêm mới
+          </Button>
+        </Space>
+      </Flex>
+      <Flex vertical align="center" className="border-[1px] border-[#ccc] w-[460px] mx-auto p-4 rounded-md">
+        <h1 className="font-semibold text-[16px] text-center">{data?.name}</h1>
+        <Row gutter={20}>
+          {data?.seats?.map((seat) => (
+            <Col key={seat.id} span={24 / (data?.floors * data?.row_count)} className="mt-4">
+              <Flex vertical align="center" className="border-[1px] border-[#ccc] p-2 rounded-md">
+                <h1 className="font-semibold text-[16px]">{seat?.position}</h1>
+                <p className="text-[16px]">{seat?.seatType?.code}</p>
+              </Flex>
+            </Col>
+          ))}
+        </Row>
+      </Flex>
+    </div>
+  );
+};
+
+export default CarriageDetails;

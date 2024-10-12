@@ -1,17 +1,14 @@
-import { DeleteOutlined, EditOutlined, ExportOutlined, ToolOutlined } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { ROW_PER_PAGE } from '~/config/constants';
-import { useSeatTypes } from '../api/get-seat-types';
+import { Link } from 'react-router-dom';
+import { useCarriageLayouts } from '../api/get-layouts';
 
-const SeatTypesTable = () => {
+const CarriageLayoutTable = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
-  const { data: seatTypes, isLoading } = useSeatTypes({
-    page,
-    keyword,
-    size: ROW_PER_PAGE,
-  });
+  const { data: carriageLayouts, isLoading } = useCarriageLayouts({ page: page - 1, size: ROW_PER_PAGE, keyword });
 
   const columns = useMemo(
     () => [
@@ -21,34 +18,35 @@ const SeatTypesTable = () => {
         key: 'id',
       },
       {
-        title: 'Tên ghế',
+        title: 'Tên toa tàu',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: 'Mã ghế',
-        dataIndex: 'code',
-        key: 'code',
+        title: 'Số tầng',
+        dataIndex: 'floors',
+        key: 'floors',
       },
       {
-        title: 'Mô tả',
-        dataIndex: 'description',
-        key: 'description',
-        width: '45%',
+        title: 'Số hàng',
+        dataIndex: 'row_count',
+        key: 'row_count',
       },
       {
         title: 'Trạng thái',
         dataIndex: 'active',
         key: 'active',
-        render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'ACTIVE' : 'DISABLED'}</Tag>,
+        render: (value) => (value ? <Tag color="success">Hoạt động</Tag> : <Tag color="default">Vô hiệu</Tag>),
       },
       {
         title: 'Hành động',
-        key: 'action',
-        render: (data) => (
+        dataIndex: 'id',
+        key: 'id',
+        render: (value) => (
           <Space>
-            <Button onClick={null} icon={<EditOutlined />} iconPosition={'end'} />
-            <Button onClick={null} icon={data?.active ? <DeleteOutlined /> : <ToolOutlined />} iconPosition={'end'} />
+            <Link to={`${value}`} type="default">
+              <Button onClick={null} icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+            </Link>
           </Space>
         ),
       },
@@ -60,12 +58,12 @@ const SeatTypesTable = () => {
     <>
       <Table
         columns={columns}
-        dataSource={seatTypes?.content}
+        dataSource={carriageLayouts?.content}
         size="middle"
         pagination={{
           current: page,
-          pageSize: seatTypes?.size,
-          total: seatTypes?.totalElements,
+          pageSize: carriageLayouts?.size,
+          total: carriageLayouts?.totalElements,
         }}
         loading={isLoading}
         onChange={(e) => {
@@ -92,4 +90,4 @@ const SeatTypesTable = () => {
   );
 };
 
-export default SeatTypesTable;
+export default CarriageLayoutTable;

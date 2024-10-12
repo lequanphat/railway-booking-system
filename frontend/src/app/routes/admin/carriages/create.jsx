@@ -1,39 +1,55 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Input, Select, Space } from 'antd';
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Flex, Form, Input, message, Select, Space } from 'antd';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CustomAsyncSelect from '~/components/ui/CustomAsyncSelect';
 import PageHeader from '~/components/ui/page-header';
+import RULES from '~/config/rule';
+import { useCreateCarriageLayout } from '~/features/carriages/api/create-layout';
 import CarriagesContainer from '~/features/carriages/components/CarriagesContainer';
 import SeatItem from '~/features/carriages/components/SeatItem';
 import { useSeatTypes } from '~/features/seat-types/api/get-seat-types';
 
 const CreateCarriage = () => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [seats, setSeats] = useState([]);
+  const [layout, setLayout] = useState([]);
+
+  const numberOfFloors = Form.useWatch('floors', form);
+  const numberOfRows = Form.useWatch('row_count', form);
 
   const [selectedSeatType, setSelectedSeatType] = useState(null);
 
   const [selectedSeatTypes, setSelectedSeatTypes] = useState([]);
 
-  const nameValue = Form.useWatch('name', form);
+  const mutation = useCreateCarriageLayout({
+    mutationConfig: {
+      onSuccess: ({ id }) => {
+        navigate(`/admin/carriages/${id}`);
+        message.success('OK bro!');
+      },
+      onError: () => {
+        message.error('Something went wrong!');
+      },
+    },
+  });
 
   useEffect(() => {
     const newSeats = selectedSeatTypes.reduce((acc, item) => {
-      console.log(item);
-      const newSeats = Array.from({ length: item.quantity }, (_, index) => ({
-        name: `${item.children} ${index + 1}`,
+      const newSeats = Array.from({ length: item.quantity }, () => ({
+        value: item.value,
+        name: item.code,
       }));
       return [...acc, ...newSeats];
     }, []);
 
-    setSeats(newSeats);
+    setLayout(newSeats);
   }, [selectedSeatTypes]);
 
   function moveArrayItem(arr, fromIndex, toIndex) {
     const updatedArray = [...arr];
 
     if (fromIndex < 0 || fromIndex >= arr.length || toIndex < 0 || toIndex >= arr.length) {
-      console.warn('Invalid indices');
       return arr;
     }
 
@@ -45,24 +61,48 @@ const CreateCarriage = () => {
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    setSeats(moveArrayItem(seats, oldIndex, newIndex));
+    setLayout(moveArrayItem(layout, oldIndex, newIndex));
   };
 
   const handleSave = () => {
-    const data = {
-      ...form.getFieldsValue(),
-      seats,
-    };
-    console.log(data);
+    form.validateFields().then(() => {
+      if (layout.length === 0) {
+        message.error('Vui lòng chọn ghế cho toa tàu');
+      } else {
+        const data = {
+          ...form.getFieldsValue(),
+          row_count: form.getFieldValue('floors') === 1 ? form.getFieldValue('row_count') : 1,
+          layout: layout.map((item) => item.value),
+        };
+        console.log(data);
+        mutation.mutate({ data });
+      }
+    });
   };
 
   const handleSelectSeatType = () => {
     if (selectedSeatType) {
-      setSelectedSeatTypes((prev) => [
-        ...prev,
-        { ...selectedSeatType, quantity: form.getFieldValue('number_of_seats') },
-      ]);
+      const isExist = selectedSeatTypes.find((item) => item.value === selectedSeatType.value);
+      if (isExist) {
+        setSelectedSeatTypes((prev) =>
+          prev.map((item) =>
+            item.value === selectedSeatType.value
+              ? { ...item, quantity: item.quantity + parseInt(form.getFieldValue('number_of_seats')) }
+              : item,
+          ),
+        );
+      } else {
+        setSelectedSeatTypes((prev) => [
+          ...prev,
+          { ...selectedSeatType, quantity: parseInt(form.getFieldValue('number_of_seats')) },
+        ]);
+      }
     }
+  };
+
+  const handleRemoveSeat = (value) => {
+    const temp = selectedSeatTypes.filter((item) => item.value !== value);
+    setSelectedSeatTypes(temp);
   };
 
   return (
@@ -85,126 +125,128 @@ const CreateCarriage = () => {
       <Flex className="" gap={20}>
         <Flex vertical align="center" className="w-[65%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
           <div className="py-4">
-            <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd} name={nameValue}>
-              {seats.map((item, index) => (
-                <SeatItem key={index} index={index} title={item.name} />
+            <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
+              {layout.map((item, index) => (
+                <SeatItem key={index} index={index} title={item.name} cols={numberOfFloors} rows={numberOfRows} />
               ))}
             </CarriagesContainer>
           </div>
         </Flex>
         <Form
           form={form}
-          onFinish={null}
           initialValues={{
             name: '',
             type: 'seat',
             number_of_seats: 1,
+            floors: 1,
+            row_count: 1,
           }}
           layout="vertical"
           className="w-[35%] bg-white border-[1px] border-[#ccc] rounded-lg p-4"
         >
           <h1 className="text-[18px] font-semibold text-center">Thông tin toa tàu</h1>
-          <Form.Item label="Tên toa tàu" name="name" rules={null} required={false} validateTrigger="onChange">
+          <Form.Item
+            label="Tên toa tàu"
+            name="name"
+            rules={RULES.createCarriage.name}
+            required={true}
+            validateTrigger="onChange"
+          >
             <Input placeholder="Nhập tên toa tàu..." />
           </Form.Item>
-          <Form.Item label="Loại toa" name="type" rules={null} required={false} validateTrigger="onBlur">
+          <Form.Item
+            label="Số tầng"
+            name="floors"
+            rules={RULES.createCarriage.floors}
+            required={true}
+            validateTrigger="onChange"
+          >
             <Select
               options={[
                 {
-                  label: 'Toa ghế ngồi có điều hòa',
-                  value: 'seat',
+                  label: '1 Tầng',
+                  value: 1,
                 },
                 {
-                  label: 'Toa ghế ngồi không điều hòa',
-                  value: 'seat-no-ac',
+                  label: '2 Tầng',
+                  value: 2,
                 },
                 {
-                  label: 'Toa giường nằm có điều hòa',
-                  value: 'bed',
+                  label: '3 Tầng',
+                  value: 3,
                 },
                 {
-                  label: 'Toa giường nằm không điều hòa',
-                  value: 'bed-no-ac',
+                  label: '4 Tầng',
+                  value: 4,
                 },
               ]}
-              defaultValue={'seat'}
             ></Select>
           </Form.Item>
-          <Form.Item label="Chọn loại ghế" name="number_of_seats">
-            {/* <Flex vertical gap={10} className="w-full px-4 mt-4">
-              <Flex justify="space-between" align="center">
-                <div className="flex-1">
-                  <p className="text-[15px] font-semibold">Ghế loại I</p>
-                </div>
-                <Input
-                  placeholder="Số lượng"
-                  className="w-[100px]"
-                  value={seats.I}
-                  onChange={(e) => {
-                    setSeats((prev) => ({ ...prev, I: e.target.value }));
-                  }}
-                />
-              </Flex>
-              <Flex justify="space-between" align="center">
-                <div className="flex-1">
-                  <p className="text-[15px] font-semibold">Ghế loại II</p>
-                </div>
-                <Input
-                  placeholder="Số lượng"
-                  className="w-[100px]"
-                  value={seats.II}
-                  onChange={(e) => {
-                    setSeats((prev) => ({ ...prev, II: e.target.value }));
-                  }}
-                />
-              </Flex>
-              <Flex justify="space-between" align="center">
-                <div className="flex-1">
-                  <p className="text-[15px] font-semibold">Ghế loại III</p>
-                </div>
-                <Input
-                  placeholder="Số lượng"
-                  className="w-[100px]"
-                  value={seats.III}
-                  onChange={(e) => {
-                    setSeats((prev) => ({ ...prev, III: e.target.value }));
-                  }}
-                />
-              </Flex>
-              <Flex justify="space-between" align="center">
-                <div className="flex-1">
-                  <p className="text-[15px] font-semibold">Ghế loại IV</p>
-                </div>
-                <Input
-                  placeholder="Số lượng"
-                  className="w-[100px]"
-                  value={seats.IV}
-                  onChange={(e) => {
-                    setSeats((prev) => ({ ...prev, IV: e.target.value }));
-                  }}
-                />
-              </Flex>
-              <Flex justify="space-between" align="center">
-                <div className="flex-1">
-                  <p className="text-[15px] font-semibold">Ghế loại V</p>
-                </div>
-                <Input
-                  placeholder="Số lượng"
-                  className="w-[100px]"
-                  value={seats.V}
-                  onChange={(e) => {
-                    setSeats((prev) => ({ ...prev, V: e.target.value }));
-                  }}
-                />
-              </Flex>
-            </Flex> */}
 
+          {numberOfFloors === 1 && (
+            <Form.Item
+              label="Số hàng ghế"
+              name="row_count"
+              rules={RULES.createCarriage.floors}
+              required={true}
+              validateTrigger="onChange"
+            >
+              <Select
+                options={[
+                  {
+                    label: '1 Hàng',
+                    value: 1,
+                  },
+                  {
+                    label: '2 Hàng',
+                    value: 2,
+                  },
+                  {
+                    label: '3 Hàng',
+                    value: 3,
+                  },
+                  {
+                    label: '4 Hàng',
+                    value: 4,
+                  },
+                ]}
+              ></Select>
+            </Form.Item>
+          )}
+          <Form.Item label="Chọn loại ghế" name="number_of_seats">
             <Flex gap={8}>
-              <CustomAsyncSelect loadQuery={useSeatTypes} setValue={setSelectedSeatType} />
+              <CustomAsyncSelect
+                loadQuery={useSeatTypes}
+                setValue={setSelectedSeatType}
+                config={{ value: 'id', label: 'name', code: 'code' }}
+              />
               <Input className="w-[80px]" type="number" />
               <Button onClick={handleSelectSeatType} type="primary" icon={<PlusOutlined />} />
             </Flex>
           </Form.Item>
+          <Flex vertical gap={12}>
+            <h1>Các ghế đã chọn</h1>
+            {selectedSeatTypes.map((item) => (
+              <Flex
+                key={item.value}
+                align="center"
+                justify="space-between"
+                className="border-[1px] border-[#ccc] w-full py-2 px-3 rounded-lg"
+              >
+                <p>
+                  {item.quantity}x {item.label}
+                </p>
+                <Button
+                  onClick={() => {
+                    handleRemoveSeat(item.value);
+                  }}
+                  type="text"
+                  icon={<CloseOutlined />}
+                  size="small"
+                />
+              </Flex>
+            ))}
+          </Flex>
         </Form>
       </Flex>
     </>

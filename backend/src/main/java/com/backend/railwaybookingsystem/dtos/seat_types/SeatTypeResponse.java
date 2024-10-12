@@ -20,7 +20,7 @@ public class SeatTypeResponse {
 
     private String description;
 
-    private String size;
+    private String code;
 
     private Boolean active;
 }

@@ -1,8 +1,5 @@
 package com.backend.railwaybookingsystem.models;
 
-import com.backend.railwaybookingsystem.enums.AuthProvider;
-import com.backend.railwaybookingsystem.enums.UserGender;
-import com.backend.railwaybookingsystem.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,8 +11,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "seat_type")
-public class SeatType {
+@Table(name = "carriage_layout")
+public class CarriageLayout {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +20,12 @@ public class SeatType {
 
 	private String name;
 
-	private String description;
+	private int floors = 1;
 
-	private String code;
+	private int row_count = 1;
 
 	private Boolean active = true;
 
-	@OneToMany(mappedBy = "seatType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "carriageLayout", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Seat> seats;
 }

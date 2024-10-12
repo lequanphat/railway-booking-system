@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const { Option } = Select;
 
-const CustomAsyncSelect = ({ loadQuery, setValue }) => {
+const CustomAsyncSelect = ({ loadQuery, setValue, config = { value: 'id', label: 'name' } }) => {
   const [options, setOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -22,10 +22,14 @@ const CustomAsyncSelect = ({ loadQuery, setValue }) => {
 
   useEffect(() => {
     if (seatTypes) {
-      const newOptions = seatTypes.content.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }));
+      const newOptions = seatTypes.content.map((item) => {
+        let option = {};
+        Object.keys(config).forEach((key) => {
+          option[key] = item[config[key]];
+        });
+
+        return option;
+      });
 
       setOptions((prev) => (page === 1 ? newOptions : [...prev, ...newOptions]));
       setHasMore(!seatTypes.last);
@@ -56,8 +60,8 @@ const CustomAsyncSelect = ({ loadQuery, setValue }) => {
       filterOption={false}
       notFoundContent={isLoading ? <Spin size="small" /> : null}
     >
-      {options.map((option) => (
-        <Option key={option.value} value={option.value}>
+      {options.map((option, index) => (
+        <Option key={index} {...option}>
           {option.label}
         </Option>
       ))}
@@ -68,6 +72,7 @@ const CustomAsyncSelect = ({ loadQuery, setValue }) => {
 CustomAsyncSelect.propTypes = {
   loadQuery: PropTypes.func.isRequired,
   setValue: PropTypes.func,
+  config: PropTypes.object,
 };
 
 export default CustomAsyncSelect;

@@ -1,19 +1,14 @@
-import { Flex, Typography } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
-import { menuItems } from "~/config/main-menu";
+import { Flex, Typography } from 'antd';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { userMenu } from '~/config/menu';
 
 const Menu = () => {
   const location = useLocation();
 
   return (
     <Flex gap={50}>
-      {menuItems.map((item, index) => (
-        <MenuItem
-          key={index}
-          title={item.title}
-          href={item.href}
-          active={location?.pathname === item.href}
-        />
+      {userMenu.map((item, index) => (
+        <MenuItem key={index} title={item.title} href={item.href} active={location?.pathname === item.href} />
       ))}
     </Flex>
   );
@@ -26,7 +21,7 @@ const MenuItem = ({ title, href, active = false }) => {
     <Typography
       level={5}
       className={`relative uppercase cursor-pointer  font-semibold hover:text-white ${
-        active ? "text-white" : "text-[#e9e9e9]"
+        active ? 'text-white' : 'text-[#e9e9e9]'
       }`}
       onClick={() => {
         nagivate(href);
