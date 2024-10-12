@@ -23,6 +23,30 @@ const TrainsTable = () => {
         key: 'name',
       },
       {
+        title: 'Số toa tàu',
+        dataIndex: 'carriages',
+        key: 'carriages',
+        render: (carriages) => `${carriages?.length} toa`,
+      },
+      {
+        title: 'Số chỗ',
+        dataIndex: 'carriages',
+        key: 'carriages',
+        render: (carriages) => {
+          const totalSeats = carriages?.reduce((acc, cur) => acc + cur.carriageLayout.seats.length, 0);
+          return `${totalSeats} chỗ`;
+        },
+      },
+      {
+        title: 'Mức giá trung bình',
+        dataIndex: 'seatPrices',
+        key: 'seatPrices',
+        render: (seatPrices) => {
+          const totalPrices = seatPrices?.reduce((acc, cur) => acc + cur.original_price_per_km, 0) / seatPrices.length;
+          return `${totalPrices}đ / km`;
+        },
+      },
+      {
         title: 'Trạng thái',
         dataIndex: 'is_active',
         key: 'is_active',
