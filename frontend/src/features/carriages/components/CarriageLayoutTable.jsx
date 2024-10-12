@@ -31,7 +31,7 @@ const CarriageLayoutTable = () => {
         title: 'Số chỗ',
         dataIndex: 'seats',
         key: 'seats',
-        render: (seats) => `${seats.length} chỗ`,
+        render: (seats) => `${seats?.length} chỗ`,
       },
       {
         title: 'Trạng thái',
