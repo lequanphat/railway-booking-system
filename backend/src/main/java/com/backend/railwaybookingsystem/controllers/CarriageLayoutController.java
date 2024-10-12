@@ -47,6 +47,6 @@ public class CarriageLayoutController {
 	@Operation(tags = "Carriage Layout", description = "get carriage laypout")
 	public ResponseEntity<CarriageLayoutResponse> getCarriageLayout(@PathVariable Long id) {
 		CarriageLayoutResponse carriageLayout =carriageLayoutService.getCarriageLayoutById(id);
-		return ResponseEntity.status(HttpStatus.CREATED).body(carriageLayout);
+		return ResponseEntity.ok(carriageLayout);
 	}
 }

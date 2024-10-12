@@ -39,7 +39,7 @@ const SelectedCarriagesTable = ({ data, handleRemoveItem }) => {
     ],
     [],
   );
-  return <Table columns={columns} dataSource={data} size="middle" />;
+  return <Table columns={columns} dataSource={data} size="middle" pagination={false} />;
 };
 
 SelectedCarriagesTable.propTypes = {

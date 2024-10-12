@@ -31,10 +31,10 @@ const CustomAsyncSelect = ({ loadQuery, setValue, config = { value: 'id', label:
         return option;
       });
 
-      setOptions((prev) => (page === 0 ? newOptions : [...prev, ...newOptions]));
+      setOptions((prev) => (page === 1 ? newOptions : [...prev, ...newOptions]));
       setHasMore(!seatTypes.last);
     }
-  }, [seatTypes, page]);
+  }, [seatTypes, page, config]);
 
   const handleSearch = (value) => {
     setKeyword(value);

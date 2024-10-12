@@ -284,23 +284,7 @@ INSERT INTO routes (id, name) VALUES (2, "Hà Nội - Sài Gòn");
 INSERT INTO routes (id, name) VALUES (3, "Sài Gòn - Đà Nẵng");
 INSERT INTO routes (id, name) VALUES (4, "Đà Nẵng - Sài Gòn");
 
--- Train
--- SG - HN
-INSERT INTO trains(id, name) VALUES (1, "SE1");
-INSERT INTO trains(id, name) VALUES (2, "SE2");
-INSERT INTO trains(id, name) VALUES (3, "SE3");
-INSERT INTO trains(id, name) VALUES (4, "SE4");
-INSERT INTO trains(id, name) VALUES (5, "SE5");
-INSERT INTO trains(id, name) VALUES (6, "SE6");
-INSERT INTO trains(id, name) VALUES (7, "SE7");
-INSERT INTO trains(id, name) VALUES (8, "SE8");
--- HN - Vinh
-INSERT INTO trains(id, name) VALUES (9, "NA1");
-INSERT INTO trains(id, name) VALUES (10, "NA2");
-INSERT INTO trains(id, name) VALUES (11, "SE35");
-INSERT INTO trains(id, name) VALUES (12, "SE36");
-
-
+-- Seat Type
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (1,
                                                                    "Ghế ngồi cứng, không điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, không có điều hòa.",
                                                                    "NCKDH",
