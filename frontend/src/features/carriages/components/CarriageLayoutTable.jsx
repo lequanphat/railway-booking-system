@@ -8,7 +8,7 @@ import { useCarriageLayouts } from '../api/get-layouts';
 const CarriageLayoutTable = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
-  const { data: carriageLayouts, isLoading } = useCarriageLayouts({ page: page - 1, size: ROW_PER_PAGE, keyword });
+  const { data: carriageLayouts, isLoading } = useCarriageLayouts({ page: page, size: ROW_PER_PAGE, keyword });
 
   const columns = useMemo(
     () => [

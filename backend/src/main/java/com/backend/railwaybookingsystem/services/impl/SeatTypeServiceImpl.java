@@ -31,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,6 +42,11 @@ public class SeatTypeServiceImpl implements SeatTypeService {
 
     @Autowired
     private SeatTypeRepository seatTypeRepository;
+
+    public List<SeatTypeResponse> getAllSeatTypes() {
+        List<SeatType> seatTypes = seatTypeRepository.findAll();
+        return SeatTypeMapper.INSTANCE.convertToSeatTypeResponses(seatTypes);
+    }
 
     public Page<SeatTypeResponse> getSeatTypes(String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));

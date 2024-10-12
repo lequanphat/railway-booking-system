@@ -72,7 +72,7 @@ public class CarriageLayoutServiceImpl implements CarriageLayoutService {
 
         if (carriageLayout != null) {
             List<SeatResponse> seatResponses = carriageLayout.getSeats().stream()
-                    .map(SeatMapper.INSTANCE::convertToSeatResponseWithType) // Sử dụng phương thức mới
+                    .map(SeatMapper.INSTANCE::convertToSeatResponseWithType)
                     .collect(Collectors.toList());
 
             CarriageLayoutResponse response = CarriageLayoutMapper.INSTANCE.convertToCarriageLayoutResponse(carriageLayout);

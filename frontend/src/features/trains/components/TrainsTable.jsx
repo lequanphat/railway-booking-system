@@ -1,17 +1,14 @@
-import { DeleteOutlined, EditOutlined, ExportOutlined, ToolOutlined } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { ROW_PER_PAGE } from '~/config/constants';
-import { useSeatTypes } from '../api/get-seat-types';
+import { Link } from 'react-router-dom';
+import { useTrains } from '../api/get-trains';
 
-const SeatTypesTable = () => {
+const TrainsTable = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
-  const { data: seatTypes, isLoading } = useSeatTypes({
-    page,
-    keyword,
-    size: ROW_PER_PAGE,
-  });
+  const { data: trains, isLoading } = useTrains({ page: page, size: ROW_PER_PAGE, keyword });
 
   const columns = useMemo(
     () => [
@@ -21,41 +18,27 @@ const SeatTypesTable = () => {
         key: 'id',
       },
       {
-        title: 'Tên ghế',
+        title: 'Tên tàu hỏa',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: 'Mã ghế',
-        dataIndex: 'code',
-        key: 'code',
-        align: 'center',
-      },
-      {
-        title: 'Giá gốc / km',
-        dataIndex: 'original_price_per_km',
-        key: 'original_price_per_km',
-        align: 'center',
-      },
-      {
-        title: 'Mô tả',
-        dataIndex: 'description',
-        key: 'description',
-        width: '32%',
-      },
-      {
         title: 'Trạng thái',
-        dataIndex: 'active',
-        key: 'active',
-        render: (value) => <Tag color={value ? 'green' : 'red'}>{value ? 'ACTIVE' : 'DISABLED'}</Tag>,
+        dataIndex: 'is_active',
+        key: 'is_active',
+        align: 'center',
+        render: (value) => (value ? <Tag color="success">Hoạt động</Tag> : <Tag color="red">Vô hiệu</Tag>),
       },
       {
         title: 'Hành động',
-        key: 'action',
-        render: (data) => (
+        dataIndex: 'id',
+        key: 'id',
+        align: 'center',
+        render: (value) => (
           <Space>
-            <Button onClick={null} icon={<EditOutlined />} iconPosition={'end'} />
-            <Button onClick={null} icon={data?.active ? <DeleteOutlined /> : <ToolOutlined />} iconPosition={'end'} />
+            <Link to={`${value}`} type="default">
+              <Button onClick={null} icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+            </Link>
           </Space>
         ),
       },
@@ -67,12 +50,12 @@ const SeatTypesTable = () => {
     <>
       <Table
         columns={columns}
-        dataSource={seatTypes?.content}
+        dataSource={trains?.content}
         size="middle"
         pagination={{
           current: page,
-          pageSize: seatTypes?.size,
-          total: seatTypes?.totalElements,
+          pageSize: trains?.size,
+          total: trains?.totalElements,
         }}
         loading={isLoading}
         onChange={(e) => {
@@ -85,6 +68,7 @@ const SeatTypesTable = () => {
               className="w-[250px]"
               allowClear
               onSearch={(value) => {
+                console.log(value);
                 setKeyword(value);
                 setPage(1);
               }}
@@ -99,4 +83,4 @@ const SeatTypesTable = () => {
   );
 };
 
-export default SeatTypesTable;
+export default TrainsTable;

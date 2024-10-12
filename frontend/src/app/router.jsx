@@ -146,6 +146,13 @@ const createAppRouter = () =>
             return { Component: CreateTrain.default };
           },
         },
+        {
+          path: 'trains/:id',
+          lazy: async () => {
+            const TrainDetails = await import('./routes/admin/trains/[id]');
+            return { Component: TrainDetails.default };
+          },
+        },
       ],
     },
     // Auth routes

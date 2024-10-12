@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 /* custom css */
+/* style for seat */
 .style-item-sortable {
   display: -webkit-box;
   display: -webkit-flex;
@@ -33,6 +34,59 @@
 }
 
 .style-item-grid-sortable .style-wrapper-sortable {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  padding: 4px;
+}
+
+/* style for carriage */
+
+.carriage-item-sortable {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 240px;
+  height: 220px;
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #efefef;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #333;
+}
+
+.carriage-item-grid-sortable {
+  float: left;
+  padding: 16px;
+  background: transparent;
+  border: 0;
+}
+
+.carriage-item-grid-sortable .carriage-wrapper-sortable {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;

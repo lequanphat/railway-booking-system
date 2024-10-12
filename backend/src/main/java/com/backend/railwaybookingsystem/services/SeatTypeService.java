@@ -11,9 +11,11 @@ import com.backend.railwaybookingsystem.enums.UserRole;
 import com.backend.railwaybookingsystem.models.User;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SeatTypeService {
+    List<SeatTypeResponse> getAllSeatTypes();
     Page<SeatTypeResponse> getSeatTypes(String keyword, int page, int size);
 
     SeatTypeResponse saveSeatType(CreateSeatTypeRequest request);

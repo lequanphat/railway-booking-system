@@ -1,6 +1,7 @@
 import { Button, Flex, Space } from 'antd';
 import PageHeader from '~/components/ui/page-header';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import TrainsTable from '~/features/trains/components/TrainsTable';
 
 const TrainsManagement = () => {
   return (
@@ -13,7 +14,7 @@ const TrainsManagement = () => {
           </Button>
         </Space>
       </Flex>
-      <div>123</div>
+      <TrainsTable />
     </>
   );
 };

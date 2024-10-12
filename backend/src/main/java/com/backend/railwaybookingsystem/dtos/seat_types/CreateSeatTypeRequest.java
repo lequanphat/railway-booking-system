@@ -25,4 +25,7 @@ public class CreateSeatTypeRequest {
 
     @NotBlank(message = "Code is required")
     private String code;
+
+    @NotNull(message = "Original price is required")
+    private double original_price_per_km;
 }

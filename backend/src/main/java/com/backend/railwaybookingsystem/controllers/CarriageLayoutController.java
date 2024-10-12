@@ -39,7 +39,7 @@ public class CarriageLayoutController {
 																		   @RequestParam(defaultValue = "10") int size,
 																		   @RequestParam(defaultValue = "") String keyword
 																		   ) {
-		Page<CarriageLayoutResponse> carriageLayouts =carriageLayoutService.getCarriageLayouts(keyword, page,size);
+		Page<CarriageLayoutResponse> carriageLayouts =carriageLayoutService.getCarriageLayouts(keyword, page-1, size);
 		return ResponseEntity.ok(carriageLayouts);
 	}
 
@@ -47,6 +47,6 @@ public class CarriageLayoutController {
 	@Operation(tags = "Carriage Layout", description = "get carriage laypout")
 	public ResponseEntity<CarriageLayoutResponse> getCarriageLayout(@PathVariable Long id) {
 		CarriageLayoutResponse carriageLayout =carriageLayoutService.getCarriageLayoutById(id);
-		return ResponseEntity.status(HttpStatus.CREATED).body(carriageLayout);
+		return ResponseEntity.ok(carriageLayout);
 	}
 }

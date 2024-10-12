@@ -27,6 +27,8 @@ public class SeatType {
 
 	private String code;
 
+	private double original_price_per_km;
+
 	private Boolean active = true;
 
 	@OneToMany(mappedBy = "seatType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

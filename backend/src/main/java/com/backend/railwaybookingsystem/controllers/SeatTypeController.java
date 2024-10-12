@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api")
 public class SeatTypeController {
@@ -31,13 +33,23 @@ public class SeatTypeController {
 
 	@GetMapping("ad/seat-types")
 	@Operation(tags = "Seat Types", description = "Return list of seat types with pagination")
-	public ResponseEntity<Page<SeatTypeResponse>> getAllSeatTypes(@RequestParam(defaultValue = "1") int page,
+	public ResponseEntity<Page<SeatTypeResponse>> getSeatTypes(@RequestParam(defaultValue = "1") int page,
 														  @RequestParam(defaultValue = "10") int size,
 															@RequestParam(defaultValue = "") String keyword
 	) {
 		Page<SeatTypeResponse> seatTypes = seatTypeService.getSeatTypes(keyword, page-1, size);
 		return ResponseEntity.ok(seatTypes);
 	}
+
+	@GetMapping("ad/seat-types/all")
+	@Operation(tags = "Seat Types", description = "Return all of seat types")
+	public ResponseEntity<List<SeatTypeResponse>> getAllSeatTypes(
+	) {
+		List<SeatTypeResponse> allSeatTypes = seatTypeService.getAllSeatTypes();
+		return ResponseEntity.ok(allSeatTypes);
+	}
+
+
 
 
 
