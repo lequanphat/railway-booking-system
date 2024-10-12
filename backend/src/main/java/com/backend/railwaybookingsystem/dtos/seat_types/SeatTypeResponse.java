@@ -23,4 +23,6 @@ public class SeatTypeResponse {
     private String code;
 
     private Boolean active;
+
+    private double original_price_per_km;
 }

@@ -45,6 +45,9 @@ const CreateSeatTypeModal = ({ open, handleCancel }) => {
           <Form.Item label="Mã ghế" name="code" rules={null} validateTrigger="onBlur">
             <Input placeholder="Nhập mã ghế..." />
           </Form.Item>
+          <Form.Item label="Giá / km" name="original_price_per_km" rules={null} validateTrigger="onBlur">
+            <Input placeholder="Nhập giá gốc..." />
+          </Form.Item>
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Flex justify="end" className="gap-3">

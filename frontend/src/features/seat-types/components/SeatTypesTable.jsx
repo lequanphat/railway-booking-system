@@ -29,12 +29,19 @@ const SeatTypesTable = () => {
         title: 'Mã ghế',
         dataIndex: 'code',
         key: 'code',
+        align: 'center',
+      },
+      {
+        title: 'Giá gốc / km',
+        dataIndex: 'original_price_per_km',
+        key: 'original_price_per_km',
+        align: 'center',
       },
       {
         title: 'Mô tả',
         dataIndex: 'description',
         key: 'description',
-        width: '45%',
+        width: '32%',
       },
       {
         title: 'Trạng thái',
