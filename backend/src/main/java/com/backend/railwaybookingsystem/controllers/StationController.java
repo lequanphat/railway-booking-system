@@ -1,6 +1,5 @@
 package com.backend.railwaybookingsystem.controllers;
 
-import com.backend.railwaybookingsystem.models.Province;
 import com.backend.railwaybookingsystem.models.Station;
 import com.backend.railwaybookingsystem.services.StationService;
 import org.springframework.beans.factory.annotation.Autowired;

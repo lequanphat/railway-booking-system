@@ -7,7 +7,6 @@ import com.backend.railwaybookingsystem.repositories.RefreshTokenRepository;
 import com.backend.railwaybookingsystem.repositories.UserRepository;
 import com.backend.railwaybookingsystem.security.jwt.JwtProperties;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
-import com.backend.railwaybookingsystem.utils.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if(token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
-            throw new TokenRefreshException(ErrorCode.TOKEN_EXPIRED);
+            throw new TokenRefreshException("Expired token. Please issue a new request");
         }
         return token;
     }

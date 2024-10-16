@@ -6,8 +6,8 @@ public class BadRequestException extends RuntimeException {
 
     private String message;
 
-    public BadRequestException(String errorCode, Object... var2) {
-        this.message = MessagesUtils.getMessage(errorCode, var2);
+    public BadRequestException(String message, Object... var2) {
+        this.message = MessagesUtils.formatMessage(message, var2);
     }
 
     @Override

@@ -6,8 +6,8 @@ public class NotFoundException extends RuntimeException {
 
     private String message;
 
-    public NotFoundException(String errorCode, Object... var2) {
-        this.message = MessagesUtils.getMessage(errorCode, var2);
+    public NotFoundException(String message, Object... var2) {
+        this.message = MessagesUtils.formatMessage(message, var2);
     }
 
     @Override

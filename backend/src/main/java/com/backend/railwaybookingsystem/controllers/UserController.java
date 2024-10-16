@@ -16,39 +16,39 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api")
 public class UserController {
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@PostMapping("ad/users")
-	@Operation(tags = "User", description = "Create a new user")
-	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest user) {
-		UserResponse createdUser = userService.saveUser(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-	}
+    @PostMapping("ad/users")
+    @Operation(tags = "User", description = "Create a new user")
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest user) {
+        UserResponse createdUser = userService.saveUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
 
-	@GetMapping("ad/users")
-	@Operation(tags = "User", description = "Return list of users with pagination")
-	public ResponseEntity<Page<UserResponse>> getAllUsers(@RequestParam(defaultValue = "1") int page,
-														  @RequestParam(defaultValue = "10") int size,
-															@RequestParam(defaultValue = "") String keyword,
-														  @RequestParam(defaultValue = "USER" ) UserRole role
-	) {
-		Page<UserResponse> users = userService.getUsers(role, keyword, page-1, size);
-		return ResponseEntity.ok(users);
-	}
+    @GetMapping("ad/users")
+    @Operation(tags = "User", description = "Return list of users with pagination")
+    public ResponseEntity<Page<UserResponse>> getAllUsers(@RequestParam(defaultValue = "1") int page,
+                                                          @RequestParam(defaultValue = "10") int size,
+                                                          @RequestParam(defaultValue = "") String keyword,
+                                                          @RequestParam(defaultValue = "USER") UserRole role
+    ) {
+        Page<UserResponse> users = userService.getUsers(role, keyword, page - 1, size);
+        return ResponseEntity.ok(users);
+    }
 
-	@PutMapping("ad/users/{id}")
-	@Operation(tags = "User", description = "Update an existing user")
-	public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest userRequest) {
-		UserResponse updatedUser = userService.updateUser(id, userRequest);
-		return ResponseEntity.ok(updatedUser);
-	}
+    @PutMapping("ad/users/{id}")
+    @Operation(tags = "User", description = "Update an existing user")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest userRequest) {
+        UserResponse updatedUser = userService.updateUser(id, userRequest);
+        return ResponseEntity.ok(updatedUser);
+    }
 
-	@DeleteMapping("ad/users/{id}")
-	@Operation(tags = "User", description = "Delete an existing user")
-	public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
-		UserResponse deletedUser = userService.deleteUser(id);
-		return ResponseEntity.ok(deletedUser);
-	}
+    @DeleteMapping("ad/users/{id}")
+    @Operation(tags = "User", description = "Delete an existing user")
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
+        UserResponse deletedUser = userService.deleteUser(id);
+        return ResponseEntity.ok(deletedUser);
+    }
 
 }

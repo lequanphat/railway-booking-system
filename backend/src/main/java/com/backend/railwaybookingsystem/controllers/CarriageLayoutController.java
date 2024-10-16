@@ -21,32 +21,32 @@ import java.util.List;
 @RestController
 @RequestMapping("api")
 public class CarriageLayoutController {
-	@Autowired
-	private CarriageLayoutService carriageLayoutService;
+    @Autowired
+    private CarriageLayoutService carriageLayoutService;
 
-	@PostMapping("ad/carriage-layouts")
-	@Operation(tags = "Carriage Layout", description = "Create a new carriage layout")
-	public ResponseEntity<CarriageLayoutResponse> createCarriageLayout(@Valid @RequestBody CreateCarriageLayoutRequest request) {
+    @PostMapping("ad/carriage-layouts")
+    @Operation(tags = "Carriage Layout", description = "Create a new carriage layout")
+    public ResponseEntity<CarriageLayoutResponse> createCarriageLayout(@Valid @RequestBody CreateCarriageLayoutRequest request) {
 
-		CarriageLayoutResponse createdCarriageLayout = carriageLayoutService.saveCarriageLayout(request);
+        CarriageLayoutResponse createdCarriageLayout = carriageLayoutService.saveCarriageLayout(request);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdCarriageLayout);
-	}
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCarriageLayout);
+    }
 
-	@GetMapping("ad/carriage-layouts")
-	@Operation(tags = "Carriage Layout", description = "get carriage laypout")
-	public ResponseEntity<Page<CarriageLayoutResponse>> getCarriageLayouts(@RequestParam(defaultValue = "1") int page,
-																		   @RequestParam(defaultValue = "10") int size,
-																		   @RequestParam(defaultValue = "") String keyword
-																		   ) {
-		Page<CarriageLayoutResponse> carriageLayouts =carriageLayoutService.getCarriageLayouts(keyword, page-1, size);
-		return ResponseEntity.ok(carriageLayouts);
-	}
+    @GetMapping("ad/carriage-layouts")
+    @Operation(tags = "Carriage Layout", description = "get carriage laypout")
+    public ResponseEntity<Page<CarriageLayoutResponse>> getCarriageLayouts(@RequestParam(defaultValue = "1") int page,
+                                                                           @RequestParam(defaultValue = "10") int size,
+                                                                           @RequestParam(defaultValue = "") String keyword
+    ) {
+        Page<CarriageLayoutResponse> carriageLayouts = carriageLayoutService.getCarriageLayouts(keyword, page - 1, size);
+        return ResponseEntity.ok(carriageLayouts);
+    }
 
-	@GetMapping("ad/carriage-layouts/{id}")
-	@Operation(tags = "Carriage Layout", description = "get carriage laypout")
-	public ResponseEntity<CarriageLayoutResponse> getCarriageLayout(@PathVariable Long id) {
-		CarriageLayoutResponse carriageLayout =carriageLayoutService.getCarriageLayoutById(id);
-		return ResponseEntity.ok(carriageLayout);
-	}
+    @GetMapping("ad/carriage-layouts/{id}")
+    @Operation(tags = "Carriage Layout", description = "get carriage laypout")
+    public ResponseEntity<CarriageLayoutResponse> getCarriageLayout(@PathVariable Long id) {
+        CarriageLayoutResponse carriageLayout = carriageLayoutService.getCarriageLayoutById(id);
+        return ResponseEntity.ok(carriageLayout);
+    }
 }

@@ -1,9 +1,11 @@
 package com.backend.railwaybookingsystem.controllers;
 
-import com.backend.railwaybookingsystem.common.CustomPagination;
+import com.backend.railwaybookingsystem.dtos.province.requests.UpdateProvinceRequest;
+import com.backend.railwaybookingsystem.utils.CustomPagination;
 import com.backend.railwaybookingsystem.dtos.province.requests.CreateProvinceRequest;
 import com.backend.railwaybookingsystem.models.Province;
 import com.backend.railwaybookingsystem.services.ProvinceService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/public/provinces")
+@Tag(name = "Provinces", description = "APIs for managing provinces")
 public class ProvinceController {
-    @Autowired
-    private ProvinceService provinceService;
+
+    private final ProvinceService provinceService;
+
+    public ProvinceController(ProvinceService provinceService) {
+        this.provinceService = provinceService;
+    }
 
     @GetMapping()
     public ResponseEntity<List<Province>> getAllProvinces() {
@@ -33,8 +40,9 @@ public class ProvinceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Province> getProvinceById(@PathVariable Long id) {
-        Optional<Province> province = provinceService.findById(id);
-        return ResponseEntity.ok(province.get());
+        return provinceService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping()
@@ -44,22 +52,22 @@ public class ProvinceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Province> updateProvince(@PathVariable Long id, @RequestBody Province province) {
-        Province updatedProvince = provinceService.updateProvince(id, province);
+    public ResponseEntity<Province> updateProvince(@PathVariable Long id, @Valid @RequestBody UpdateProvinceRequest request) {
+        Province updatedProvince = provinceService.updateProvince(id, request);
         return ResponseEntity.ok(updatedProvince);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Province> deleteProvince(@PathVariable Long id) {
         provinceService.deleteProvince(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
-    public CustomPagination<Province> getProvinces(@RequestParam(defaultValue = "") String searchTerm,
-                                                   @RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<CustomPagination<Province>> getProvinces(@RequestParam(defaultValue = "") String searchTerm,
+                                                                   @RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "10") int size) {
         Page<Province> provinces = provinceService.getProvinces(searchTerm, PageRequest.of(page, size));
-        return new CustomPagination<>(provinces);
+        return ResponseEntity.ok(new CustomPagination<>(provinces));
     }
 }

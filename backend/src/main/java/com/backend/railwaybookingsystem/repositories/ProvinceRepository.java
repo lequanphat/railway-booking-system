@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProvinceRepository extends JpaRepository<Province, Long> {
     Page<Province> findByNameContainingIgnoreCase(String searchTerm, Pageable pageable);
+    boolean existsByName(String name);
+    boolean existsByNameAndIdNot(String name, Long id);
 }
