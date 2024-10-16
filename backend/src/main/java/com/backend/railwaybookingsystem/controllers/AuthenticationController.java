@@ -6,14 +6,11 @@ import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationRespons
 import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
-import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.security.jwt.JwtTokenService;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
 import com.backend.railwaybookingsystem.services.UserService;
-import com.backend.railwaybookingsystem.services.UserVerificationService;
-import com.backend.railwaybookingsystem.utils.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +68,7 @@ public class AuthenticationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new NotFoundException(ErrorCode.USER_NOT_FOUND);
+            throw new NotFoundException("User not found");
         }
         String email = authentication.getName();
         User user = userService.findAuthenticatedUserByEmail(email);
@@ -80,6 +77,7 @@ public class AuthenticationController {
         AuthenticationResponse authResponse = new AuthenticationResponse(user, token);
         return ResponseEntity.ok(authResponse);
     }
+
     @GetMapping("/verify-account/{token}")
     @Operation(tags = "Verify account", description = "Verify account by token.")
     public ResponseEntity<User> verifyAccount(@PathVariable String token) {

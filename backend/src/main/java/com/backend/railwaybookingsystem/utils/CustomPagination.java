@@ -1,4 +1,4 @@
-package com.backend.railwaybookingsystem.common;
+package com.backend.railwaybookingsystem.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +22,7 @@ public class CustomPagination<T> {
 
     @Data
     @AllArgsConstructor
+    static
     class CustomPageMeta {
         int pageNumber;
         int pageSize;

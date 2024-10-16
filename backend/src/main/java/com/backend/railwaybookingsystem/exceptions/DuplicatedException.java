@@ -6,8 +6,8 @@ public class DuplicatedException extends RuntimeException {
 
     private String message;
 
-    public DuplicatedException(String errorCode, Object... var2) {
-        this.message = MessagesUtils.getMessage(errorCode, var2);
+    public DuplicatedException(String message, Object... var2) {
+        this.message = MessagesUtils.formatMessage(message, var2);
     }
 
     @Override

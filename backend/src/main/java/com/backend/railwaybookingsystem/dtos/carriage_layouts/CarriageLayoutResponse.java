@@ -19,8 +19,7 @@ public class CarriageLayoutResponse {
 
     private String name;
 
-
-    private int floors ;
+    private int floors;
 
     private int row_count;
 

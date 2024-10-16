@@ -1,12 +1,13 @@
 package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.province.requests.CreateProvinceRequest;
+import com.backend.railwaybookingsystem.dtos.province.requests.UpdateProvinceRequest;
+import com.backend.railwaybookingsystem.exceptions.DuplicatedException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ProvinceMapper;
 import com.backend.railwaybookingsystem.models.Province;
 import com.backend.railwaybookingsystem.repositories.ProvinceRepository;
 import com.backend.railwaybookingsystem.services.ProvinceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,43 +18,56 @@ import java.util.Optional;
 @Service
 public class ProvinceServiceImpl implements ProvinceService {
 
-    @Autowired
-    private ProvinceRepository provineRepository;
+    private final ProvinceRepository provinceRepository;
+
+    public ProvinceServiceImpl(ProvinceRepository provinceRepository) {
+        this.provinceRepository = provinceRepository;
+    }
 
     @Override
     public Province createProvince(CreateProvinceRequest request) {
-        // unique name
-
+        if (provinceRepository.existsByName(request.getName())) {
+            throw new DuplicatedException("Province with name already exists");
+        }
         Province province = ProvinceMapper.INSTANCE.toProvince(request);
-        return provineRepository.save(province);
+        return provinceRepository.save(province);
     }
 
     @Override
     public List<Province> getAllProvinces() {
-        return provineRepository.findAll();
+        return provinceRepository.findAll();
     }
 
     @Override
     public Optional<Province> findById(Long id) {
-        provineRepository.findById(id).orElseThrow(() -> new NotFoundException("Province not found"));
-        return provineRepository.findById(id);
+        return provinceRepository.findById(id)
+                .map(Optional::of)
+                .orElseThrow(() -> new NotFoundException("Province not found"));
     }
 
     @Override
-    public Province updateProvince(Long id, Province provinceDetails) {
-        provineRepository.findById(id).orElseThrow(() -> new NotFoundException("Province not found"));
-        provineRepository.save(provinceDetails);
-        return provinceDetails;
+    public Province updateProvince(Long id, UpdateProvinceRequest request) {
+        Province existingProvince = provinceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Province not found"));
+
+        if (provinceRepository.existsByNameAndIdNot(request.getName(), id)) {
+            throw new DuplicatedException("Province with name already exists");
+        }
+
+        existingProvince.setName(request.getName());
+        return provinceRepository.save(existingProvince);
     }
 
     @Override
     public void deleteProvince(Long id) {
-        provineRepository.findById(id).orElseThrow(() -> new NotFoundException("Province not found"));
-        provineRepository.deleteById(id);
+        if (!provinceRepository.existsById(id)) {
+            throw new NotFoundException("Province not found");
+        }
+        provinceRepository.deleteById(id);
     }
 
     @Override
     public Page<Province> getProvinces(String searchTerm, Pageable pageable) {
-        return provineRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
+        return provinceRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
     }
 }

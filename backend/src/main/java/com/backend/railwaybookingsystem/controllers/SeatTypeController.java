@@ -21,36 +21,31 @@ import java.util.List;
 @RestController
 @RequestMapping("api")
 public class SeatTypeController {
-	@Autowired
-	private SeatTypeService seatTypeService;
+    @Autowired
+    private SeatTypeService seatTypeService;
 
-	@PostMapping("ad/seat-types")
-	@Operation(tags = "Seat Types", description = "Create a new seat type")
-	public ResponseEntity<SeatTypeResponse> createSeatType(@Valid @RequestBody CreateSeatTypeRequest request) {
-		SeatTypeResponse createdSeatType = seatTypeService.saveSeatType(request);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdSeatType);
-	}
+    @PostMapping("ad/seat-types")
+    @Operation(tags = "Seat Types", description = "Create a new seat type")
+    public ResponseEntity<SeatTypeResponse> createSeatType(@Valid @RequestBody CreateSeatTypeRequest request) {
+        SeatTypeResponse createdSeatType = seatTypeService.saveSeatType(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdSeatType);
+    }
 
-	@GetMapping("ad/seat-types")
-	@Operation(tags = "Seat Types", description = "Return list of seat types with pagination")
-	public ResponseEntity<Page<SeatTypeResponse>> getSeatTypes(@RequestParam(defaultValue = "1") int page,
-														  @RequestParam(defaultValue = "10") int size,
-															@RequestParam(defaultValue = "") String keyword
-	) {
-		Page<SeatTypeResponse> seatTypes = seatTypeService.getSeatTypes(keyword, page-1, size);
-		return ResponseEntity.ok(seatTypes);
-	}
+    @GetMapping("ad/seat-types")
+    @Operation(tags = "Seat Types", description = "Return list of seat types with pagination")
+    public ResponseEntity<Page<SeatTypeResponse>> getSeatTypes(@RequestParam(defaultValue = "1") int page,
+                                                               @RequestParam(defaultValue = "10") int size,
+                                                               @RequestParam(defaultValue = "") String keyword
+    ) {
+        Page<SeatTypeResponse> seatTypes = seatTypeService.getSeatTypes(keyword, page - 1, size);
+        return ResponseEntity.ok(seatTypes);
+    }
 
-	@GetMapping("ad/seat-types/all")
-	@Operation(tags = "Seat Types", description = "Return all of seat types")
-	public ResponseEntity<List<SeatTypeResponse>> getAllSeatTypes(
-	) {
-		List<SeatTypeResponse> allSeatTypes = seatTypeService.getAllSeatTypes();
-		return ResponseEntity.ok(allSeatTypes);
-	}
-
-
-
-
-
+    @GetMapping("ad/seat-types/all")
+    @Operation(tags = "Seat Types", description = "Return all of seat types")
+    public ResponseEntity<List<SeatTypeResponse>> getAllSeatTypes(
+    ) {
+        List<SeatTypeResponse> allSeatTypes = seatTypeService.getAllSeatTypes();
+        return ResponseEntity.ok(allSeatTypes);
+    }
 }

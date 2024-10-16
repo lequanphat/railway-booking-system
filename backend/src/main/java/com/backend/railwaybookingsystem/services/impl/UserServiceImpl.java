@@ -10,13 +10,10 @@ import com.backend.railwaybookingsystem.exceptions.DuplicatedException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.UserMapper;
 import com.backend.railwaybookingsystem.models.User;
-import com.backend.railwaybookingsystem.models.UserVerification;
 import com.backend.railwaybookingsystem.repositories.UserRepository;
 import com.backend.railwaybookingsystem.services.EmailService;
 import com.backend.railwaybookingsystem.services.UserService;
 import com.backend.railwaybookingsystem.services.UserVerificationService;
-import com.backend.railwaybookingsystem.utils.ErrorCode;
-import com.backend.railwaybookingsystem.utils.Generator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +47,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse saveUser(CreateUserRequest request) {
         User existingUser = this.findAuthenticatedUserByEmail(request.getEmail());
         if (existingUser != null) {
-            throw new DuplicatedException(ErrorCode.USER_ALREADY_EXISTS, request.getEmail());
+            throw new DuplicatedException("User with username {} already exists", request.getEmail());
         }
         User user = UserMapper.INSTANCE.convertToUser(request);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -78,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public UserResponse updateUser(Long id, UpdateUserRequest updateRequest) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND, id));
+                .orElseThrow(() -> new NotFoundException("No user found with username {}", id));
 
         existingUser.setName(updateRequest.getName());
         existingUser.setPhone(updateRequest.getPhone());
@@ -95,7 +92,7 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public UserResponse deleteUser(Long id) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND, id));
+                .orElseThrow(() -> new NotFoundException("No user found with username {}", id));
 
         userRepository.delete(existingUser);
         return UserMapper.INSTANCE.convertToUserResponse(existingUser);
@@ -106,7 +103,7 @@ public class UserServiceImpl implements UserService {
     public RegistrationResponse registration(RegistrationRequest registrationRequest) {
         User existingUser = this.findAuthenticatedUserByEmail(registrationRequest.getEmail());
         if (existingUser != null) {
-            throw new DuplicatedException(ErrorCode.USER_ALREADY_EXISTS, registrationRequest.getEmail());
+            throw new DuplicatedException("User with username {} already exists", registrationRequest.getEmail());
         }
         final User user = UserMapper.INSTANCE.convertToUser(registrationRequest);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
