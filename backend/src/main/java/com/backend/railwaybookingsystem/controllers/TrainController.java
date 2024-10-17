@@ -1,7 +1,7 @@
 package com.backend.railwaybookingsystem.controllers;
 
-import com.backend.railwaybookingsystem.dtos.trains.CreateTrainRequest;
-import com.backend.railwaybookingsystem.dtos.trains.TrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
 import com.backend.railwaybookingsystem.services.TrainService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;

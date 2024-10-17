@@ -1,4 +1,5 @@
 package com.backend.railwaybookingsystem.services.impl;
+
 import com.backend.railwaybookingsystem.dtos.seat_types.CreateSeatTypeRequest;
 import com.backend.railwaybookingsystem.dtos.seat_types.SeatTypeResponse;
 import com.backend.railwaybookingsystem.mappers.SeatTypeMapper;
@@ -18,7 +19,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class SeatTypeServiceImpl implements SeatTypeService {
-
     @Autowired
     private SeatTypeRepository seatTypeRepository;
 
@@ -30,11 +30,11 @@ public class SeatTypeServiceImpl implements SeatTypeService {
     public Page<SeatTypeResponse> getSeatTypes(String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
 
-        Page<SeatType> seatTypes = seatTypeRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword, pageRequest);
+        var seatTypes = seatTypeRepository
+                .findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword, pageRequest)
+                .map(SeatTypeMapper.INSTANCE::convertToSeatTypeResponse);
 
-        List<SeatTypeResponse> userResponseList = SeatTypeMapper.INSTANCE.convertToSeatTypeResponses(seatTypes.getContent());
-
-        return new PageImpl<>(userResponseList, pageRequest, seatTypes.getTotalElements());
+        return seatTypes;
     }
 
     public SeatTypeResponse saveSeatType(CreateSeatTypeRequest request) {

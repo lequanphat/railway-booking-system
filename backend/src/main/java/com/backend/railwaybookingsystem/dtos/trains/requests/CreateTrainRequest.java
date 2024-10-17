@@ -1,4 +1,4 @@
-package com.backend.railwaybookingsystem.dtos.trains;
+package com.backend.railwaybookingsystem.dtos.trains.requests;
 
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import jakarta.validation.Valid;
