@@ -1,15 +1,11 @@
 import { ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
-import { useMemo, useState } from 'react';
-import { ROW_PER_PAGE } from '~/config/constants';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTrains } from '../api/get-trains';
+import { useTable } from '~/hooks/useTable';
 
 const TrainsTable = () => {
-  const [page, setPage] = useState(1);
-  const [keyword, setKeyword] = useState('');
-  const { data: trains, isLoading } = useTrains({ page: page, size: ROW_PER_PAGE, keyword });
-
   const columns = useMemo(
     () => [
       {
@@ -61,7 +57,7 @@ const TrainsTable = () => {
         render: (value) => (
           <Space>
             <Link to={`${value}`} type="default">
-              <Button onClick={null} icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+              <Button size="small" icon={<QuestionCircleOutlined />} iconPosition={'end'} />
             </Link>
           </Space>
         ),
@@ -70,40 +66,31 @@ const TrainsTable = () => {
     [],
   );
 
+  const { tableProps, handleSearch, keyword } = useTable({
+    fetchData: useTrains,
+    columns,
+    defaultPageSize: 10,
+  });
+
   return (
-    <>
-      <Table
-        columns={columns}
-        dataSource={trains?.content}
-        size="middle"
-        pagination={{
-          current: page,
-          pageSize: trains?.size,
-          total: trains?.totalElements,
-        }}
-        loading={isLoading}
-        onChange={(e) => {
-          setPage(e?.current);
-        }}
-        title={() => (
-          <Flex justify="space-between">
-            <Input.Search
-              placeholder="Tìm kiếm..."
-              className="w-[250px]"
-              allowClear
-              onSearch={(value) => {
-                console.log(value);
-                setKeyword(value);
-                setPage(1);
-              }}
-            />
-            <Button icon={<ExportOutlined />}>
-              Export<Tag color="blue">Coming Soon</Tag>
-            </Button>
-          </Flex>
-        )}
-      />
-    </>
+    <Table
+      rowKey="id"
+      title={() => (
+        <Flex justify="space-between">
+          <Input.Search
+            placeholder="Tìm kiếm..."
+            className="w-[250px]"
+            allowClear
+            onSearch={handleSearch}
+            value={keyword}
+          />
+          <Button icon={<ExportOutlined />}>
+            Export<Tag color="blue">Coming Soon</Tag>
+          </Button>
+        </Flex>
+      )}
+      {...tableProps}
+    />
   );
 };
 

@@ -21,7 +21,7 @@ const TrainDetails = () => {
     <div>
       <Flex align="center" justify="space-between" className="mb-2">
         <PageHeader
-          heading="Quản lý tàu hỏa"
+          heading="Thông tin tàu hoả"
           links={[
             { title: 'Trang chủ', href: '/admin' },
             { title: 'Toa hỏa', href: '/admin/trains' },
@@ -38,19 +38,19 @@ const TrainDetails = () => {
         <Flex
           vertical
           align="center"
-          className="flex-1 border-[1px] bg-white border-[#ccc] w-[460px] mx-auto p-4 rounded-md"
+          className="flex-1 border bg-white border-gray-200 w-[460px] mx-auto p-4 rounded-md"
           gap={16}
         >
-          <h1 className="font-semibold text-[16px] text-center">{trainData?.name}</h1>
+          <h1 className="font-semibold text-base text-center">{trainData?.name}</h1>
           <Flex vertical gap={16} className="w-full">
             {trainData?.carriages?.map((carriage) => (
               <Flex
                 key={carriage.id}
                 vertical
                 align="center"
-                className="w-full border-[1px] border-[#ccc] mx-auto p-4 rounded-md"
+                className="w-full border border-gray-200 mx-auto p-4 rounded-md"
               >
-                <h1 className="font-semibold text-[16px] text-center">{carriage?.carriageLayout?.name}</h1>
+                <h1 className="font-semibold text-base text-center">{carriage?.carriageLayout?.name}</h1>
                 <Row gutter={20}>
                   {carriage?.carriageLayout?.seats?.map((seat) => (
                     <Col
@@ -58,9 +58,9 @@ const TrainDetails = () => {
                       span={24 / (carriage?.carriageLayout?.floors * carriage?.carriageLayout?.row_count)}
                       className="mt-4"
                     >
-                      <Flex vertical align="center" className="border-[1px] border-[#ccc] p-2 rounded-md">
-                        <h1 className="font-semibold text-[18px]">{seat?.position}</h1>
-                        <p className="text-[12px]">{seat?.seatType?.code}</p>
+                      <Flex vertical align="center" className="border border-gray-200 p-2 rounded-md">
+                        <h1 className="font-semibold text-lg">{seat?.position}</h1>
+                        <p className="text-xs">{seat?.seatType?.code}</p>
                       </Flex>
                     </Col>
                   ))}
@@ -69,7 +69,7 @@ const TrainDetails = () => {
             ))}
           </Flex>
         </Flex>
-        <Flex vertical className="flex-1 border-[1px] bg-white border-[#ccc] mx-auto p-4 rounded-md" gap={12}>
+        <Flex vertical className="flex-1 border bg-white border-gray-200 mx-auto p-4 rounded-md" gap={12}>
           <h1 className="font-semibold text-[16px] text-center">Bảng giá vé</h1>
           <div className="w-full">
             <SeatPricesTable data={seatPricesData} />
