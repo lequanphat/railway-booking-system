@@ -21,7 +21,7 @@ export const getCarriageLayoutQueryOptions = ({ page, size, keyword }) => {
 export const useCarriageLayouts = ({ queryConfig, page, size, keyword }) => {
   return useQuery({
     ...getCarriageLayoutQueryOptions({ page, size, keyword }),
-    initialData: { content: [] },
+    initialData: { items: [] },
     ...queryConfig,
   });
 };
