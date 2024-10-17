@@ -8,6 +8,7 @@ import com.backend.railwaybookingsystem.dtos.users.UserResponse;
 import com.backend.railwaybookingsystem.enums.UserRole;
 import com.backend.railwaybookingsystem.services.SeatTypeService;
 import com.backend.railwaybookingsystem.services.UserService;
+import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,12 @@ public class SeatTypeController {
 
     @GetMapping("ad/seat-types")
     @Operation(tags = "Seat Types", description = "Return list of seat types with pagination")
-    public ResponseEntity<Page<SeatTypeResponse>> getSeatTypes(@RequestParam(defaultValue = "1") int page,
-                                                               @RequestParam(defaultValue = "10") int size,
-                                                               @RequestParam(defaultValue = "") String keyword
+    public ResponseEntity<CustomPagination<SeatTypeResponse>> getSeatTypes(@RequestParam(defaultValue = "1") int page,
+                                                         @RequestParam(defaultValue = "10") int size,
+                                                         @RequestParam(defaultValue = "") String keyword
     ) {
         Page<SeatTypeResponse> seatTypes = seatTypeService.getSeatTypes(keyword, page - 1, size);
-        return ResponseEntity.ok(seatTypes);
+        return ResponseEntity.ok(new CustomPagination<>(seatTypes));
     }
 
     @GetMapping("ad/seat-types/all")

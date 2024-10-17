@@ -281,8 +281,40 @@ INSERT INTO stations (id, name, province_id) VALUES (173, "Cà Ná", 37);
 -- Route
 INSERT INTO routes (id, name) VALUES (1, "Sài Gòn - Hà Nội");
 INSERT INTO routes (id, name) VALUES (2, "Hà Nội - Sài Gòn");
+
 INSERT INTO routes (id, name) VALUES (3, "Sài Gòn - Đà Nẵng");
 INSERT INTO routes (id, name) VALUES (4, "Đà Nẵng - Sài Gòn");
+
+INSERT INTO routes (id, name) VALUES (5, "Hà Nội - Đà Nẵng");
+INSERT INTO routes (id, name) VALUES (6, "Đà Nẵng - Hà Nội");
+
+INSERT INTO routes (id, name) VALUES (7, "Hà Nội - Vinh");
+INSERT INTO routes (id, name) VALUES (8, "Vinh - Hà Nội");
+
+-- Trains
+INSERT INTO trains(id, name, route_id) VALUES (1, "SE1", 2);
+INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (1, 1, 1, "06:00","06:10",0, 0);
+INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (2, 1, 2, "07:00","07:10",0, 600);
+
+INSERT INTO trains(id, name, route_id) VALUES (2, "SE2", 1);
+INSERT INTO trains(id, name, route_id) VALUES (3, "SE3", 2);
+INSERT INTO trains(id, name, route_id) VALUES (4, "SE4", 1);
+INSERT INTO trains(id, name, route_id) VALUES (5, "SE5", 2);
+INSERT INTO trains(id, name, route_id) VALUES (6, "SE6", 1);
+INSERT INTO trains(id, name, route_id) VALUES (7, "SE7", 2);
+INSERT INTO trains(id, name, route_id) VALUES (8, "SE8", 1);
+
+-- SG - DN
+INSERT INTO trains(id, name, route_id) VALUES (9, "SE21", 4);
+INSERT INTO trains(id, name, route_id) VALUES (10, "SE22", 3);
+
+-- HN - Vinh
+INSERT INTO trains(id, name, route_id) VALUES (11, "NA1", 7);
+INSERT INTO trains(id, name, route_id) VALUES (12, "NA2", 8);
+
+-- HN - DN
+INSERT INTO trains(id, name, route_id) VALUES (13, "SE19", 5);
+INSERT INTO trains(id, name, route_id) VALUES (14, "SE20", 6);
 
 -- Seat Type
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (1,

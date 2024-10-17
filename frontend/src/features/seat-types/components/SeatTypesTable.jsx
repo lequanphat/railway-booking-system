@@ -67,12 +67,13 @@ const SeatTypesTable = () => {
     <>
       <Table
         columns={columns}
-        dataSource={seatTypes?.content}
+        dataSource={seatTypes?.items}
         size="middle"
+        rowKey={(record) => record.id}
         pagination={{
-          current: page,
-          pageSize: seatTypes?.size,
-          total: seatTypes?.totalElements,
+          current: seatTypes?.meta.current_page,
+          pageSize: seatTypes?.meta.per_page,
+          total: seatTypes?.meta.total_elements,
         }}
         loading={isLoading}
         onChange={(e) => {

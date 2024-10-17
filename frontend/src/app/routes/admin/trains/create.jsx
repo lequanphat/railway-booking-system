@@ -110,7 +110,7 @@ const TrainsManagement = () => {
     <>
       <Flex align="center" justify="space-between" className="mb-2">
         <PageHeader
-          heading="Quản lý tàu hỏa"
+          heading="Tạo tàu"
           links={[
             { title: 'Trang chủ', href: '/admin' },
             { title: 'Tàu hỏa', href: '/admin/trains' },

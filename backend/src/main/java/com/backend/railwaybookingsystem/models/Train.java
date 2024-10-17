@@ -26,4 +26,7 @@ public class Train {
 
     @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SeatPrice> seatPrices;
+
+    @ManyToOne
+    private Route route;
 }
