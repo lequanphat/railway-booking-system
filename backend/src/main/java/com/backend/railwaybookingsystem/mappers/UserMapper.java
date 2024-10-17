@@ -1,10 +1,10 @@
 package com.backend.railwaybookingsystem.mappers;
 
+import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UserResponse;
 import com.backend.railwaybookingsystem.models.User;
-import com.backend.railwaybookingsystem.dtos.auth.AuthenticatedUserDto;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,7 +29,5 @@ public interface UserMapper {
 
     User convertToUser(RegistrationRequest registrationRequest);
 
-    AuthenticatedUserDto convertToAuthenticatedUserDto(User user);
-
-    User convertToUser(AuthenticatedUserDto authenticatedUserDto);
+    LoginResponse.AuthenticatedUserDto convertToAuthenticatedUserDto(User user);
 }
