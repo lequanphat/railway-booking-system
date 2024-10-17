@@ -66,7 +66,7 @@ const TrainsTable = () => {
     [],
   );
 
-  const { tableProps, handleSearch, keyword } = useTable({
+  const { tableProps, handleSearch } = useTable({
     fetchData: useTrains,
     columns,
     defaultPageSize: 10,
@@ -77,13 +77,7 @@ const TrainsTable = () => {
       rowKey="id"
       title={() => (
         <Flex justify="space-between">
-          <Input.Search
-            placeholder="Tìm kiếm..."
-            className="w-[250px]"
-            allowClear
-            onSearch={handleSearch}
-            value={keyword}
-          />
+          <Input.Search placeholder="Tìm kiếm..." className="w-[250px]" onSearch={handleSearch} allowClear />
           <Button icon={<ExportOutlined />}>
             Export<Tag color="blue">Coming Soon</Tag>
           </Button>
