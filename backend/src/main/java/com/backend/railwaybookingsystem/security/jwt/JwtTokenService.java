@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.security.jwt;
 
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
+import com.backend.railwaybookingsystem.mappers.UserMapper;
 import com.backend.railwaybookingsystem.models.RefreshToken;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.dtos.auth.request.LoginRequest;
@@ -59,7 +60,7 @@ public class JwtTokenService {
 		final RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.get());
 
 		return LoginResponse.builder()
-				.user(user.get())
+				.user(UserMapper.INSTANCE.convertToAuthenticatedUserDto(user.get()))
 				.token(token)
 				.refreshToken(refreshToken.getToken())
 				.expiresIn(jwtProperties.getExpirationMinute() * 60)

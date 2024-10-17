@@ -35,8 +35,8 @@ public class SeatTypeController {
     @GetMapping("ad/seat-types")
     @Operation(tags = "Seat Types", description = "Return list of seat types with pagination")
     public ResponseEntity<CustomPagination<SeatTypeResponse>> getSeatTypes(@RequestParam(defaultValue = "1") int page,
-                                                         @RequestParam(defaultValue = "10") int size,
-                                                         @RequestParam(defaultValue = "") String keyword
+                                                                           @RequestParam(defaultValue = "10") int size,
+                                                                           @RequestParam(defaultValue = "") String keyword
     ) {
         Page<SeatTypeResponse> seatTypes = seatTypeService.getSeatTypes(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(seatTypes));
