@@ -1,16 +1,12 @@
 package com.backend.railwaybookingsystem.services.impl;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.carriages.CarriageResponse;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceResponse;
-import com.backend.railwaybookingsystem.dtos.seats.SeatResponse;
-import com.backend.railwaybookingsystem.dtos.trains.CreateTrainRequest;
-import com.backend.railwaybookingsystem.dtos.trains.TrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
 import com.backend.railwaybookingsystem.mappers.*;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
-import com.backend.railwaybookingsystem.services.CarriageLayoutService;
 import com.backend.railwaybookingsystem.services.TrainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

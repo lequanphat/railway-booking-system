@@ -1,9 +1,7 @@
 package com.backend.railwaybookingsystem.services;
 
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
-import com.backend.railwaybookingsystem.dtos.trains.CreateTrainRequest;
-import com.backend.railwaybookingsystem.dtos.trains.TrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
 import org.springframework.data.domain.Page;
 
 public interface TrainService {

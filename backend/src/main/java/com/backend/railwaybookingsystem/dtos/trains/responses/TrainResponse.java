@@ -1,13 +1,8 @@
-package com.backend.railwaybookingsystem.dtos.trains;
+package com.backend.railwaybookingsystem.dtos.trains.responses;
 
 import com.backend.railwaybookingsystem.dtos.carriages.CarriageResponse;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceResponse;
-import com.backend.railwaybookingsystem.dtos.seats.SeatResponse;
-import com.backend.railwaybookingsystem.models.SeatPrice;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
 public class TrainResponse {
 
     private Long id;
@@ -27,4 +21,6 @@ public class TrainResponse {
     private List<CarriageResponse> carriages;
 
     private List<SeatPriceResponse> seatPrices;
+
+
 }

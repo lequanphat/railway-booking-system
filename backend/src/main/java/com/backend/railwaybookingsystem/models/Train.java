@@ -29,4 +29,7 @@ public class Train {
 
     @ManyToOne
     private Route route;
+
+    @OneToMany
+    private List<RouteSegment> routeSegments;
 }
