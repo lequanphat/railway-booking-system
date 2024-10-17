@@ -61,12 +61,12 @@ const CarriageLayoutTable = () => {
     <>
       <Table
         columns={columns}
-        dataSource={carriageLayouts?.content}
+        dataSource={carriageLayouts?.items}
         size="middle"
         pagination={{
           current: page,
-          pageSize: carriageLayouts?.size,
-          total: carriageLayouts?.totalElements,
+          pageSize: carriageLayouts?.meta?.per_page,
+          total: carriageLayouts?.totalElements?.total_elements,
         }}
         loading={isLoading}
         onChange={(e) => {

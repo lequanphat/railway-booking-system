@@ -143,8 +143,8 @@ const TrainsManagement = () => {
           className="w-[60%]"
         >
           <Flex vertical className="w-full" gap={20}>
-            <Flex vertical className="w-full  bg-white border-[1px] border-[#ccc] rounded-lg p-4">
-              <h1 className="text-[18px] font-semibold text-center">Thông tin tàu hỏa</h1>
+            <Flex vertical className="w-full  bg-white border border-[#ccc] rounded-lg p-4">
+              <h1 className="text-lg font-semibold text-center">Thông tin tàu hỏa</h1>
               <Form.Item
                 label="Tên tàu"
                 name="name"
@@ -170,8 +170,8 @@ const TrainsManagement = () => {
                 <SelectedCarriagesTable data={formattedCarriages} handleRemoveItem={handleRemoveCarriage} />
               </Flex>
             </Flex>
-            <Flex vertical className="w-full  bg-white border-[1px] border-[#ccc] rounded-lg p-4" gap={10}>
-              <h1 className="text-[18px] font-semibold text-center">Thông tin giá ghế</h1>
+            <Flex vertical className="w-full  bg-white border border-[#ccc] rounded-lg p-4" gap={10}>
+              <h1 className="text-lg font-semibold text-center">Thông tin giá ghế</h1>
               <Flex vertical gap={10}>
                 {allSeatTypes?.map((item) => (
                   <Form.Item
