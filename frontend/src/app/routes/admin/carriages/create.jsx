@@ -123,7 +123,7 @@ const CreateCarriage = () => {
         </Space>
       </Flex>
       <Flex className="" gap={20}>
-        <Flex vertical align="center" className="w-[65%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
+        <Flex vertical align="center" className="w-[65%] bg-white border border-[#ccc] rounded-lg p-4">
           <div className="py-4">
             <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
               {layout.map((item, index) => (
@@ -142,9 +142,9 @@ const CreateCarriage = () => {
             row_count: 1,
           }}
           layout="vertical"
-          className="w-[35%] bg-white border-[1px] border-[#ccc] rounded-lg p-4"
+          className="w-[35%] bg-white border border-[#ccc] rounded-lg p-4"
         >
-          <h1 className="text-[18px] font-semibold text-center">Thông tin toa tàu</h1>
+          <h1 className="text-lg font-semibold text-center">Thông tin toa tàu</h1>
           <Form.Item
             label="Tên toa tàu"
             name="name"
@@ -231,7 +231,7 @@ const CreateCarriage = () => {
                 key={item.value}
                 align="center"
                 justify="space-between"
-                className="border-[1px] border-[#ccc] w-full py-2 px-3 rounded-lg"
+                className="border border-[#ccc] w-full py-2 px-3 rounded-lg"
               >
                 <p>
                   {item.quantity}x {item.label}

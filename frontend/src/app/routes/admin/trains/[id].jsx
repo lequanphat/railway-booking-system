@@ -70,7 +70,7 @@ const TrainDetails = () => {
           </Flex>
         </Flex>
         <Flex vertical className="flex-1 border bg-white border-gray-200 mx-auto p-4 rounded-md" gap={12}>
-          <h1 className="font-semibold text-[16px] text-center">Bảng giá vé</h1>
+          <h1 className="font-semibold text-base text-center">Bảng giá vé</h1>
           <div className="w-full">
             <SeatPricesTable data={seatPricesData} />
           </div>

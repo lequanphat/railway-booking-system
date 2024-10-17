@@ -24,14 +24,14 @@ const CarriageDetails = () => {
           </Button>
         </Space>
       </Flex>
-      <Flex vertical align="center" className="border-[1px] border-[#ccc] w-[460px] mx-auto p-4 rounded-md">
-        <h1 className="font-semibold text-[16px] text-center">{data?.name}</h1>
+      <Flex vertical align="center" className="border border-[#ccc] w-[460px] mx-auto p-4 rounded-md">
+        <h1 className="font-semibold text-base text-center">{data?.name}</h1>
         <Row gutter={20}>
           {data?.seats?.map((seat) => (
             <Col key={seat.id} span={24 / (data?.floors * data?.row_count)} className="mt-4">
-              <Flex vertical align="center" className="border-[1px] border-[#ccc] p-2 rounded-md">
-                <h1 className="font-semibold text-[18px]">{seat?.position}</h1>
-                <p className="text-[12px]">{seat?.seatType?.code}</p>
+              <Flex vertical align="center" className="border border-[#ccc] p-2 rounded-md">
+                <h1 className="font-semibold text-lg">{seat?.position}</h1>
+                <p className="text-xs">{seat?.seatType?.code}</p>
               </Flex>
             </Col>
           ))}
