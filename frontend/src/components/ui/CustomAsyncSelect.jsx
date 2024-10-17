@@ -22,7 +22,7 @@ const CustomAsyncSelect = ({ loadQuery, setValue, config = { value: 'id', label:
 
   useEffect(() => {
     if (seatTypes) {
-      const newOptions = seatTypes.content.map((item) => {
+      const newOptions = seatTypes.items.map((item) => {
         let option = {};
         Object.keys(config).forEach((key) => {
           option[key] = item[config[key]];
@@ -32,7 +32,7 @@ const CustomAsyncSelect = ({ loadQuery, setValue, config = { value: 'id', label:
       });
 
       setOptions((prev) => (page === 1 ? newOptions : [...prev, ...newOptions]));
-      setHasMore(!seatTypes.last);
+      setHasMore(seatTypes?.meta?.current_page < seatTypes?.meta?.total_pages);
     }
   }, [seatTypes, page, config]);
 

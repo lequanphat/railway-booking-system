@@ -2,12 +2,7 @@ package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.seat_types.CreateSeatTypeRequest;
 import com.backend.railwaybookingsystem.dtos.seat_types.SeatTypeResponse;
-import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
-import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
-import com.backend.railwaybookingsystem.dtos.users.UserResponse;
-import com.backend.railwaybookingsystem.enums.UserRole;
 import com.backend.railwaybookingsystem.services.SeatTypeService;
-import com.backend.railwaybookingsystem.services.UserService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
