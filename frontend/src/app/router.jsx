@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AdminLayout from '~/components/layouts/admin-layout';
@@ -7,6 +7,8 @@ import MainLayout from '~/components/layouts/main-layout';
 import AdminRoutes from './guards/admin-routes';
 import AuthRoutes from './guards/auth-routes';
 import PrivateRoutes from './guards/private-routes';
+
+const queryClient = new QueryClient();
 
 const createAppRouter = () =>
   createBrowserRouter([
@@ -151,6 +153,24 @@ const createAppRouter = () =>
           lazy: async () => {
             const TrainDetails = await import('./routes/admin/trains/[id]');
             return { Component: TrainDetails.default };
+          },
+        },
+        {
+          path: 'trains/:trainId/route-segments',
+          lazy: async () => {
+            const CreateTrain = await import('./routes/admin/trains/route-segments');
+            return { Component: CreateTrain.default };
+          },
+          loader: async ({ params }) => {
+            const { RouteSegmentsLoader } = await import('./routes/admin/trains/route-segments');
+            return RouteSegmentsLoader(queryClient)({ params });
+          },
+        },
+        {
+          path: 'schedules/generate',
+          lazy: async () => {
+            const GenerateSchedule = await import('./routes/admin/generate-route-segments');
+            return { Component: GenerateSchedule.default };
           },
         },
       ],

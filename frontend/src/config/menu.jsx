@@ -43,8 +43,8 @@ const adminMenu = Object.freeze([
       },
       {
         key: '2-4',
-        label: 'Quản lý toa tàu',
-        path: '/schedules/carriages',
+        label: 'Generate Route',
+        path: '/admin/schedules/generate',
       },
     ],
   },

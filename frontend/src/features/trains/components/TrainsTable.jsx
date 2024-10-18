@@ -1,4 +1,4 @@
-import { ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -54,10 +54,13 @@ const TrainsTable = () => {
         dataIndex: 'id',
         key: 'id',
         align: 'center',
-        render: (value) => (
+        render: (value, record) => (
           <Space>
             <Link to={`${value}`} type="default">
               <Button size="small" icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+            </Link>
+            <Link to={`${record.id}/route-segments`}>
+              <Button size="small" icon={<SwapOutlined />} />
             </Link>
           </Space>
         ),

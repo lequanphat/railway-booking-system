@@ -1,9 +1,13 @@
 package com.backend.railwaybookingsystem.services.impl;
+
 import com.backend.railwaybookingsystem.dtos.carriages.CarriageResponse;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceResponse;
+import com.backend.railwaybookingsystem.dtos.trains.requests.CreateRouteSegmentRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
+import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.*;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
@@ -39,7 +43,7 @@ public class TrainServiceImpl implements TrainService {
     private SeatPriceRepository seatPriceRepository;
 
 
-    public TrainResponse saveTrain(CreateTrainRequest request){
+    public TrainResponse saveTrain(CreateTrainRequest request) {
         List<Long> carriages = request.getCarriagesList();
 
         List<SeatPriceRequest> seatPricesList = request.getSeatPricesList();
@@ -47,9 +51,9 @@ public class TrainServiceImpl implements TrainService {
         Train train = TrainMapper.INSTANCE.convertToTrain(request);
         Train savedTrain = trainRepository.save(train);
 
-        for(int i=0; i< carriages.size(); i++){
+        for (int i = 0; i < carriages.size(); i++) {
             Carriage carriage = new Carriage();
-            carriage.setPosition(i+1);
+            carriage.setPosition(i + 1);
             carriage.setCarriageLayout(carriageLayoutRepository.findById(carriages.get(i)).orElse(null));
             carriage.setTrain(train);
             carriageRepository.save(carriage);
@@ -95,5 +99,7 @@ public class TrainServiceImpl implements TrainService {
         }
         return null;
     }
+
+
 }
 

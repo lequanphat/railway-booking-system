@@ -116,3 +116,7 @@
     left: 100%;
   }
 }
+
+.ant-form-item-explain-error {
+  font-size: 13px;
+}

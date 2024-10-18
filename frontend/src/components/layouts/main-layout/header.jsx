@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Menu from './menu';
 import MobileMenu from './mobile-menu';
 import logo from '~/assets/images/logo.png';
-import { default as downloadAppIcon, default as personIcon } from '~/assets/svg/download_app.svg';
+import downloadAppIcon from '~/assets/svg/download_app.svg';
+import personIcon from '~/assets/svg/person.svg';
 import UserDropdown from './user-dropdown';
 import useAuthStore from '~/stores/auth-store';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -34,16 +36,18 @@ const Header = () => {
           ></Button>
         </div>
         <div className="hidden md:block bg-white px-24 pt-[60px] rounded-full translate-y-[-50%]">
-          <img src={logo} alt="logo" className="w-[160px] h-auto" />
+          <img src={logo} alt="logo" className="w-[120px] h-auto" />
         </div>
         <div className="py-4">
           {isAuthenticated ? (
             <UserDropdown />
           ) : (
-            <Button href="/auth/login" className="!p-2 border-none" shape="round">
-              <img src={personIcon} alt="login" className="w-[20px] h-auto" />
-              <span className="px-[6px]">Login/Register</span>
-            </Button>
+            <Link to="/auth/login">
+              <Button className="!p-2 border-none" shape="round">
+                <img src={personIcon} alt="login" className="w-[20px] h-auto" />
+                <span className="pr-2 font-medium text-sm">Đăng nhập/Đăng ký</span>
+              </Button>
+            </Link>
           )}
         </div>
       </Flex>

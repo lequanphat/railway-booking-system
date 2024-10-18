@@ -32,7 +32,7 @@ const LoginRoute = () => {
   return (
     <div className="p-8 rounded-[8px] w-[90%] md:w-[460px] bg-white border shadow-sm">
       <Typography className="text-[22px] font-semibold">Đăng nhập</Typography>
-      <Form form={form} className="pt-4" onFinish={handleLogin} layout="vertical">
+      <Form form={form} className="pt-4" onFinish={handleLogin} layout="vertical" variant="filled">
         <Flex vertical>
           <Form.Item label="Email" name="email" rules={RULES.login.email} required={false} validateTrigger="onBlur">
             <Input placeholder="Nhập email..." />

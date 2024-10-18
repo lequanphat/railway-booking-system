@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '~/lib/api';
 
 export const getStations = () => {
-  return api.get(`/public/provinces`);
+  return api.get(`/public/stations`);
 };
 
 export const useStations = () => {
   return useQuery({
-    queryKey: ['provinces'],
+    queryKey: ['stations'],
     queryFn: getStations,
   });
 };

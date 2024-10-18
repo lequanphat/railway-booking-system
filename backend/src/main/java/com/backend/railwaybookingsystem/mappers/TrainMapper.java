@@ -1,10 +1,10 @@
 package com.backend.railwaybookingsystem.mappers;
 
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
 import com.backend.railwaybookingsystem.models.Train;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -18,4 +18,6 @@ public interface TrainMapper {
     Train convertToTrain(CreateTrainRequest request);
 
     List<TrainResponse> convertToTrainResponses(List<Train> trains);
+
+    GetTrainRouteSegmentsResponse convertToGetTrainRouteSegmentsResponse(Train train);
 }
