@@ -30,6 +30,6 @@ public class Train {
     @ManyToOne
     private Route route;
 
-    @OneToMany
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RouteSegment> routeSegments;
 }

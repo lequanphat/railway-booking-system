@@ -295,6 +295,11 @@ INSERT INTO routes (id, name) VALUES (8, "Vinh - Hà Nội");
 INSERT INTO trains(id, name, route_id) VALUES (1, "SE1", 2);
 INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (1, 1, 1, "06:00","06:10",0, 0);
 INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (2, 1, 2, "07:00","07:10",0, 600);
+INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (3, 1, 3, "08:00","08:10",0, 1200);
+INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (4, 1, 4, "09:00","09:10",0, 1800);
+INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (5, 1, 5, "10:00","10:10",0, 2400);
+INSERT INTO route_segments(id, train_id, station_id, arrival_time, departure_time, day_number, distance) VALUES (6, 1, 6, "11:00","11:10",0, 3000);
+
 
 INSERT INTO trains(id, name, route_id) VALUES (2, "SE2", 1);
 INSERT INTO trains(id, name, route_id) VALUES (3, "SE3", 2);

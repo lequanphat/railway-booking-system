@@ -1,4 +1,4 @@
-import { ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { ExportOutlined, QuestionCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -54,10 +54,13 @@ const TrainsTable = () => {
         dataIndex: 'id',
         key: 'id',
         align: 'center',
-        render: (value) => (
+        render: (value, record) => (
           <Space>
             <Link to={`${value}`} type="default">
               <Button size="small" icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+            </Link>
+            <Link to={`${record.id}/route-segments`}>
+              <Button size="small" icon={<SwapOutlined />} />
             </Link>
           </Space>
         ),
@@ -66,7 +69,7 @@ const TrainsTable = () => {
     [],
   );
 
-  const { tableProps, handleSearch, keyword } = useTable({
+  const { tableProps, handleSearch } = useTable({
     fetchData: useTrains,
     columns,
     defaultPageSize: 10,
@@ -77,13 +80,7 @@ const TrainsTable = () => {
       rowKey="id"
       title={() => (
         <Flex justify="space-between">
-          <Input.Search
-            placeholder="Tìm kiếm..."
-            className="w-[250px]"
-            allowClear
-            onSearch={handleSearch}
-            value={keyword}
-          />
+          <Input.Search placeholder="Tìm kiếm..." className="w-[250px]" onSearch={handleSearch} allowClear />
           <Button icon={<ExportOutlined />}>
             Export<Tag color="blue">Coming Soon</Tag>
           </Button>
