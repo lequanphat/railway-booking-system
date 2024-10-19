@@ -4,10 +4,11 @@ import PageHeader from '~/components/ui/page-header';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { useTrain } from '~/features/trains/api/get-train';
 import SeatPricesTable from '~/features/trains/components/SeatPricesTable';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const TrainDetails = () => {
   const { id } = useParams();
+  const [formatTrainData, setFormatTrainData] = useState(null);
   const { data: trainData } = useTrain({ id });
 
   const seatPricesData = useMemo(() => {
@@ -17,6 +18,35 @@ const TrainDetails = () => {
       price: seatPrice?.original_price_per_km,
     }));
   }, [trainData]);
+
+  useEffect(() => {
+    if (!trainData) return;
+    trainData?.carriages?.forEach((carriage) => {
+      carriage?.carriageLayout?.seats?.forEach((seat) => {
+        seat.seatType = trainData?.seatPrices?.find(
+          (seatPrice) => seatPrice?.seatType?.id === seat?.seatType?.id,
+        )?.seatType;
+      });
+    });
+    const updatedTrainData = {
+      ...trainData,
+      carriages: trainData.carriages.map((carriage) => ({
+        ...carriage,
+        carriageLayout: {
+          ...carriage.carriageLayout,
+          seats: carriage.carriageLayout.seats.map((seat) => ({
+            ...seat,
+            seatType:
+              trainData.seatPrices.find((seatPrice) => seatPrice?.seatType?.id === seat?.seatType?.id)?.seatType ||
+              seat.seatType,
+          })),
+        },
+      })),
+    };
+
+    setFormatTrainData(updatedTrainData);
+  }, [trainData]);
+
   return (
     <div>
       <Flex align="center" justify="space-between" className="mb-2">
@@ -25,7 +55,7 @@ const TrainDetails = () => {
           links={[
             { title: 'Trang chủ', href: '/admin' },
             { title: 'Toa hỏa', href: '/admin/trains' },
-            { title: trainData?.name || 'Chi tiết' },
+            { title: formatTrainData?.name || 'Chi tiết' },
           ]}
         />
         <Space>
@@ -41,9 +71,9 @@ const TrainDetails = () => {
           className="flex-1 border bg-white border-gray-200 w-[460px] mx-auto p-4 rounded-md"
           gap={16}
         >
-          <h1 className="font-semibold text-base text-center">{trainData?.name}</h1>
+          <h1 className="font-semibold text-base text-center">{formatTrainData?.name}</h1>
           <Flex vertical gap={16} className="w-full">
-            {trainData?.carriages?.map((carriage) => (
+            {formatTrainData?.carriages?.map((carriage) => (
               <Flex
                 key={carriage.id}
                 vertical

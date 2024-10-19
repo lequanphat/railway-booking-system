@@ -34,15 +34,6 @@ const TrainsTable = () => {
         },
       },
       {
-        title: 'Mức giá trung bình',
-        dataIndex: 'seatPrices',
-        key: 'seatPrices',
-        render: (seatPrices) => {
-          const totalPrices = seatPrices?.reduce((acc, cur) => acc + cur.original_price_per_km, 0) / seatPrices.length;
-          return `${totalPrices}đ / km`;
-        },
-      },
-      {
         title: 'Trạng thái',
         dataIndex: 'is_active',
         key: 'is_active',

@@ -1,14 +1,16 @@
 package com.backend.railwaybookingsystem.services;
 
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
-import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.CreateTrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
 import org.springframework.data.domain.Page;
 
 public interface TrainService {
 
-    TrainResponse getTrainById(Long id);
+    TrainDetailResponse getTrainDetailById(Long id);
 
-    TrainResponse saveTrain(CreateTrainRequest request);
+    CreateTrainResponse saveTrain(CreateTrainRequest request);
 
-    Page<TrainResponse> getTrains(String keyword, int page, int size);
+    Page<TrainListResponse> getTrains(String keyword, int page, int size);
 }

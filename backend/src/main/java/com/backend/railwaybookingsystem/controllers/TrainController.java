@@ -1,7 +1,9 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
-import com.backend.railwaybookingsystem.dtos.trains.responses.TrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.CreateTrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
 import com.backend.railwaybookingsystem.services.TrainService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,25 +22,25 @@ public class TrainController {
 
     @PostMapping("ad/trains")
     @Operation(tags = "Train", description = "Create a new train")
-    public ResponseEntity<TrainResponse> createTrain(@Valid @RequestBody CreateTrainRequest request) {
-        TrainResponse createdTrain = trainService.saveTrain(request);
+    public ResponseEntity<CreateTrainResponse> createTrain(@Valid @RequestBody CreateTrainRequest request) {
+        CreateTrainResponse createdTrain = trainService.saveTrain(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTrain);
     }
 
     @GetMapping("ad/trains")
     @Operation(tags = "Train", description = "get trains with pagination")
-    public ResponseEntity<CustomPagination<TrainResponse>> getTrains(@RequestParam(defaultValue = "1") int page,
-                                                                     @RequestParam(defaultValue = "10") int size,
-                                                                     @RequestParam(defaultValue = "") String keyword
+    public ResponseEntity<CustomPagination<TrainListResponse>> getTrains(@RequestParam(defaultValue = "1") int page,
+                                                                         @RequestParam(defaultValue = "10") int size,
+                                                                         @RequestParam(defaultValue = "") String keyword
     ) {
-        Page<TrainResponse> trains = trainService.getTrains(keyword, page - 1, size);
+        Page<TrainListResponse> trains = trainService.getTrains(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(trains));
     }
 
     @GetMapping("ad/trains/{id}")
     @Operation(tags = "Train", description = "get train")
-    public ResponseEntity<TrainResponse> getTrainById(@PathVariable Long id) {
-        TrainResponse train = trainService.getTrainById(id);
+    public ResponseEntity<TrainDetailResponse> getTrainById(@PathVariable Long id) {
+        TrainDetailResponse train = trainService.getTrainDetailById(id);
         return ResponseEntity.ok(train);
     }
 }
