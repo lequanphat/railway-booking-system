@@ -1,16 +1,11 @@
 package com.backend.railwaybookingsystem.services.impl;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.seats.SeatResponse;
-import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.mappers.CarriageLayoutMapper;
-import com.backend.railwaybookingsystem.mappers.SeatMapper;
-import com.backend.railwaybookingsystem.mappers.TrainMapper;
 import com.backend.railwaybookingsystem.models.CarriageLayout;
 import com.backend.railwaybookingsystem.models.Seat;
-import com.backend.railwaybookingsystem.models.Train;
 import com.backend.railwaybookingsystem.repositories.CarriageLayoutRepository;
 import com.backend.railwaybookingsystem.repositories.SeatRepository;
 import com.backend.railwaybookingsystem.repositories.SeatTypeRepository;
@@ -24,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

@@ -1,6 +1,6 @@
 package com.backend.railwaybookingsystem.controllers;
 
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
