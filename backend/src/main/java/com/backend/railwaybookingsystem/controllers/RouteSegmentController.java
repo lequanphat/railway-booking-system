@@ -3,7 +3,6 @@ package com.backend.railwaybookingsystem.controllers;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateRouteSegmentRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.services.RouteSegmentService;
-import com.backend.railwaybookingsystem.services.TrainService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

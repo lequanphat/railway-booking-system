@@ -1,7 +1,9 @@
 package com.backend.railwaybookingsystem.controllers;
 
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
 import com.backend.railwaybookingsystem.services.CarriageLayoutService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,20 +22,20 @@ public class CarriageLayoutController {
 
     @PostMapping("ad/carriage-layouts")
     @Operation(tags = "Carriage Layout", description = "Create a new carriage layout")
-    public ResponseEntity<CarriageLayoutResponse> createCarriageLayout(@Valid @RequestBody CreateCarriageLayoutRequest request) {
+    public ResponseEntity<CreateCarriageLayoutResponse> createCarriageLayout(@Valid @RequestBody CreateCarriageLayoutRequest request) {
 
-        CarriageLayoutResponse createdCarriageLayout = carriageLayoutService.saveCarriageLayout(request);
+        CreateCarriageLayoutResponse createdCarriageLayout = carriageLayoutService.saveCarriageLayout(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCarriageLayout);
     }
 
     @GetMapping("ad/carriage-layouts")
     @Operation(tags = "Carriage Layout", description = "get carriage laypout")
-    public ResponseEntity<CustomPagination<CarriageLayoutResponse>> getCarriageLayouts(@RequestParam(defaultValue = "1") int page,
-                                                                           @RequestParam(defaultValue = "10") int size,
-                                                                           @RequestParam(defaultValue = "") String keyword
+    public ResponseEntity<CustomPagination<CarriageLayoutListResponse>> getCarriageLayouts(@RequestParam(defaultValue = "1") int page,
+                                                                                           @RequestParam(defaultValue = "10") int size,
+                                                                                           @RequestParam(defaultValue = "") String keyword
     ) {
-        Page<CarriageLayoutResponse> carriageLayouts = carriageLayoutService.getCarriageLayouts(keyword, page - 1, size);
+        Page<CarriageLayoutListResponse> carriageLayouts = carriageLayoutService.getCarriageLayouts(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(carriageLayouts));
     }
 

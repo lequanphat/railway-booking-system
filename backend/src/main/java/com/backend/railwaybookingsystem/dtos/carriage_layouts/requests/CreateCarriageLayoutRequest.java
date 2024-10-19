@@ -1,4 +1,4 @@
-package com.backend.railwaybookingsystem.dtos.carriage_layouts;
+package com.backend.railwaybookingsystem.dtos.carriage_layouts.requests;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;

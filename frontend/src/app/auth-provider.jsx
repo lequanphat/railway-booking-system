@@ -6,6 +6,7 @@ const AuthProvider = ({ children }) => {
   const { setUser } = useAuthStore();
   const {
     data: { user, token },
+    error,
   } = useAuthentication();
 
   useEffect(() => {
@@ -13,7 +14,11 @@ const AuthProvider = ({ children }) => {
       setUser(user);
       localStorage.setItem('token', token);
     }
-  }, [user, token, setUser]);
+
+    if (error) {
+      localStorage.removeItem('token');
+    }
+  }, [user, token, setUser, error]);
 
   return children;
 };

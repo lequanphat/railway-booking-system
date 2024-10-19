@@ -1,9 +1,6 @@
 package com.backend.railwaybookingsystem.mappers;
 
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.seats.SeatResponse;
-import com.backend.railwaybookingsystem.models.CarriageLayout;
 import com.backend.railwaybookingsystem.models.Seat;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

@@ -1,16 +1,16 @@
 package com.backend.railwaybookingsystem.services;
 
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
-import com.backend.railwaybookingsystem.dtos.seat_types.CreateSeatTypeRequest;
-import com.backend.railwaybookingsystem.dtos.seat_types.SeatTypeResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
 import org.springframework.data.domain.Page;
 
 public interface CarriageLayoutService {
 
     CarriageLayoutResponse getCarriageLayoutById(Long id);
 
-    CarriageLayoutResponse saveCarriageLayout(CreateCarriageLayoutRequest request);
+    CreateCarriageLayoutResponse saveCarriageLayout(CreateCarriageLayoutRequest request);
 
-    Page<CarriageLayoutResponse> getCarriageLayouts(String keyword, int page, int size);
+    Page<CarriageLayoutListResponse> getCarriageLayouts(String keyword, int page, int size);
 }

@@ -1,7 +1,6 @@
 package com.backend.railwaybookingsystem.dtos.carriages;
 
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
-import com.backend.railwaybookingsystem.dtos.seat_types.SeatTypeResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
