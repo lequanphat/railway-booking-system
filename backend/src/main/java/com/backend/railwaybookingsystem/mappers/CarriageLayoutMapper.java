@@ -31,7 +31,7 @@ public interface CarriageLayoutMapper {
 
     default List<CarriageLayoutResponse.SeatDto> sortSeatsByPosition(List<Seat> seats) {
         return seats.stream()
-                .sorted(Comparator.comparingInt(Seat::getPosition).reversed())
+                .sorted(Comparator.comparingInt(Seat::getPosition))
                 .map(seat -> new CarriageLayoutResponse.SeatDto(
                         seat.getId(), seat.getPosition(),
                         new CarriageLayoutResponse.SeatDto.SeatTypeDto(
