@@ -1,20 +1,20 @@
 package com.backend.railwaybookingsystem.services.impl;
-import com.backend.railwaybookingsystem.dtos.carriage_layouts.CarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.CreateCarriageLayoutRequest;
-import com.backend.railwaybookingsystem.dtos.seat_types.CreateSeatTypeRequest;
-import com.backend.railwaybookingsystem.dtos.seat_types.SeatTypeResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.seats.SeatResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.mappers.CarriageLayoutMapper;
 import com.backend.railwaybookingsystem.mappers.SeatMapper;
-import com.backend.railwaybookingsystem.mappers.SeatTypeMapper;
+import com.backend.railwaybookingsystem.mappers.TrainMapper;
 import com.backend.railwaybookingsystem.models.CarriageLayout;
 import com.backend.railwaybookingsystem.models.Seat;
-import com.backend.railwaybookingsystem.models.SeatType;
+import com.backend.railwaybookingsystem.models.Train;
 import com.backend.railwaybookingsystem.repositories.CarriageLayoutRepository;
 import com.backend.railwaybookingsystem.repositories.SeatRepository;
 import com.backend.railwaybookingsystem.repositories.SeatTypeRepository;
 import com.backend.railwaybookingsystem.services.CarriageLayoutService;
-import com.backend.railwaybookingsystem.services.SeatTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,7 +40,7 @@ public class CarriageLayoutServiceImpl implements CarriageLayoutService {
     private SeatRepository seatRepository;
 
 
-    public CarriageLayoutResponse saveCarriageLayout(CreateCarriageLayoutRequest request){
+    public CreateCarriageLayoutResponse saveCarriageLayout(CreateCarriageLayoutRequest request){
         List<Long> seatList = request.getLayout();
 
         CarriageLayout carriageLayout = CarriageLayoutMapper.INSTANCE.convertToCarriageLayout(request);
@@ -54,32 +54,23 @@ public class CarriageLayoutServiceImpl implements CarriageLayoutService {
             seatRepository.save(seat);
         }
 
-        return CarriageLayoutMapper.INSTANCE.convertToCarriageLayoutResponse(savedCarriageLayout);
+        return CarriageLayoutMapper.INSTANCE.convertToCreateCarriageLayoutResponse(savedCarriageLayout);
     }
 
-    public Page<CarriageLayoutResponse> getCarriageLayouts(String keyword, int page, int size) {
+
+    public Page<CarriageLayoutListResponse> getCarriageLayouts(String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
 
-        Page<CarriageLayout> carriageLayouts = carriageLayoutRepository.findByNameContainingIgnoreCase(keyword, pageRequest);
+        Page<CarriageLayoutListResponse> carriageLayouts = carriageLayoutRepository.findByNameContainingIgnoreCase(keyword, pageRequest)
+                .map(CarriageLayoutMapper.INSTANCE::convertToCarriageLayoutListResponse);
 
-        List<CarriageLayoutResponse> carriageLayoutsList = CarriageLayoutMapper.INSTANCE.convertToCarriageLayoutResponses(carriageLayouts.getContent());
-
-        return new PageImpl<>(carriageLayoutsList, pageRequest, carriageLayouts.getTotalElements());
+        return new PageImpl<>(carriageLayouts.getContent(), pageRequest, carriageLayouts.getTotalElements());
     }
 
     public CarriageLayoutResponse getCarriageLayoutById(Long id) {
-        CarriageLayout carriageLayout = carriageLayoutRepository.findById(id).orElse(null);
-
-        if (carriageLayout != null) {
-            List<SeatResponse> seatResponses = carriageLayout.getSeats().stream()
-                    .map(SeatMapper.INSTANCE::convertToSeatResponseWithType)
-                    .collect(Collectors.toList());
-
-            CarriageLayoutResponse response = CarriageLayoutMapper.INSTANCE.convertToCarriageLayoutResponse(carriageLayout);
-            response.setSeats(seatResponses);
-            return response;
-        }
-        return null;
+        return carriageLayoutRepository.findById(id)
+                .map(CarriageLayoutMapper.INSTANCE::convertToCarriageLayoutResponse)
+                .orElse(null);
     }
 }
 
