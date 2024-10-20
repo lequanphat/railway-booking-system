@@ -16,6 +16,11 @@ const SeatPricesTable = ({ data }) => {
         key: 'name',
       },
       {
+        title: 'Mã ghế',
+        dataIndex: 'code',
+        key: 'code',
+      },
+      {
         title: 'Giá vé / km',
         dataIndex: 'price',
         key: 'price',

@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Row, Space } from 'antd';
+import { Button, Card, Col, Flex, Row, Space } from 'antd';
 import { useParams } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
 import { PlusSquareOutlined } from '@ant-design/icons';
@@ -15,19 +15,13 @@ const TrainDetails = () => {
     return trainData?.seatPrices?.map((seatPrice, index) => ({
       index: index + 1,
       name: seatPrice?.seatType?.name,
+      code: seatPrice?.seatType?.code,
       price: seatPrice?.original_price_per_km,
     }));
   }, [trainData]);
 
   useEffect(() => {
     if (!trainData) return;
-    trainData?.carriages?.forEach((carriage) => {
-      carriage?.carriageLayout?.seats?.forEach((seat) => {
-        seat.seatType = trainData?.seatPrices?.find(
-          (seatPrice) => seatPrice?.seatType?.id === seat?.seatType?.id,
-        )?.seatType;
-      });
-    });
     const updatedTrainData = {
       ...trainData,
       carriages: trainData.carriages.map((carriage) => ({
@@ -64,48 +58,62 @@ const TrainDetails = () => {
           </Button>
         </Space>
       </Flex>
-      <Flex className="w-full" gap={20}>
-        <Flex
-          vertical
-          align="center"
-          className="flex-1 border bg-white border-gray-200 w-[460px] mx-auto p-4 rounded-md"
-          gap={16}
-        >
-          <h1 className="font-semibold text-base text-center">{formatTrainData?.name}</h1>
-          <Flex vertical gap={16} className="w-full">
-            {formatTrainData?.carriages?.map((carriage) => (
-              <Flex
-                key={carriage.id}
-                vertical
-                align="center"
-                className="w-full border border-gray-200 mx-auto p-4 rounded-md"
-              >
-                <h1 className="font-semibold text-base text-center">{carriage?.carriageLayout?.name}</h1>
-                <Row gutter={20}>
-                  {carriage?.carriageLayout?.seats?.map((seat) => (
-                    <Col
-                      key={seat.id}
-                      span={24 / (carriage?.carriageLayout?.floors * carriage?.carriageLayout?.row_count)}
-                      className="mt-4"
-                    >
-                      <Flex vertical align="center" className="border border-gray-200 p-2 rounded-md">
-                        <h1 className="font-semibold text-lg">{seat?.position}</h1>
-                        <p className="text-xs">{seat?.seatType?.code}</p>
-                      </Flex>
-                    </Col>
-                  ))}
-                </Row>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Card>
+            <Flex vertical align="center" className="bg-white w-full mx-auto" gap={16}>
+              <h1 className="font-semibold text-base text-center">{formatTrainData?.name}</h1>
+              <Flex vertical gap={16} className="w-full">
+                {formatTrainData?.carriages?.map((carriage) => (
+                  <Flex
+                    key={carriage.id}
+                    vertical
+                    align="center"
+                    className="w-full border border-gray-200 mx-auto p-6 rounded-md"
+                  >
+                    <h1 className="font-semibold text-base text-center mb-6">{carriage?.carriageLayout?.name}</h1>
+                    <Row gutter={[20, 20]}>
+                      {carriage?.carriageLayout?.seats?.map((seat) => (
+                        <Col
+                          key={seat.id}
+                          span={24 / (carriage?.carriageLayout?.floors * carriage?.carriageLayout?.row_count)}
+                        >
+                          <Flex vertical align="center" className="border border-gray-200 p-2 rounded-md">
+                            <h1 className="font-semibold text-lg">{seat?.position}</h1>
+                            <p className="text-xs">{seat?.seatType?.code}</p>
+                          </Flex>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Flex>
+                ))}
               </Flex>
-            ))}
-          </Flex>
-        </Flex>
-        <Flex vertical className="flex-1 border bg-white border-gray-200 mx-auto p-4 rounded-md" gap={12}>
-          <h1 className="font-semibold text-base text-center">Bảng giá vé</h1>
-          <div className="w-full">
-            <SeatPricesTable data={seatPricesData} />
-          </div>
-        </Flex>
-      </Flex>
+            </Flex>
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Card>
+                <Flex vertical className="bg-white mx-auto" gap={12}>
+                  <h1 className="font-semibold text-base text-center">Lộ trình di chuyển</h1>
+                  <div className="w-full">Content here</div>
+                </Flex>
+              </Card>
+            </Col>
+            <Col span={24}>
+              <Card>
+                <Flex vertical className="bg-white mx-auto" gap={12}>
+                  <h1 className="font-semibold text-base text-center">Bảng giá vé</h1>
+                  <div className="w-full">
+                    <SeatPricesTable data={seatPricesData} />
+                  </div>
+                </Flex>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </div>
   );
 };
