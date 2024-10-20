@@ -24,21 +24,32 @@ const CarriageDetails = () => {
           </Button>
         </Space>
       </Flex>
-      <Card className="w-[460px] mx-auto p-4 rounded-md">
-        <Flex vertical align="center">
-          <h1 className="font-semibold text-base text-center">{data?.name}</h1>
-          <Row gutter={20}>
-            {data?.seats?.map((seat) => (
-              <Col key={seat.id} span={24 / (data?.floors * data?.row_count)} className="mt-4">
-                <Flex vertical align="center" className="border border-[#ccc] p-2 rounded-md">
-                  <h1 className="font-semibold text-lg">{seat?.position}</h1>
-                  <p className="text-xs">{seat?.seatType?.code}</p>
-                </Flex>
-              </Col>
-            ))}
-          </Row>
-        </Flex>
-      </Card>
+      <Row gutter={[16, 16]}>
+        <Col span={12}>
+          <Card className="w-full mx-auto p-4 rounded-md">
+            <Flex vertical align="center">
+              <h1 className="font-semibold text-base text-center mb-6">{data?.name}</h1>
+              <Row gutter={[20, 20]}>
+                {data?.seats?.map((seat) => (
+                  <Col key={seat.id} span={24 / (data?.floors * data?.row_count)}>
+                    <Flex vertical align="center" className="border border-[#ccc] p-2 rounded-md">
+                      <h1 className="font-semibold text-lg">{seat?.position}</h1>
+                      <p className="text-xs">{seat?.seatType?.code}</p>
+                    </Flex>
+                  </Col>
+                ))}
+              </Row>
+            </Flex>
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card className="w-full mx-auto p-4 rounded-md">
+            <Flex vertical align="center">
+              <h1 className="font-semibold text-base text-center mb-4">Thông tin toa tàu</h1>
+            </Flex>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };
