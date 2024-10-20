@@ -1,8 +1,10 @@
 package com.backend.railwaybookingsystem.services.impl;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.UpdateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
+import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.CarriageLayoutMapper;
 import com.backend.railwaybookingsystem.models.CarriageLayout;
 import com.backend.railwaybookingsystem.models.Seat;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class CarriageLayoutServiceImpl implements CarriageLayoutService {
     private SeatRepository seatRepository;
 
 
+    @Transactional
     public CreateCarriageLayoutResponse saveCarriageLayout(CreateCarriageLayoutRequest request){
         List<Long> seatList = request.getLayout();
 
@@ -49,6 +53,22 @@ public class CarriageLayoutServiceImpl implements CarriageLayoutService {
         }
 
         return CarriageLayoutMapper.INSTANCE.convertToCreateCarriageLayoutResponse(savedCarriageLayout);
+    }
+
+    @Transactional
+    public CreateCarriageLayoutResponse updateCarriageLayout(Long id, UpdateCarriageLayoutRequest request){
+        CarriageLayout carriageLayout = carriageLayoutRepository.findById(id).orElse(null);
+        if(carriageLayout == null){
+            throw new NotFoundException("Carriage Layout not found");
+        }
+
+        carriageLayout.setName(request.getName());
+        carriageLayout.setFloors(request.getFloors());
+        carriageLayout.setRow_count(request.getRow_count());
+
+        CarriageLayout updatedCarriageLayout = carriageLayoutRepository.save(carriageLayout);
+
+        return CarriageLayoutMapper.INSTANCE.convertToCreateCarriageLayoutResponse(updatedCarriageLayout);
     }
 
 

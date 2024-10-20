@@ -5,6 +5,7 @@ import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.CreateTrainResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
+import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.*;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -76,9 +79,21 @@ public class TrainServiceImpl implements TrainService {
     }
 
     public TrainDetailResponse getTrainDetailById(Long id) {
-        return trainRepository.findById(id)
+        TrainDetailResponse train = trainRepository.findById(id)
                 .map(TrainMapper.INSTANCE::convertToTrainDetailResponse)
                 .orElse(null);
+
+        if(train == null){
+            throw new NotFoundException("Train not found");
+        }
+        List<TrainDetailResponse.CarriageDto> carriages = train.getCarriages();
+        Collections.sort(carriages, Comparator.comparingInt(TrainDetailResponse.CarriageDto::getPosition));
+
+        for (TrainDetailResponse.CarriageDto carriage : carriages) {
+            List<TrainDetailResponse.CarriageDto.CarriageLayoutDto.SeatDto> seats = carriage.getCarriageLayout().getSeats();
+            Collections.sort(seats, Comparator.comparingInt(TrainDetailResponse.CarriageDto.CarriageLayoutDto.SeatDto::getPosition));
+        }
+        return train;
     }
 }
 

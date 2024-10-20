@@ -128,6 +128,13 @@ const createAppRouter = () =>
           },
         },
         {
+          path: 'carriage-layouts/:id/edit',
+          lazy: async () => {
+            const EditCarriagePage = await import('./routes/admin/carriages/[id]/edit');
+            return { Component: EditCarriagePage.default };
+          },
+        },
+        {
           path: 'seats',
           lazy: async () => {
             const SeatsManagement = await import('./routes/admin/seat-types');

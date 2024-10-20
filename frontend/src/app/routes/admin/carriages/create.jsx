@@ -1,13 +1,15 @@
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Input, message, Select, Space } from 'antd';
+import { Button, Card, Col, Flex, Form, Input, message, Row, Select, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomAsyncSelect from '~/components/ui/CustomAsyncSelect';
 import PageHeader from '~/components/ui/page-header';
-import RULES from '~/config/rule';
 import { useCreateCarriageLayout } from '~/features/carriages/api/create-layout';
 import CarriagesContainer from '~/features/carriages/components/CarriagesContainer';
 import SeatItem from '~/features/carriages/components/SeatItem';
+import CARRIAGE_RULES from '~/features/carriages/schemas';
+import { CARRIAGE_FLOORS_OPTIONS, CARRIAGE_ROWS_OPTIONS } from '~/features/carriages/utils/constants';
+import { moveArrayItem } from '~/features/carriages/utils/helpers';
 import { useSeatTypes } from '~/features/seat-types/api/get-seat-types';
 
 const CreateCarriage = () => {
@@ -26,7 +28,7 @@ const CreateCarriage = () => {
     mutationConfig: {
       onSuccess: ({ id }) => {
         navigate(`/admin/carriage-layouts/${id}`);
-        message.success('OK bro!');
+        message.success('Tạo toa tàu thành công');
       },
       onError: () => {
         message.error('Something went wrong!');
@@ -36,29 +38,15 @@ const CreateCarriage = () => {
 
   useEffect(() => {
     const newSeats = selectedSeatTypes.reduce((acc, item) => {
-      const newSeats = Array.from({ length: item.quantity }, () => ({
+      const newSeatsLine = Array.from({ length: item.quantity }, () => ({
         value: item.value,
         name: item.code,
       }));
-      return [...acc, ...newSeats];
+      return [...acc, ...newSeatsLine];
     }, []);
 
     setLayout(newSeats);
   }, [selectedSeatTypes]);
-
-  function moveArrayItem(arr, fromIndex, toIndex) {
-    const updatedArray = [...arr];
-
-    if (fromIndex < 0 || fromIndex >= arr.length || toIndex < 0 || toIndex >= arr.length) {
-      return arr;
-    }
-
-    const [movedItem] = updatedArray.splice(fromIndex, 1);
-
-    updatedArray.splice(toIndex, 0, movedItem);
-
-    return updatedArray;
-  }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     setLayout(moveArrayItem(layout, oldIndex, newIndex));
@@ -74,7 +62,6 @@ const CreateCarriage = () => {
           row_count: form.getFieldValue('floors') === 1 ? form.getFieldValue('row_count') : 1,
           layout: layout.map((item) => item.value),
         };
-        console.log(data);
         mutation.mutate({ data });
       }
     });
@@ -122,133 +109,102 @@ const CreateCarriage = () => {
           </Button>
         </Space>
       </Flex>
-      <Flex className="" gap={20}>
-        <Flex vertical align="center" className="w-[65%] bg-white border border-[#ccc] rounded-lg p-4">
-          <div className="py-4">
-            <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
-              {layout.map((item, index) => (
-                <SeatItem key={index} index={index} title={item.name} cols={numberOfFloors} rows={numberOfRows} />
-              ))}
-            </CarriagesContainer>
-          </div>
-        </Flex>
-        <Form
-          form={form}
-          initialValues={{
-            name: '',
-            type: 'seat',
-            number_of_seats: 1,
-            floors: 1,
-            row_count: 1,
-          }}
-          layout="vertical"
-          className="w-[35%] bg-white border border-[#ccc] rounded-lg p-4"
-        >
-          <h1 className="text-lg font-semibold text-center">Thông tin toa tàu</h1>
-          <Form.Item
-            label="Tên toa tàu"
-            name="name"
-            rules={RULES.createCarriage.name}
-            required={true}
-            validateTrigger="onChange"
-          >
-            <Input placeholder="Nhập tên toa tàu..." />
-          </Form.Item>
-          <Form.Item
-            label="Số tầng"
-            name="floors"
-            rules={RULES.createCarriage.floors}
-            required={true}
-            validateTrigger="onChange"
-          >
-            <Select
-              options={[
-                {
-                  label: '1 Tầng',
-                  value: 1,
-                },
-                {
-                  label: '2 Tầng',
-                  value: 2,
-                },
-                {
-                  label: '3 Tầng',
-                  value: 3,
-                },
-                {
-                  label: '4 Tầng',
-                  value: 4,
-                },
-              ]}
-            ></Select>
-          </Form.Item>
-
-          {numberOfFloors === 1 && (
-            <Form.Item
-              label="Số hàng ghế"
-              name="row_count"
-              rules={RULES.createCarriage.floors}
-              required={true}
-              validateTrigger="onChange"
-            >
-              <Select
-                options={[
-                  {
-                    label: '1 Hàng',
-                    value: 1,
-                  },
-                  {
-                    label: '2 Hàng',
-                    value: 2,
-                  },
-                  {
-                    label: '3 Hàng',
-                    value: 3,
-                  },
-                  {
-                    label: '4 Hàng',
-                    value: 4,
-                  },
-                ]}
-              ></Select>
-            </Form.Item>
-          )}
-          <Form.Item label="Chọn loại ghế" name="number_of_seats">
-            <Flex gap={8}>
-              <CustomAsyncSelect
-                loadQuery={useSeatTypes}
-                setValue={setSelectedSeatType}
-                config={{ value: 'id', label: 'name', code: 'code' }}
-              />
-              <Input className="w-[80px]" type="number" />
-              <Button onClick={handleSelectSeatType} type="primary" icon={<PlusOutlined />} />
+      <Row gutter={[16, 16]}>
+        <Col span={14}>
+          <Card>
+            <Flex vertical align="center">
+              <div className="py-4">
+                <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
+                  {layout.map((item, index) => (
+                    <SeatItem key={index} index={index} title={item.name} cols={numberOfFloors} rows={numberOfRows} />
+                  ))}
+                </CarriagesContainer>
+              </div>
             </Flex>
-          </Form.Item>
-          <Flex vertical gap={12}>
-            <h1>Các ghế đã chọn</h1>
-            {selectedSeatTypes.map((item) => (
-              <Flex
-                key={item.value}
-                align="center"
-                justify="space-between"
-                className="border border-[#ccc] w-full py-2 px-3 rounded-lg"
+          </Card>
+        </Col>
+        <Col span={10}>
+          <Card>
+            <Form
+              form={form}
+              initialValues={{
+                name: '',
+                type: 'seat',
+                number_of_seats: 1,
+                floors: 1,
+                row_count: 1,
+              }}
+              layout="vertical"
+            >
+              <h1 className="text-lg font-semibold text-center">Thông tin toa tàu</h1>
+              <Form.Item
+                label="Tên toa tàu"
+                name="name"
+                rules={CARRIAGE_RULES.createCarriage.name}
+                required={true}
+                validateTrigger="onChange"
               >
-                <p>
-                  {item.quantity}x {item.label}
-                </p>
-                <Button
-                  onClick={() => {
-                    handleRemoveSeat(item.value);
-                  }}
-                  type="text"
-                  icon={<CloseOutlined />}
-                  size="small"
-                />
+                <Input placeholder="Nhập tên toa tàu..." />
+              </Form.Item>
+              <Form.Item
+                label="Số tầng"
+                name="floors"
+                rules={CARRIAGE_RULES.createCarriage.floors}
+                required={true}
+                validateTrigger="onChange"
+              >
+                <Select options={CARRIAGE_FLOORS_OPTIONS}></Select>
+              </Form.Item>
+
+              {numberOfFloors === 1 && (
+                <Form.Item
+                  label="Số hàng ghế"
+                  name="row_count"
+                  rules={CARRIAGE_RULES.createCarriage.floors}
+                  required={true}
+                  validateTrigger="onChange"
+                >
+                  <Select options={CARRIAGE_ROWS_OPTIONS}></Select>
+                </Form.Item>
+              )}
+              <Form.Item label="Chọn loại ghế" name="number_of_seats">
+                <Flex gap={8}>
+                  <CustomAsyncSelect
+                    loadQuery={useSeatTypes}
+                    setValue={setSelectedSeatType}
+                    config={{ value: 'id', label: 'name', code: 'code' }}
+                  />
+                  <Input className="w-[80px]" type="number" />
+                  <Button onClick={handleSelectSeatType} type="primary" icon={<PlusOutlined />} />
+                </Flex>
+              </Form.Item>
+              <Flex vertical gap={12}>
+                <h1>Các ghế đã chọn</h1>
+                {selectedSeatTypes.map((item) => (
+                  <Flex
+                    key={item.value}
+                    align="center"
+                    justify="space-between"
+                    className="border border-[#ccc] w-full py-2 px-3 rounded-lg"
+                  >
+                    <p>
+                      {item.quantity}x {item.label}
+                    </p>
+                    <Button
+                      onClick={() => {
+                        handleRemoveSeat(item.value);
+                      }}
+                      type="text"
+                      icon={<CloseOutlined />}
+                      size="small"
+                    />
+                  </Flex>
+                ))}
               </Flex>
-            ))}
-          </Flex>
-        </Form>
-      </Flex>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 };
