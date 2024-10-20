@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.services;
 
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.UpdateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
@@ -11,6 +12,8 @@ public interface CarriageLayoutService {
     CarriageLayoutResponse getCarriageLayoutById(Long id);
 
     CreateCarriageLayoutResponse saveCarriageLayout(CreateCarriageLayoutRequest request);
+
+    CreateCarriageLayoutResponse updateCarriageLayout(Long id, UpdateCarriageLayoutRequest request);
 
     Page<CarriageLayoutListResponse> getCarriageLayouts(String keyword, int page, int size);
 }

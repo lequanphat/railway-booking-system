@@ -19,8 +19,8 @@ const CarriageDetails = () => {
           ]}
         />
         <Space>
-          <Button href="create" type="primary" icon={<PlusSquareOutlined />}>
-            Thêm mới
+          <Button href={`${id}/edit`} type="primary" icon={<PlusSquareOutlined />}>
+            Chỉnh sửa
           </Button>
         </Space>
       </Flex>

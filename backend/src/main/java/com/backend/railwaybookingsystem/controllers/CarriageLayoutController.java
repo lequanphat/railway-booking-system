@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.CreateCarriageLayoutRequest;
+import com.backend.railwaybookingsystem.dtos.carriage_layouts.requests.UpdateCarriageLayoutRequest;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutListResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageLayoutResponse;
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
@@ -44,5 +45,15 @@ public class CarriageLayoutController {
     public ResponseEntity<CarriageLayoutResponse> getCarriageLayout(@PathVariable Long id) {
         CarriageLayoutResponse carriageLayout = carriageLayoutService.getCarriageLayoutById(id);
         return ResponseEntity.ok(carriageLayout);
+    }
+
+
+    @PutMapping("ad/carriage-layouts/{id}")
+    @Operation(tags = "Carriage Layout", description = "Update a carriage layout")
+    public ResponseEntity<CreateCarriageLayoutResponse> createCarriageLayout(@PathVariable Long id, @Valid @RequestBody UpdateCarriageLayoutRequest request) {
+
+        CreateCarriageLayoutResponse createdCarriageLayout = carriageLayoutService.updateCarriageLayout(id, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(createdCarriageLayout);
     }
 }
