@@ -1,4 +1,4 @@
-import { PlusSquareOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
@@ -11,7 +11,7 @@ const CarriagesManagement = () => {
         <PageHeader heading="Quản lý toa tàu" links={[{ title: 'Trang chủ', href: '/admin' }, { title: 'Toa tàu' }]} />
         <Space>
           <Link to="create">
-            <Button type="primary" icon={<PlusSquareOutlined />}>
+            <Button type="primary" icon={<PlusOutlined />}>
               Thêm mới
             </Button>
           </Link>

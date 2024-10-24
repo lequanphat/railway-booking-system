@@ -6,6 +6,7 @@ import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CarriageL
 import com.backend.railwaybookingsystem.dtos.carriage_layouts.response.CreateCarriageLayoutResponse;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.CarriageLayoutMapper;
+import com.backend.railwaybookingsystem.models.Carriage;
 import com.backend.railwaybookingsystem.models.CarriageLayout;
 import com.backend.railwaybookingsystem.models.Seat;
 import com.backend.railwaybookingsystem.repositories.CarriageLayoutRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -67,6 +69,40 @@ public class CarriageLayoutServiceImpl implements CarriageLayoutService {
         carriageLayout.setRow_count(request.getRow_count());
 
         CarriageLayout updatedCarriageLayout = carriageLayoutRepository.save(carriageLayout);
+
+        List<Long> newLayout = request.getLayout();
+
+        // update seats in same block
+
+        int updatedLength = Math.min(newLayout.size(), carriageLayout.getSeats().size());
+
+        for(int i = 0; i < updatedLength; i++){
+            Seat preSeat = carriageLayout.getSeats().get(i);
+            if(!Objects.equals(preSeat.getSeatType().getId(), newLayout.get(i))) {
+                preSeat.setSeatType(seatTypeRepository.findById(newLayout.get(i)).orElse(null));
+                seatRepository.save(preSeat);
+            }
+        }
+
+        // update seats in different block
+
+        int differentLength = newLayout.size() - carriageLayout.getSeats().size();
+
+        if(differentLength < 0){
+            for(int i = carriageLayout.getSeats().size() - 1; i >= updatedLength; i--){
+                Seat seat = carriageLayout.getSeats().get(i);
+                carriageLayout.getSeats().remove(seat);
+                seatRepository.delete(seat);
+            }
+        } else if(differentLength>0) {
+            for(int i = 0; i < differentLength; i++){
+                Seat seat = new Seat();
+                seat.setPosition(updatedLength + i + 1);
+                seat.setSeatType(seatTypeRepository.findById(newLayout.get(updatedLength + i)).orElse(null));
+                seat.setCarriageLayout(carriageLayout);
+                seatRepository.save(seat);
+            }
+        }
 
         return CarriageLayoutMapper.INSTANCE.convertToCreateCarriageLayoutResponse(updatedCarriageLayout);
     }

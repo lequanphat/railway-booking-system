@@ -155,7 +155,11 @@ const TrainsManagement = () => {
               </Form.Item>
               <Flex vertical gap={12}>
                 <h1>Các toa đã chọn</h1>
-                <SelectedCarriagesTable data={formattedCarriages} handleRemoveItem={handleRemoveCarriage} />
+                <SelectedCarriagesTable
+                  data={formattedCarriages}
+                  handleRemoveItem={handleRemoveCarriage}
+                  isEdit={true}
+                />
               </Flex>
             </Flex>
             <Flex vertical className="w-full  bg-white border border-[#ccc] rounded-lg p-4" gap={10}>

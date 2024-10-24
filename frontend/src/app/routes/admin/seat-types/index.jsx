@@ -1,4 +1,4 @@
-import { PlusSquareOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space } from 'antd';
 import PageHeader from '~/components/ui/page-header';
 import CreateSeatTypeModal from '~/features/seat-types/components/CreateSeatTypeModal';
@@ -16,7 +16,7 @@ const SeatsManagement = () => {
           links={[{ title: 'Trang chủ', href: '/admin' }, { title: 'Ghế ngồi' }]}
         />
         <Space>
-          <Button onClick={openCreateModal} type="primary" icon={<PlusSquareOutlined />}>
+          <Button onClick={openCreateModal} type="primary" icon={<PlusOutlined />}>
             Thêm mới
           </Button>
         </Space>
