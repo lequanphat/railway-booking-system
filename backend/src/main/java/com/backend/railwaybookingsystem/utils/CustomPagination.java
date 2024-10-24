@@ -24,8 +24,7 @@ public class CustomPagination<T> {
 
     @Data
     @AllArgsConstructor
-    static
-    class CustomPageMeta {
+    static class CustomPageMeta {
         @JsonProperty("current_page")
         int currentPage;
 

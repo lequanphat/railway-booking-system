@@ -29,17 +29,17 @@ const adminMenu = Object.freeze([
       {
         key: '2-1',
         label: 'Tuyến đường',
-        path: '/schedules/routes',
+        path: '/admin/schedules/routes',
       },
       {
         key: '2-2',
         label: 'Lịch trình tàu',
-        path: '/schedules/trains',
+        path: '/admin/train-schedules',
       },
       {
         key: '2-3',
         label: 'Ga tàu',
-        path: '/schedules/stations',
+        path: '/admin/schedules/stations',
       },
       {
         key: '2-4',

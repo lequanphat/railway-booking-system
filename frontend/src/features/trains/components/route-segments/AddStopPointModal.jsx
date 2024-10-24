@@ -6,7 +6,18 @@ const AddStopPointModal = ({ open, closeModal, handleAddItem, dataSource }) => {
   const { data } = useStations();
   const [form] = Form.useForm();
   const onFinish = (values) => {
-    handleAddItem(values);
+    const formattedValues = {
+      station: {
+        id: values.station_id,
+        name: values.station_name,
+      },
+      distance: values.distance,
+      day_number: values.day_number,
+      departure_time: values.departure_time,
+      arrival_time: values.arrival_time,
+    };
+
+    handleAddItem(formattedValues);
     form.resetFields();
   };
 

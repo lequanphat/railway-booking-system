@@ -1,4 +1,4 @@
-import { App, Button, Flex } from 'antd';
+import { App, Button, Card, Descriptions, Flex } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { useState, useCallback, useMemo } from 'react';
 import { useBoolean } from '~/hooks/useBoolean';
@@ -10,6 +10,7 @@ import AddStopPointModal from '~/features/trains/components/route-segments/AddSt
 import RouteSegmentsTable from '~/features/trains/components/route-segments/RouteSegmentsTable';
 import { useSaveRouteSegments } from '~/features/trains/api/save-route-segments';
 import UpdateStopPointModal from '~/features/trains/components/route-segments/UpdateStopPointModal';
+import { calculateTravelTime } from '~/utils/calculateTravelTime';
 
 export const RouteSegmentsLoader =
   (queryClient) =>
@@ -19,7 +20,7 @@ export const RouteSegmentsLoader =
   };
 
 const RouteSegments = () => {
-  const { id, route_segments } = useLoaderData();
+  const { id, name, route, route_segments } = useLoaderData();
   const { message } = App.useApp();
   const [dataSource, setDataSource] = useState(route_segments);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -32,34 +33,15 @@ const RouteSegments = () => {
 
   const handleAddItem = useCallback(
     (values) => {
-      setDataSource((prev) => [
-        ...prev,
-        {
-          station: {
-            id: values.station_id,
-            name: values.station_name,
-          },
-          ...values,
-        },
-      ]);
+      setDataSource((prev) => [...prev, values]);
       closeAddModal();
     },
     [closeAddModal],
   );
 
   const handleUpdateItem = useCallback(
-    (values, index) => {
-      setDataSource((prev) => {
-        const updated = [...prev];
-        updated[index] = {
-          station: {
-            id: values.station_id,
-            name: values.station_name,
-          },
-          ...values,
-        };
-        return updated;
-      });
+    (values) => {
+      setDataSource((prev) => prev.map((item) => (item.station.id === values.station.id ? values : item)));
       closeUpdateModal();
     },
     [closeUpdateModal],
@@ -93,6 +75,39 @@ const RouteSegments = () => {
     [],
   );
 
+  const items = [
+    {
+      key: '1',
+      label: 'Id',
+      children: id,
+    },
+    {
+      key: '2',
+      label: 'Tên tàu',
+      children: name,
+    },
+    {
+      key: '3',
+      label: 'Tuyến',
+      children: route.name,
+    },
+    {
+      key: '4',
+      label: 'Giờ đi',
+      children: route_segments[0]?.departure_time ?? 'Chưa cập nhật',
+    },
+    {
+      key: '5',
+      label: 'Giờ đến',
+      children: route_segments[route_segments.length - 1]?.arrival_time ?? 'Chưa cập nhật',
+    },
+    {
+      key: '6',
+      label: 'Thời gian hành trình',
+      children: calculateTravelTime(route_segments[0], route_segments[route_segments.length - 1]),
+    },
+  ];
+
   return (
     <>
       <Flex align="center" justify="space-between" className="mb-4">
@@ -101,6 +116,11 @@ const RouteSegments = () => {
           Lưu
         </Button>
       </Flex>
+
+      <Card title="Thông tin tàu" className="mb-3">
+        <Descriptions items={items} />
+      </Card>
+
       <RouteSegmentsTable
         dataSource={dataSource}
         setDataSource={setDataSource}
