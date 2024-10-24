@@ -54,8 +54,14 @@ const SeatTypesTable = () => {
         key: 'action',
         render: (data) => (
           <Space>
-            <Button onClick={null} icon={<EditOutlined />} iconPosition={'end'} />
-            <Button onClick={null} icon={data?.active ? <DeleteOutlined /> : <ToolOutlined />} iconPosition={'end'} />
+            <Button size="small" onClick={null} icon={<EditOutlined />} iconPosition={'end'} title="Chỉnh sửa" />
+            <Button
+              size="small"
+              onClick={null}
+              icon={data?.active ? <DeleteOutlined /> : <ToolOutlined />}
+              iconPosition={'end'}
+              title="Xóa / Khôi phục"
+            />
           </Space>
         ),
       },

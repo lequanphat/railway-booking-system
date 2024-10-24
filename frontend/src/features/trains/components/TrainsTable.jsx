@@ -1,4 +1,4 @@
-import { ExportOutlined, QuestionCircleOutlined, SwapOutlined } from '@ant-design/icons';
+import { EditOutlined, ExportOutlined, QuestionCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -47,11 +47,14 @@ const TrainsTable = () => {
         align: 'center',
         render: (value, record) => (
           <Space>
+            <Link to={`${value}/edit`} type="default">
+              <Button size="small" icon={<EditOutlined />} iconPosition={'end'} title="Chỉnh sửa" />
+            </Link>
             <Link to={`${value}`} type="default">
-              <Button size="small" icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+              <Button size="small" icon={<QuestionCircleOutlined />} iconPosition={'end'} title="Chi tiết" />
             </Link>
             <Link to={`${record.id}/route-segments`}>
-              <Button size="small" icon={<SwapOutlined />} />
+              <Button size="small" icon={<SwapOutlined />} title="Tuyến đường" />
             </Link>
           </Space>
         ),

@@ -1,8 +1,8 @@
-import { Button, Card, Col, Flex, Row, Space } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Flex, Row, Space, Tag } from 'antd';
 import { useParams } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
 import { useCarriageLayout } from '~/features/carriages/api/get-layout';
-import { PlusSquareOutlined } from '@ant-design/icons';
 
 const CarriageDetails = () => {
   const { id } = useParams();
@@ -15,11 +15,18 @@ const CarriageDetails = () => {
           links={[
             { title: 'Trang chủ', href: '/admin' },
             { title: 'Toa tàu', href: '/admin/carriage-layouts' },
-            { title: data?.name || 'Chi tiết' },
+            {
+              title: (
+                <Flex gap={8} align="center">
+                  {data?.name}
+                  {data?.active ? <Tag color="success">Hoạt động</Tag> : <Tag color="red">Vô hiệu</Tag>}
+                </Flex>
+              ),
+            },
           ]}
         />
         <Space>
-          <Button href={`${id}/edit`} type="primary" icon={<PlusSquareOutlined />}>
+          <Button href={`${id}/edit`} type="primary" icon={<EditOutlined />}>
             Chỉnh sửa
           </Button>
         </Space>
