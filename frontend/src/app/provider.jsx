@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntApp, ConfigProvider } from 'antd';
 import AuthProvider from './auth-provider';
 
+
 const queryClient = new QueryClient();
 const AppProvider = ({ children }) => {
   return (

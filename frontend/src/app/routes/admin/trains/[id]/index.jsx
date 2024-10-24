@@ -1,7 +1,7 @@
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Flex, Row, Space, Tag } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
 import { useTrain } from '~/features/trains/api/get-train';
 import SeatPricesTable from '~/features/trains/components/SeatPricesTable';
@@ -73,9 +73,11 @@ const TrainDetails = () => {
           ]}
         />
         <Space>
-          <Button href={`${id}/edit`} type="primary" icon={<EditOutlined />}>
-            Chỉnh sửa
-          </Button>
+          <Link to="edit">
+            <Button type="primary" icon={<EditOutlined />}>
+              Chỉnh sửa
+            </Button>
+          </Link>
         </Space>
       </Flex>
       <Row gutter={16}>

@@ -14,13 +14,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update # if you have problems with db, change to 'create' at the first time you run application
+      ddl-auto: create # if you have problems with db, change to 'create' at the first time you run application
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     defer-datasource-initialization: true
   sql:
     init:
-      mode: never # always khi ddl-auto = create, never khi ddl-auto = update
+      mode: always # always khi ddl-auto = create, never khi ddl-auto = update
 
   mail:
     host: smtp.gmail.com

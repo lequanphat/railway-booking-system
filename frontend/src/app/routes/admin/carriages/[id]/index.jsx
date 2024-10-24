@@ -1,6 +1,6 @@
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Flex, Row, Space, Tag } from 'antd';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
 import { useCarriageLayout } from '~/features/carriages/api/get-layout';
 
@@ -26,9 +26,11 @@ const CarriageDetails = () => {
           ]}
         />
         <Space>
-          <Button href={`${id}/edit`} type="primary" icon={<EditOutlined />}>
-            Chỉnh sửa
-          </Button>
+          <Link to="edit">
+            <Button type="primary" icon={<EditOutlined />}>
+              Chỉnh sửa
+            </Button>
+          </Link>
         </Space>
       </Flex>
       <Row gutter={[16, 16]}>
