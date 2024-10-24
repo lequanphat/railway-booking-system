@@ -163,6 +163,13 @@ const createAppRouter = () =>
           },
         },
         {
+          path: 'trains/:id/edit',
+          lazy: async () => {
+            const EditTrainPage = await import('./routes/admin/trains/[id]/edit');
+            return { Component: EditTrainPage.default };
+          },
+        },
+        {
           path: 'trains/:trainId/route-segments',
           lazy: async () => {
             const CreateTrain = await import('./routes/admin/trains/route-segments');

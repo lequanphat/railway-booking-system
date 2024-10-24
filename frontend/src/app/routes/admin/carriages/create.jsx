@@ -116,7 +116,14 @@ const CreateCarriage = () => {
               <div className="py-4">
                 <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
                   {layout.map((item, index) => (
-                    <SeatItem key={index} index={index} title={item.name} cols={numberOfFloors} rows={numberOfRows} />
+                    <SeatItem
+                      key={index}
+                      index={index}
+                      position={index + 1}
+                      title={item.name}
+                      cols={numberOfFloors}
+                      rows={numberOfRows}
+                    />
                   ))}
                 </CarriagesContainer>
               </div>

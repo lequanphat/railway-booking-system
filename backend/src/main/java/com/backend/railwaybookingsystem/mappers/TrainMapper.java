@@ -19,4 +19,6 @@ public interface TrainMapper {
     GetTrainRouteSegmentsResponse convertToGetTrainRouteSegmentsResponse(Train train);
 
     TrainDetailResponse convertToTrainDetailResponse(Train train);
+
+    UpdateTrainResponse convertToUpdateTrainResponse(Train train);
 }
