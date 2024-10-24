@@ -5,6 +5,8 @@ export const useAuthentication = () => {
   return useQuery({
     queryKey: ['authentication'],
     queryFn: () => api.get('/auth/me'),
+    refetchOnWindowFocus: false,
+    enabled: !!localStorage.getItem('token'),
     initialData: {
       user: null,
       token: null,

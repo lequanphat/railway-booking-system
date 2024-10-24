@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import LoadingScreen from '~/components/ui/LoadingScreen';
 import { useAuthentication } from '~/features/auth/api/others';
 import useAuthStore from '~/stores/auth-store';
 
@@ -7,6 +8,7 @@ const AuthProvider = ({ children }) => {
   const {
     data: { user, token },
     error,
+    isFetching,
   } = useAuthentication();
 
   useEffect(() => {
@@ -19,6 +21,8 @@ const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
     }
   }, [user, token, setUser, error]);
+
+  if (isFetching) return <LoadingScreen />;
 
   return children;
 };
