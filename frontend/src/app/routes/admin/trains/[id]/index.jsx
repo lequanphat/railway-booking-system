@@ -1,10 +1,10 @@
+import { EditOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Flex, Row, Space } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
-import { PlusSquareOutlined } from '@ant-design/icons';
 import { useTrain } from '~/features/trains/api/get-train';
 import SeatPricesTable from '~/features/trains/components/SeatPricesTable';
-import { useEffect, useMemo, useState } from 'react';
 
 const TrainDetails = () => {
   const { id } = useParams();
@@ -53,8 +53,8 @@ const TrainDetails = () => {
           ]}
         />
         <Space>
-          <Button href="create" type="primary" icon={<PlusSquareOutlined />}>
-            Thêm mới
+          <Button href={`${id}/edit`} type="primary" icon={<EditOutlined />}>
+            Chỉnh sửa
           </Button>
         </Space>
       </Flex>

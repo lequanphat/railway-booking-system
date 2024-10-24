@@ -1,9 +1,11 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.requests.UpdateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.CreateTrainResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.UpdateTrainResponse;
 import com.backend.railwaybookingsystem.services.TrainService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +43,13 @@ public class TrainController {
     @Operation(tags = "Train", description = "get train")
     public ResponseEntity<TrainDetailResponse> getTrainById(@PathVariable Long id) {
         TrainDetailResponse train = trainService.getTrainDetailById(id);
+        return ResponseEntity.ok(train);
+    }
+
+    @PutMapping("ad/trains/{id}")
+    @Operation(tags = "Train", description = "update train")
+    public ResponseEntity<UpdateTrainResponse> updateTrain(@PathVariable Long id, @Valid @RequestBody UpdateTrainRequest request) {
+        UpdateTrainResponse train = trainService.updateTrain(id, request);
         return ResponseEntity.ok(train);
     }
 }

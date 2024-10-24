@@ -27,5 +27,6 @@ public class CarriageLayout {
 	private Boolean active = true;
 
 	@OneToMany(mappedBy = "carriageLayout", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OrderBy("position ASC")
 	private List<Seat> seats;
 }
