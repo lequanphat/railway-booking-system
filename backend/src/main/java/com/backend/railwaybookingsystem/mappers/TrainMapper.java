@@ -23,4 +23,6 @@ public interface TrainMapper {
     TrainDetailResponse convertToTrainDetailResponse(Train train);
 
     List<GetAllTrainResponse> convertToTrainListResponseList(List<Train> trains);
+  
+    UpdateTrainResponse convertToUpdateTrainResponse(Train train);
 }

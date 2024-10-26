@@ -2,15 +2,18 @@ package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
+import com.backend.railwaybookingsystem.dtos.trains.requests.UpdateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.CreateTrainResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.GetAllTrainResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.UpdateTrainResponse;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.*;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.TrainService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -92,14 +96,65 @@ public class TrainServiceImpl implements TrainService {
         if(train == null){
             throw new NotFoundException("Train not found");
         }
-        List<TrainDetailResponse.CarriageDto> carriages = train.getCarriages();
-        Collections.sort(carriages, Comparator.comparingInt(TrainDetailResponse.CarriageDto::getPosition));
-
-        for (TrainDetailResponse.CarriageDto carriage : carriages) {
-            List<TrainDetailResponse.CarriageDto.CarriageLayoutDto.SeatDto> seats = carriage.getCarriageLayout().getSeats();
-            Collections.sort(seats, Comparator.comparingInt(TrainDetailResponse.CarriageDto.CarriageLayoutDto.SeatDto::getPosition));
-        }
         return train;
+    }
+
+    @Transactional
+    public UpdateTrainResponse updateTrain(Long id, UpdateTrainRequest request) {
+        Train train = trainRepository.findById(id).orElse(null);
+        if(train == null){
+            throw new NotFoundException("Train not found");
+        }
+
+        List<Long> newCarriages = request.getCarriagesList();
+
+        // update carriage in same block
+
+        int updatedLength = Math.min(newCarriages.size(), train.getCarriages().size());
+
+        for(int i = 0; i < updatedLength; i++){
+            Carriage preCarriage = train.getCarriages().get(i);
+            if(!Objects.equals(preCarriage.getCarriageLayout().getId(), newCarriages.get(i))) {
+                preCarriage.setCarriageLayout(carriageLayoutRepository.getReferenceById(newCarriages.get(i)));
+                carriageRepository.save(preCarriage);
+            }
+        }
+
+        // update carriage in different block
+
+        int differentLength = newCarriages.size() - train.getCarriages().size();
+
+        if(differentLength < 0){
+            for(int i = train.getCarriages().size() - 1; i >= updatedLength; i--){
+                Carriage carriage = train.getCarriages().get(i);
+                train.getCarriages().remove(carriage);
+                carriageRepository.delete(carriage);
+            }
+        } else if(differentLength>0) {
+            for(int i = 0; i < differentLength; i++){
+                Carriage carriage = new Carriage();
+                carriage.setPosition(updatedLength + i + 1);
+                carriage.setCarriageLayout(carriageLayoutRepository.findById(newCarriages.get(updatedLength + i)).orElse(null));
+                carriage.setTrain(train);
+                carriageRepository.save(carriage);
+            }
+        }
+
+        // update seat prices
+        List<SeatPriceRequest> seatPricesList = request.getSeatPricesList();
+
+        for (SeatPriceRequest seatPriceRequest : seatPricesList) {
+            SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(train.getId(), seatPriceRequest.getSeat_type_id());
+            if(seatPrice == null){
+                seatPrice = new SeatPrice();
+                seatPrice.setTrain(train);
+                seatPrice.setSeatType(seatTypeRepository.findById(seatPriceRequest.getSeat_type_id()).orElse(null));
+            }
+            seatPrice.setOriginal_price_per_km(seatPriceRequest.getPrice());
+            seatPriceRepository.save(seatPrice);
+        }
+
+        return TrainMapper.INSTANCE.convertToUpdateTrainResponse(train);
     }
 }
 

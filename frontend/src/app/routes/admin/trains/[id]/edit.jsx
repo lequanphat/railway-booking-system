@@ -1,20 +1,24 @@
 import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input, message, Space } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CustomAsyncSelect from '~/components/ui/CustomAsyncSelect';
 import PageHeader from '~/components/ui/page-header';
 import RULES from '~/config/rule';
 import { useCarriageLayouts } from '~/features/carriages/api/get-layouts';
 import { moveArrayItem } from '~/features/carriages/utils/helpers';
-import { useCreateTrain } from '~/features/trains/api/create-train';
-import { useAllSeatTypes } from '~/features/trains/api/get-all-seat-types';
+import { useTrain } from '~/features/trains/api/get-train';
+import { useUpdateTrain } from '~/features/trains/api/update-train';
 import CarriageSortableItem from '~/features/trains/components/CarriageSortableItem';
 import SelectedCarriagesTable from '~/features/trains/components/SelectedCarriagesTable';
 import TrainContainer from '~/features/trains/components/TrainContainer';
 
-const TrainsManagement = () => {
+const EditTrainPage = () => {
   const navigate = useNavigate();
+
+  const { id } = useParams();
+
+  const { data: train } = useTrain({ id, queryConfig: { enabled: !!id } });
 
   const [form] = Form.useForm();
 
@@ -24,15 +28,11 @@ const TrainsManagement = () => {
 
   const [seatPrices, setSeatPrices] = useState([]);
 
-  const { data: allSeatTypes } = useAllSeatTypes({
-    retry: false,
-  });
-
-  const mutation = useCreateTrain({
+  const mutation = useUpdateTrain({
     mutationConfig: {
       onSuccess: ({ id }) => {
         navigate(`/admin/trains/${id}`);
-        message.success('OK bro!');
+        message.success('Cập nhật tàu thành công!');
       },
       onError: () => {
         message.error('Something went wrong!');
@@ -41,18 +41,37 @@ const TrainsManagement = () => {
   });
 
   useEffect(() => {
-    if (allSeatTypes) {
+    if (train) {
+      // set form value
+      form.setFieldsValue({
+        name: train.name,
+      });
+
+      // set carriages
+      setCarriages(
+        train?.carriages.map((carriage) => ({
+          value: carriage?.carriageLayout?.id,
+          label: carriage?.carriageLayout?.name,
+          ...carriage?.carriageLayout,
+        })),
+      );
+
+      // set seat prices
       setSeatPrices(
-        allSeatTypes?.map((seatType) => ({ seat_type_id: seatType.id, price: seatType.original_price_per_km })),
+        train?.seatPrices?.map((seatPrice) => ({
+          seat_type_id: seatPrice?.seatType?.id,
+          price: seatPrice?.original_price_per_km,
+        })),
       );
     }
-  }, [allSeatTypes]);
+  }, [train, form]);
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     setCarriages(moveArrayItem(carriages, oldIndex, newIndex));
   };
 
   const handleAddCarriage = () => {
+    console.log(selectedCarriage);
     setCarriages((prev) => [...prev, selectedCarriage]);
   };
 
@@ -68,6 +87,7 @@ const TrainsManagement = () => {
           price: parseFloat(item.price) > 0 ? parseFloat(item.price) : 0,
         }));
         const data = {
+          id: train.id,
           name: values.name,
           carriagesList: carriages.map((item) => item.value),
           seatPricesList: validatedSeatPrices,
@@ -87,10 +107,10 @@ const TrainsManagement = () => {
   const formattedCarriages = useMemo(() => {
     return carriages.map((item, index) => ({
       index,
-      key: item.id,
+      key: index,
       name: item.label,
       structure: `${item.floors} tầng, ${item.row_count} hàng`,
-      seats: item.seats.length,
+      seats: item?.seats?.length,
     }));
   }, [carriages]);
 
@@ -101,20 +121,21 @@ const TrainsManagement = () => {
           heading="Tạo tàu"
           links={[
             { title: 'Trang chủ', href: '/admin' },
-            { title: 'Tàu hỏa', href: '/admin/trains' },
-            { title: 'Tạo tàu hỏa' },
+            { title: 'Toa hỏa', href: '/admin/trains' },
+            { title: train?.name || 'Chi tiết', href: `/admin/trains/${id}` },
+            { title: 'Chỉnh sửa' },
           ]}
         />
         <Space>
           <Button onClick={handleSave} type="primary" icon={<SaveOutlined />}>
-            Tạo ngay
+            Lưu thay đổi
           </Button>
         </Space>
       </Flex>
       <Flex className="" gap={20}>
         <Flex vertical align="center" className="w-[40%] bg-white border-[1px] border-[#ccc] rounded-lg p-4">
           <Flex justify="center" className="py-4 w-full ">
-            <TrainContainer axis={'xy'} onSortEnd={onSortEnd}>
+            <TrainContainer axis={'y'} onSortEnd={onSortEnd}>
               {carriages?.map((item, index) => (
                 <CarriageSortableItem key={index} index={index} {...item} />
               ))}
@@ -125,6 +146,7 @@ const TrainsManagement = () => {
           form={form}
           initialValues={{
             name: '',
+            number_of_seats: 1,
             seat_prices: [],
           }}
           layout="vertical"
@@ -165,10 +187,10 @@ const TrainsManagement = () => {
             <Flex vertical className="w-full  bg-white border border-[#ccc] rounded-lg p-4" gap={10}>
               <h1 className="text-lg font-semibold text-center">Thông tin giá ghế</h1>
               <Flex vertical gap={10}>
-                {allSeatTypes?.map((item) => (
+                {train?.seatPrices?.map((item) => (
                   <Form.Item
-                    key={item.id}
-                    label={item.name}
+                    key={item?.seatType?.id}
+                    label={item?.seatType?.name}
                     rules={[
                       {
                         required: true,
@@ -183,7 +205,7 @@ const TrainsManagement = () => {
                       type="number"
                       defaultValue={item.original_price_per_km}
                       onChange={(e) => {
-                        handleChangePriceOfItem(item.id, e.target.value);
+                        handleChangePriceOfItem(item?.seatType?.id, e.target.value);
                       }}
                     />
                   </Form.Item>
@@ -197,4 +219,4 @@ const TrainsManagement = () => {
   );
 };
 
-export default TrainsManagement;
+export default EditTrainPage;

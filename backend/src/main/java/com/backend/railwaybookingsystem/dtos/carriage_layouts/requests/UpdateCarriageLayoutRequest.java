@@ -24,4 +24,9 @@ public class UpdateCarriageLayoutRequest {
     private int floors;
 
     private int row_count;
+
+    @Valid
+    @NotNull(message = "Layout is required")
+    @Size(min = 1, message = "Layout must have at least one seat")
+    private List<Long> layout;
 }

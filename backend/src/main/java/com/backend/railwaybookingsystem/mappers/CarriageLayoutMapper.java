@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public interface CarriageLayoutMapper {
     CarriageLayoutMapper INSTANCE = Mappers.getMapper(CarriageLayoutMapper.class);
 
-    @Mapping(target = "seats", expression = "java(sortSeatsByPosition(carriageLayout.getSeats()))")
     CarriageLayoutResponse convertToCarriageLayoutResponse(CarriageLayout carriageLayout);
 
     CarriageLayout convertToCarriageLayout(CreateCarriageLayoutRequest request);
@@ -27,22 +26,4 @@ public interface CarriageLayoutMapper {
     CarriageLayoutListResponse convertToCarriageLayoutListResponse(CarriageLayout carriageLayouts);
 
     CreateCarriageLayoutResponse convertToCreateCarriageLayoutResponse(CarriageLayout carriageLayout);
-
-
-    default List<CarriageLayoutResponse.SeatDto> sortSeatsByPosition(List<Seat> seats) {
-        return seats.stream()
-                .sorted(Comparator.comparingInt(Seat::getPosition))
-                .map(seat -> new CarriageLayoutResponse.SeatDto(
-                        seat.getId(), seat.getPosition(),
-                        new CarriageLayoutResponse.SeatDto.SeatTypeDto(
-                                seat.getSeatType().getId(),
-                                seat.getSeatType().getName(),
-                                seat.getSeatType().getCode(),
-                                seat.getSeatType().getOriginal_price_per_km(),
-                                seat.getSeatType().getActive()
-                        )
-                ))
-                .collect(Collectors.toList());
-    }
-
 }

@@ -1,4 +1,4 @@
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Flex, Form, Input, message, Row, Select, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -104,7 +104,7 @@ const CreateCarriage = () => {
           ]}
         />
         <Space>
-          <Button onClick={handleSave} type="primary" icon={<PlusOutlined />}>
+          <Button onClick={handleSave} type="primary" icon={<SaveOutlined />}>
             Tạo ngay
           </Button>
         </Space>
@@ -116,7 +116,14 @@ const CreateCarriage = () => {
               <div className="py-4">
                 <CarriagesContainer axis={'xy'} onSortEnd={onSortEnd}>
                   {layout.map((item, index) => (
-                    <SeatItem key={index} index={index} title={item.name} cols={numberOfFloors} rows={numberOfRows} />
+                    <SeatItem
+                      key={index}
+                      index={index}
+                      position={index + 1}
+                      title={item.name}
+                      cols={numberOfFloors}
+                      rows={numberOfRows}
+                    />
                   ))}
                 </CarriagesContainer>
               </div>

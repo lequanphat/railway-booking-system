@@ -1,4 +1,4 @@
-import { ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { ROW_PER_PAGE } from '~/config/constants';
@@ -47,8 +47,17 @@ const CarriageLayoutTable = () => {
         align: 'center',
         render: (value) => (
           <Space>
+            <Link to={`${value}/edit`} type="default">
+              <Button size="small" icon={<EditOutlined />} iconPosition={'end'} title="Chỉnh sửa" />
+            </Link>
             <Link to={`${value}`} type="default">
-              <Button onClick={null} icon={<QuestionCircleOutlined />} iconPosition={'end'} />
+              <Button
+                size="small"
+                onClick={null}
+                icon={<QuestionCircleOutlined />}
+                iconPosition={'end'}
+                title="Chi tiết"
+              />
             </Link>
           </Space>
         ),

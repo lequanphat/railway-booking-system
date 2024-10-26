@@ -1,10 +1,11 @@
-import { Button, Card, Col, Flex, Row, Space } from 'antd';
-import { useParams } from 'react-router-dom';
+import { EditOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Flex, Row, Space, Tag } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
-import { PlusSquareOutlined } from '@ant-design/icons';
 import { useTrain } from '~/features/trains/api/get-train';
 import SeatPricesTable from '~/features/trains/components/SeatPricesTable';
-import { useEffect, useMemo, useState } from 'react';
+import SelectedCarriagesTable from '~/features/trains/components/SelectedCarriagesTable';
 
 const TrainDetails = () => {
   const { id } = useParams();
@@ -41,6 +42,18 @@ const TrainDetails = () => {
     setFormatTrainData(updatedTrainData);
   }, [trainData]);
 
+  const formattedCarriages = useMemo(() => {
+    return trainData?.carriages?.map((carriage, index) => ({
+      index,
+      key: index,
+      name: carriage?.carriageLayout?.name,
+      structure: `${carriage?.carriageLayout?.floors} tầng, ${carriage?.carriageLayout?.row_count} hàng`,
+      seats: carriage?.carriageLayout?.seats?.length,
+    }));
+  }, [trainData?.carriages]);
+
+  console.log('trainData?.carriages', trainData?.carriages);
+
   return (
     <div>
       <Flex align="center" justify="space-between" className="mb-2">
@@ -49,13 +62,22 @@ const TrainDetails = () => {
           links={[
             { title: 'Trang chủ', href: '/admin' },
             { title: 'Toa hỏa', href: '/admin/trains' },
-            { title: formatTrainData?.name || 'Chi tiết' },
+            {
+              title: (
+                <Flex gap={8} align="center">
+                  {formatTrainData?.name}
+                  {trainData?.is_active ? <Tag color="success">Hoạt động</Tag> : <Tag color="red">Vô hiệu</Tag>}
+                </Flex>
+              ),
+            },
           ]}
         />
         <Space>
-          <Button href="create" type="primary" icon={<PlusSquareOutlined />}>
-            Thêm mới
-          </Button>
+          <Link to="edit">
+            <Button type="primary" icon={<EditOutlined />}>
+              Chỉnh sửa
+            </Button>
+          </Link>
         </Space>
       </Flex>
       <Row gutter={16}>
@@ -96,8 +118,8 @@ const TrainDetails = () => {
             <Col span={24}>
               <Card>
                 <Flex vertical className="bg-white mx-auto" gap={12}>
-                  <h1 className="font-semibold text-base text-center">Lộ trình di chuyển</h1>
-                  <div className="w-full">Content here</div>
+                  <h1 className="font-semibold text-base text-center">Kết cấu toa tàu</h1>
+                  <SelectedCarriagesTable data={formattedCarriages} handleRemoveItem={null} />
                 </Flex>
               </Card>
             </Col>
