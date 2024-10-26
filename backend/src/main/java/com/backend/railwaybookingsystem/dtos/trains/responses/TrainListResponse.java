@@ -1,7 +1,6 @@
 package com.backend.railwaybookingsystem.dtos.trains.responses;
 
 import lombok.Value;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,8 +8,15 @@ import java.util.List;
 public class TrainListResponse implements Serializable {
     Long id;
     String name;
+    RouteDto route;
     Boolean is_active;
     List<CarriageDto> carriages;
+
+    @Value
+    public static class RouteDto implements Serializable {
+        Long id;
+        String name;
+    }
 
     @Value
     public static class CarriageDto implements Serializable {

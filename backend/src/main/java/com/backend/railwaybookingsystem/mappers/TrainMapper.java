@@ -6,6 +6,8 @@ import com.backend.railwaybookingsystem.models.Train;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TrainMapper {
     TrainMapper INSTANCE = Mappers.getMapper(TrainMapper.class);
@@ -19,4 +21,6 @@ public interface TrainMapper {
     GetTrainRouteSegmentsResponse convertToGetTrainRouteSegmentsResponse(Train train);
 
     TrainDetailResponse convertToTrainDetailResponse(Train train);
+
+    List<GetAllTrainResponse> convertToTrainListResponseList(List<Train> trains);
 }

@@ -1,7 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntApp, ConfigProvider } from 'antd';
 import AuthProvider from './auth-provider';
-
+import viVN from 'antd/locale/vi_VN';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
+dayjs.locale('vi');
 
 const queryClient = new QueryClient();
 const AppProvider = ({ children }) => {
@@ -11,7 +14,7 @@ const AppProvider = ({ children }) => {
         token: {
           fontFamily: 'Inter',
           borderRadius: 4,
-          controlHeight: 37,
+          controlHeight: 34,
           colorPrimary: '#006dae',
         },
         components: {
@@ -25,6 +28,7 @@ const AppProvider = ({ children }) => {
         },
         hashed: false,
       }}
+      locale={viVN}
     >
       <QueryClientProvider client={queryClient}>
         <AuthProvider>

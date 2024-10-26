@@ -2,6 +2,7 @@ package com.backend.railwaybookingsystem.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "trains")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Train {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
