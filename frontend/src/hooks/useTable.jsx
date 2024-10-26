@@ -5,7 +5,7 @@ export const useTable = ({ fetchData, defaultPageSize = 8, defaultPage = 1, colu
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [keyword, setKeyword] = useState('');
 
-  const { data, isLoading, error } = fetchData({ page, pageSize, keyword });
+  const { data, isLoading, error } = fetchData({ page, size: pageSize, keyword });
 
   const handlePageChange = (newPage, newPageSize) => {
     setPage(newPage);

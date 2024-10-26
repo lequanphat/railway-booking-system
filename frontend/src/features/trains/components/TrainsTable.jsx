@@ -34,6 +34,11 @@ const TrainsTable = () => {
         },
       },
       {
+        title: 'Tuyến đường',
+        dataIndex: ['route', 'name'],
+        key: 'route',
+      },
+      {
         title: 'Trạng thái',
         dataIndex: 'is_active',
         key: 'is_active',

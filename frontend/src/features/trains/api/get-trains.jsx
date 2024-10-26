@@ -2,7 +2,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 import { api } from '~/lib/api';
 
 export const getTrains = (page, size, keyword) => {
-  return api.get(`/ad/trains`, {
+  return api.get(`/ad/trains/search`, {
     params: {
       page,
       size,

@@ -4,6 +4,7 @@ import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.UpdateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.CreateTrainResponse;
+import com.backend.railwaybookingsystem.dtos.trains.responses.GetAllTrainResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.UpdateTrainResponse;
@@ -80,6 +81,11 @@ public class TrainServiceImpl implements TrainService {
                 .map(TrainMapper.INSTANCE::convertToTrainListResponse);
 
         return new PageImpl<>(trains.getContent(), pageRequest, trains.getTotalElements());
+    }
+
+    @Override
+    public List<GetAllTrainResponse> getAllTrains() {
+        return TrainMapper.INSTANCE.convertToTrainListResponseList(trainRepository.findAll());
     }
 
     public TrainDetailResponse getTrainDetailById(Long id) {
