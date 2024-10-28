@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 public class UpdateTrainRequest {
     @NotBlank(message = "Name is required")
-    @Size(min = 10, max = 150, message = "Name must be between 10 and 150 characters")
+    @Size(min = 2, max = 150, message = "Name must be between 2 and 150 characters")
     private String name;
 
     @Valid

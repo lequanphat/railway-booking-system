@@ -301,86 +301,406 @@ INSERT INTO routes (id, name) VALUES (12, "Nha Trang - Sài Gòn")^;
 INSERT INTO routes (id, name) VALUES (13, "Sài Gòn - Phan Thiết")^;
 INSERT INTO routes (id, name) VALUES (14, "Phan Thiết - Sài Gòn")^;
 
--- Trains
-INSERT INTO trains(id, name, route_id) VALUES (1, "SE1", 2)^;
-INSERT INTO trains(id, name, route_id) VALUES (2, "SE2", 1)^;
-INSERT INTO trains(id, name, route_id) VALUES (3, "SE3", 2)^;
-INSERT INTO trains(id, name, route_id) VALUES (4, "SE4", 1)^;
-INSERT INTO trains(id, name, route_id) VALUES (5, "SE5", 2)^;
-INSERT INTO trains(id, name, route_id) VALUES (6, "SE6", 1)^;
-INSERT INTO trains(id, name, route_id) VALUES (7, "SE7", 2)^;
-INSERT INTO trains(id, name, route_id) VALUES (8, "SE8", 1)^;
-
--- SG - DN
-INSERT INTO trains(id, name, route_id) VALUES (9, "SE21", 4)^;
-INSERT INTO trains(id, name, route_id) VALUES (10, "SE22", 3)^;
-
--- HN - Vinh
-INSERT INTO trains(id, name, route_id) VALUES (11, "NA1", 7)^;
-INSERT INTO trains(id, name, route_id) VALUES (12, "NA2", 8)^;
-
--- HN - DN
-INSERT INTO trains(id, name, route_id) VALUES (13, "SE19", 5)^;
-INSERT INTO trains(id, name, route_id) VALUES (14, "SE20", 6)^;
-
--- SG - Nha Trang
-INSERT INTO trains(id, name, route_id) VALUES (16, "SNT1", 12)^;
-INSERT INTO trains(id, name, route_id) VALUES (17, "SNT2", 11)^;
-
--- SG - Phan Thiết
-INSERT INTO trains(id, name, route_id) VALUES (20, "SPT1", 13)^;
-INSERT INTO trains(id, name, route_id) VALUES (21, "SPT2", 14)^;
-
-
+-- Carriage Layout
+INSERT INTO carriage_layout (active, floors, row_count, id, name) VALUES (NULL, 1, 4, 1, "Ngồi mềm điều hòa")^;
+INSERT INTO carriage_layout (active, floors, row_count, id, name) VALUES (NULL, 1, 3, 2, "Giường nằm khoang 6 điều hòa")^;
+INSERT INTO carriage_layout (active, floors, row_count, id, name) VALUES (NULL, 1, 2, 3, "GIường nằm khoang 4 điều hòa")^;
+INSERT INTO carriage_layout (active, floors, row_count, id, name) VALUES  (NULL, 1, 4, 4, "Ghế phụ, không điều hòa")^;
 
 -- Seat Type
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (1,
-                                                                   "Ghế ngồi cứng, không điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, không có điều hòa.",
-                                                                   "NCKDH",
-                                                                    1000,
-                                                                   1)^;
+                                                                                          "Ghế ngồi cứng, không điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, không có điều hòa.",
+                                                                                          "NCKDH",
+                                                                                          1000,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (2,
-                                                                   "Ghế ngồi cứng, có điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, có điều hòa.",
-                                                                   "NCCDH",
-                                                                   1100,
-                                                                   1)^;
+                                                                                          "Ghế ngồi cứng, có điều hòa", "Giá rẻ nhất, phù hợp với chặn ngắn, gỗ cứng, mức tiện nghi kém, không phù hợp với người già và trẻ em, có điều hòa.",
+                                                                                          "NCCDH",
+                                                                                          1100,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (3,
-                                                                   "Ghế ngồi mềm, không điều hòa", "Giá và chất lượng tầm trung, tương đối rộng rãi, có thể điều chỉnh nghiên 15 độ để nghỉ ngơi, phù hợp với lộ trình kéo dài dưới 6 tiếng, không có điều hòa.",
-                                                                   "NMKDH",
-                                                                   1150,
-                                                                   1)^;
+                                                                                          "Ghế ngồi mềm, không điều hòa", "Giá và chất lượng tầm trung, tương đối rộng rãi, có thể điều chỉnh nghiên 15 độ để nghỉ ngơi, phù hợp với lộ trình kéo dài dưới 6 tiếng, không có điều hòa.",
+                                                                                          "NMKDH",
+                                                                                          1150,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (4,
-                                                                   "Ghế ngồi mềm, có điều hòa", "Giá và chất lượng tầm trung, tương đối rộng rãi, có thể điều chỉnh nghiên 15 độ để nghỉ ngơi, phù hợp với lộ trình kéo dài dưới 6 tiếng, có điều hòa.",
-                                                                   "NMCDH",
-                                                                   1200,
-                                                                   1)^;
+                                                                                          "Ghế ngồi mềm, có điều hòa", "Giá và chất lượng tầm trung, tương đối rộng rãi, có thể điều chỉnh nghiên 15 độ để nghỉ ngơi, phù hợp với lộ trình kéo dài dưới 6 tiếng, có điều hòa.",
+                                                                                          "NMCDH",
+                                                                                          1200,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (5,
-                                                                   "Giường nằm khoang 4", "Giá vé cao, đầy đủ tiện nghi: điều hòa, chăn, ga gối đệm, ổ điện, nước uống miễn phí, không gian riêng tư, phù hợp với chuyến đi xa, đi qua đêm",
-                                                                   "GK4",
-                                                                   2200,
-                                                                   1)^;
+                                                                                          "Giường nằm khoang 4", "Giá vé cao, đầy đủ tiện nghi: điều hòa, chăn, ga gối đệm, ổ điện, nước uống miễn phí, không gian riêng tư, phù hợp với chuyến đi xa, đi qua đêm",
+                                                                                          "GK4",
+                                                                                          2200,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (6,
-                                                                   "Giường nằm khoang 6", "Giá vé phải chăng, diện tích hẹp hơn so với khoang 4, khó ngồi thẳng vì chiều cao hạn chế của trần tàu, trang bị chăn gối nệm để hành khách nghỉ ngơi thoải mái, phù hợp với chuyến đi xa, đi qua đêm",
-                                                                   "GK6",
-                                                                   1600,
-                                                                   1)^;
+                                                                                          "Giường nằm khoang 6", "Giá vé phải chăng, diện tích hẹp hơn so với khoang 4, khó ngồi thẳng vì chiều cao hạn chế của trần tàu, trang bị chăn gối nệm để hành khách nghỉ ngơi thoải mái, phù hợp với chuyến đi xa, đi qua đêm",
+                                                                                          "GK6",
+                                                                                          1600,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (7,
-                                                                   "Giường nằm khoang 2 VIP", "Giá vé cao nhất trong các loại vé tàu hỏa, được phục vụ nước uống và bữa ăn miễn phí, không gian cực kì rộng rãi, đảm bảo tính riêng tư tuyệt đối, nội thất tốt nhất, hiện đại nhất, số lượng ít nên khó mua được vé",
-                                                                   "GK2V",
-                                                                   4000,
-                                                                   1)^;
+                                                                                          "Giường nằm khoang 2 VIP", "Giá vé cao nhất trong các loại vé tàu hỏa, được phục vụ nước uống và bữa ăn miễn phí, không gian cực kì rộng rãi, đảm bảo tính riêng tư tuyệt đối, nội thất tốt nhất, hiện đại nhất, số lượng ít nên khó mua được vé",
+                                                                                          "GK2V",
+                                                                                          4000,
+                                                                                          1)^;
 
 INSERT INTO seat_type(id, name, description, code, original_price_per_km, active) VALUES (8,
-                                                                   "Ghế phụ", "Giá thành rẻ nhất, dễ dàng đặt vé, ghế nhựa cứng, không thoải mái cho việc nghỉ ngơi, không có không gian để cất hành lý, không được cung cấp các tiện nghi như các loại ghế tàu hỏa khác",
-                                                                   "GP",
-                                                                   800,
-                                                                   1)^;
+                                                                                          "Ghế phụ", "Giá thành rẻ nhất, dễ dàng đặt vé, ghế nhựa cứng, không thoải mái cho việc nghỉ ngơi, không có không gian để cất hành lý, không được cung cấp các tiện nghi như các loại ghế tàu hỏa khác",
+                                                                                          "GP",
+                                                                                          800,
+                                                                                          1)^;
+
+-- Seats
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (1, 1, 1, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (2, 1, 2, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (3, 1, 3, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (4, 1, 4, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (5, 1, 5, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (6, 1, 6, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (7, 1, 7, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (8, 1, 8, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (9, 1, 9, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (10, 1, 10, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (11, 1, 11, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (12, 1, 12, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (13, 1, 13, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (14, 1, 14, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (15, 1, 15, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (16, 1, 16, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (17, 1, 17, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (18, 1, 18, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (19, 1, 19, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (20, 1, 20, 4)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (1, 2, 21, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (2, 2, 22, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (3, 2, 23, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (4, 2, 24, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (5, 2, 25, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (6, 2, 26, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (7, 2, 27, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (8, 2, 28, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (9, 2, 29, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (10, 2, 30, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (11, 2, 31, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (12, 2, 32, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (13, 2, 33, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (14, 2, 34, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (15, 2, 35, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (16, 2, 36, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (17, 2, 37, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (18, 2, 38, 6)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (1, 3, 39, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (2, 3, 40, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (3, 3, 41, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (4, 3, 42, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (5, 3, 43, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (6, 3, 44, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (7, 3, 45, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (8, 3, 46, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (9, 3, 47, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (10, 3, 48, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (11, 3, 49, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (12, 3, 50, 5)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (1, 4, 51, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (2, 4, 52, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (3, 4, 53, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (4, 4, 54, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (5, 4, 55, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (6, 4, 56, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (7, 4, 57, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (8, 4, 58, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (9, 4, 59, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (10, 4, 60, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (11, 4, 61, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (12, 4, 62, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (13, 4, 63, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (14, 4, 64, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (15, 4, 65, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (16, 4, 66, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (17, 4, 67, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (18, 4, 68, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (19, 4, 69, 8)^;
+INSERT INTO seat (position, carriage_layout_id, id, seat_type_id) VALUES (20, 4, 70, 8)^;
+
+
+
+
+-- Trains
+INSERT INTO trains(id, name, route_id, is_active) VALUES (1, "SE1", 2, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (2, "SE2", 1, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (3, "SE3", 2, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (4, "SE4", 1, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (5, "SE5", 2, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (6, "SE6", 1, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (7, "SE7", 2, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (8, "SE8", 1, 1)^;
+
+
+-- SG - DN
+INSERT INTO trains(id, name, route_id, is_active) VALUES (9, "SE21", 4, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (10, "SE22", 3, 1)^;
+
+-- HN - Vinh
+INSERT INTO trains(id, name, route_id, is_active) VALUES (11, "NA1", 7, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (12, "NA2", 8, 1)^;
+
+-- HN - DN
+INSERT INTO trains(id, name, route_id, is_active) VALUES (13, "SE19", 5, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (14, "SE20", 6, 1)^;
+
+-- SG - Nha Trang
+INSERT INTO trains(id, name, route_id, is_active) VALUES (16, "SNT1", 12, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (17, "SNT2", 11, 1)^;
+
+-- SG - Phan Thiết
+INSERT INTO trains(id, name, route_id, is_active) VALUES (20, "SPT1", 13, 1)^;
+INSERT INTO trains(id, name, route_id, is_active) VALUES (21, "SPT2", 14, 1)^;
+
+-- Carriages
+-- for train 01
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (1, 1, 1, 1)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (2, 2, 1, 1)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (3, 3, 1, 1)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (4, 4, 2, 1)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (5, 5, 3, 1)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (6, 6, 4, 1)^;
+
+-- for train 02
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (7, 1, 1, 2)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (8, 2, 1, 2)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (9, 3, 1, 2)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (10, 4, 2, 2)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (11, 5, 3, 2)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (12, 6, 4, 2)^;
+
+-- for train 03
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (13, 1, 1, 3)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (14, 2, 1, 3)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (15, 3, 1, 3)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (16, 4, 2, 3)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (17, 5, 3, 3)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (18, 6, 4, 3)^;
+
+-- for train 04
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (19, 1, 1, 4)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (20, 2, 1, 4)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (21, 3, 1, 4)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (22, 4, 2, 4)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (23, 5, 3, 4)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (24, 6, 4, 4)^;
+
+-- for train 05
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (25, 1, 1, 5)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (26, 2, 1, 5)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (27, 3, 1, 5)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (28, 4, 2, 5)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (29, 5, 3, 5)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (30, 6, 4, 5)^;
+
+-- for train 06
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (31, 1, 1, 6)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (32, 2, 1, 6)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (33, 3, 1, 6)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (34, 4, 2, 6)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (35, 5, 3, 6)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (36, 6, 4, 6)^;
+
+-- for train 07
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (37, 1, 1, 7)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (38, 2, 1, 7)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (39, 3, 1, 7)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (40, 4, 2, 7)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (41, 5, 3, 7)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (42, 6, 4, 7)^;
+
+-- for train 08
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (43, 1, 1, 8)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (44, 2, 1, 8)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (45, 3, 1, 8)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (46, 4, 2, 8)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (47, 5, 3, 8)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (48, 6, 4, 8)^;
+
+-- for train 09
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (49, 1, 1, 9)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (50, 2, 1, 9)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (51, 3, 1, 9)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (52, 4, 2, 9)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (53, 5, 3, 9)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (54, 6, 4, 9)^;
+
+-- for train 10
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (55, 1, 1, 10)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (56, 2, 1, 10)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (57, 3, 1, 10)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (58, 4, 2, 10)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (59, 5, 3, 10)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (60, 6, 4, 10)^;
+
+-- for train 11
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (61, 1, 1, 11)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (62, 2, 1, 11)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (63, 3, 1, 11)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (64, 4, 2, 11)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (65, 5, 3, 11)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (66, 6, 4, 11)^;
+
+-- for train 12
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (67, 1, 1, 12)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (68, 2, 1, 12)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (69, 3, 1, 12)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (70, 4, 2, 12)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (71, 5, 3, 12)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (72, 6, 4, 12)^;
+
+-- for train 13
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (73, 1, 1, 13)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (74, 2, 1, 13)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (75, 3, 1, 13)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (76, 4, 2, 13)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (77, 5, 3, 13)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (78, 6, 4, 13)^;
+
+-- for train 14
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (79, 1, 1, 14)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (80, 2, 1, 14)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (81, 3, 1, 14)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (82, 4, 2, 14)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (83, 5, 3, 14)^;
+INSERT INTO carriage (id, position, carriage_layout_id, train_id) VALUES (84, 6, 4, 14)^;
+
+-- seat price
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 1, 1, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 2, 2, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 3, 3, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 4, 4, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 5, 5, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 6, 6, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 7, 7, 1)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 8, 8, 1)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 9, 1, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 10, 2, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 11, 3, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 12, 4, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 13, 5, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 14, 6, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 15, 7, 2)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 16, 8, 2)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 17, 1, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 18, 2, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 19, 3, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 20, 4, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 21, 5, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 22, 6, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 23, 7, 3)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 24, 8, 3)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 25, 1, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 26, 2, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 27, 3, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 28, 4, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 29, 5, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 30, 6, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 31, 7, 4)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 32, 8, 4)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 33, 1, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 34, 2, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 35, 3, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 36, 4, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 37, 5, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 38, 6, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 39, 7, 5)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 40, 8, 5)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 41, 1, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 42, 2, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 43, 3, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 44, 4, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 45, 5, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 46, 6, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 47, 7, 6)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 48, 8, 6)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 49, 1, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 50, 2, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 51, 3, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 52, 4, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 53, 5, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 54, 6, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 55, 7, 7)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 56, 8, 7)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 57, 1, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 58, 2, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 59, 3, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 60, 4, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 61, 5, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 62, 6, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 63, 7, 8)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 64, 8, 8)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 65, 1, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 66, 2, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 67, 3, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 68, 4, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 69, 5, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 70, 6, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 71, 7, 9)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 72, 8, 9)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 73, 1, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 74, 2, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 75, 3, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 76, 4, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 77, 5, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 78, 6, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 79, 7, 10)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 80, 8, 10)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 81, 1, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 82, 2, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 83, 3, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 84, 4, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 85, 5, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 86, 6, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 87, 7, 11)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 88, 8, 11)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 89, 1, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 90, 2, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 91, 3, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 92, 4, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 93, 5, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 94, 6, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 95, 7, 12)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 96, 8, 12)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 97, 1, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 98, 2, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 99, 3, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 100, 4, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 101, 5, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 102, 6, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 103, 7, 13)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 104, 8, 13)^;
+
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1000, 105, 1, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1100, 106, 2, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1150, 107, 3, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1200, 108, 4, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (2200, 109, 5, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (1600, 110, 6, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (4000, 111, 7, 14)^;
+INSERT INTO seat_price (original_price_per_km, id, seat_type_id, train_id) VALUES (800, 112, 8, 14)^;
 
 -- Route Segment
 -- SE1
