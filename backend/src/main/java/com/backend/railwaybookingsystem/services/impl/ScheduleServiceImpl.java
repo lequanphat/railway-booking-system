@@ -2,6 +2,7 @@ package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsReponse;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ScheduleMapper;
 import com.backend.railwaybookingsystem.models.Schedule;
@@ -50,5 +51,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void deleteSchedule(Long id) {
         scheduleRepository.deleteById(id);
+    }
+
+    @Override
+    public ScheduleDetailsReponse getScheduleDetails(Long id) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + id));
+        return ScheduleMapper.INSTANCE.convertToScheduleDetailsReponse(schedule);
     }
 }
