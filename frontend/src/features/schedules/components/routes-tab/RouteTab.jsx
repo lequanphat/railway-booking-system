@@ -1,8 +1,9 @@
 import { Flex, Timeline } from 'antd';
-import { useMemo } from 'react';
-import PropTypes from 'prop-types';
+import { useContext, useMemo } from 'react';
+import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 
-const RouteTab = ({ routeSegments = [] }) => {
+const RouteTab = () => {
+  const { routeSegments } = useContext(ScheduleDetailContext);
   const routes = useMemo(
     () =>
       routeSegments?.map((route, index) => ({
@@ -25,10 +26,6 @@ const RouteItem = ({ name, time }) => {
       <p className="text-[14px]">{time}</p>
     </Flex>
   );
-};
-
-RouteTab.propTypes = {
-  routeSegments: PropTypes.array,
 };
 
 export default RouteTab;
