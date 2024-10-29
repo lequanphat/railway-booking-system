@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import SeatPricesTable from './SeatPriceTable';
 import { Flex } from 'antd';
-import PropTypes from 'prop-types';
+import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 
-const DetailsTab = ({ train }) => {
+const DetailsTab = () => {
+  const { train } = useContext(ScheduleDetailContext);
   const seatPricesData = useMemo(() => {
     return train?.seatPrices?.map((seatPrice, index) => ({
       index: index + 1,
@@ -20,9 +21,6 @@ const DetailsTab = ({ train }) => {
       </div>
     </Flex>
   );
-};
-DetailsTab.propTypes = {
-  train: PropTypes.object,
 };
 
 export default DetailsTab;

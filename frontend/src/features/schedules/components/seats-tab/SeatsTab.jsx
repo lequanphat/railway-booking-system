@@ -1,10 +1,11 @@
 import { Flex } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { CarriageAbstractPattern, TrainHeadAbstractPattern } from './CarriageAbstractFrame';
 import CarriageLayout from './CarriageLayout';
-import PropTypes from 'prop-types';
+import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 
-const SeatsTab = ({ train }) => {
+const SeatsTab = () => {
+  const { train } = useContext(ScheduleDetailContext);
   const [selectedCarriage, setSelectedCarriage] = useState(null);
 
   useEffect(() => {
@@ -49,10 +50,6 @@ const SeatsTab = ({ train }) => {
       />
     </Flex>
   );
-};
-
-SeatsTab.propTypes = {
-  train: PropTypes.object,
 };
 
 export default SeatsTab;
