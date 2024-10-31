@@ -7,12 +7,10 @@ import java.time.Instant;
 
 
 @Entity(name = "refreshtoken")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
