@@ -76,7 +76,7 @@ const RULES = {
   createTrain: {
     name: [
       { required: true, message: 'Please enter the carriage name!' },
-      { min: 10, message: 'Name must be at least 10 characters!' },
+      { min: 2, message: 'Name must be at least 2 characters!' },
       {
         max: 150,
         message: 'Name must be at most 150 characters!',

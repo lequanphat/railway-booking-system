@@ -2,6 +2,7 @@ package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsReponse;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,11 @@ public class ScheduleController {
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
         scheduleService.deleteSchedule(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("public/schedules/{id}/details")
+    public ResponseEntity<ScheduleDetailsReponse> getScheduleDetails(@PathVariable Long id) {
+        ScheduleDetailsReponse schedules = scheduleService.getScheduleDetails(id);
+        return ResponseEntity.ok(schedules);
     }
 }
