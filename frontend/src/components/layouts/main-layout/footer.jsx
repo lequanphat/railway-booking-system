@@ -8,7 +8,7 @@ import whiteLogoImage from '~/assets/images/white-logo.png';
 const Footer = () => {
   return (
     <FooterAnt className="text-center  w-full m-0 p-0 overflow-hidden">
-      <div className="relative w-full h-[300px]">
+      <div className="relative w-full h-[300px] bg-background">
         <img src={bgFooter2} alt="" className="absolute bottom-0 left-0 w-full h-auto" />
         <img
           src={trainImage}
