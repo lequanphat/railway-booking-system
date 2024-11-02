@@ -40,6 +40,9 @@ const ScheduleDetailsPage = () => {
             carriageId: carriage.id,
             carriagePosition: carriage.position,
             carriageName: carriage.carriageLayout.name,
+            is_occupied: scheduleDetails?.tickets.some(
+              (ticket) => ticket.seat.id === seat.id && ticket.carriage.id === carriage.id,
+            ),
             seatType:
               scheduleDetails?.train?.seatPrices.find((seatPrice) => seatPrice?.seatType?.id === seat?.seatType?.id)
                 ?.seatType || seat.seatType,
@@ -58,9 +61,17 @@ const ScheduleDetailsPage = () => {
 
   const nextStep = useCallback(() => {
     setCurrentStep((pre) => pre + 1);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }, []);
   const prevStep = useCallback(() => {
     setCurrentStep((pre) => pre - 1);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }, []);
 
   const steps = useMemo(
@@ -106,6 +117,7 @@ const ScheduleDetailsPage = () => {
       routeSegments: scheduleDetails?.train?.routeSegments,
       totalDistance,
       selectedSeats,
+      tickets: scheduleDetails?.tickets || [],
       setSelectedSeats,
       passengerInformation,
       setPassengerInformation,

@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.repositories;
 
 import com.backend.railwaybookingsystem.models.Schedule;
+import com.backend.railwaybookingsystem.models.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

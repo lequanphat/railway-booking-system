@@ -11,9 +11,10 @@ import java.util.List;
  * DTO for {@link com.backend.railwaybookingsystem.models.Schedule}
  */
 @Value
-public class ScheduleDetailsReponse implements Serializable {
+public class ScheduleDetailsResponse implements Serializable {
     Long id;
     TrainDto train;
+    List<TicketDto> tickets;
     LocalDate departureDate;
 
     /**
@@ -122,6 +123,34 @@ public class ScheduleDetailsReponse implements Serializable {
                 Long id;
                 String name;
             }
+        }
+    }
+
+    /**
+     * DTO for {@link com.backend.railwaybookingsystem.models.Ticket}
+     */
+    @Value
+    public static class TicketDto implements Serializable {
+        Long id;
+        SeatDto seat;
+        CarriageDto carriage;
+
+        /**
+         * DTO for {@link com.backend.railwaybookingsystem.models.Seat}
+         */
+        @Value
+        public static class SeatDto implements Serializable {
+            Long id;
+            int position;
+        }
+
+        /**
+         * DTO for {@link com.backend.railwaybookingsystem.models.Carriage}
+         */
+        @Value
+        public static class CarriageDto implements Serializable {
+            Long id;
+            int position;
         }
     }
 }
