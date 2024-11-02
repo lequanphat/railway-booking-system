@@ -67,6 +67,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = OrderMapper.INSTANCE.convertToOrder(request);
         order.getTickets().clear();
 
+        double totalPrice = 0;
+
         for(int i=0; i< request.getTickets().size(); i++){
             PlaceOrderRequest.TicketDto ticketDto = request.getTickets().get(i);
             SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
@@ -82,7 +84,10 @@ public class OrderServiceImpl implements OrderService {
             Ticket ticket = TicketMapper.INSTANCE.convertToTicket(ticketDto);
             ticket.setOrder(order);
             order.getTickets().add(ticket);
+
+            totalPrice += ticket.getPrice();
         }
+        order.setTotalPrice(totalPrice);
         Order savedOrder = orderRepository.save(order);
         log.info("Order placed successfully");
         return OrderMapper.INSTANCE.convertToPlaceOrderResponse(savedOrder);
