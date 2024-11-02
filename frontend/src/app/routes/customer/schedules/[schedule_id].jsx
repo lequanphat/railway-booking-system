@@ -1,6 +1,6 @@
-import { Steps } from 'antd';
-import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Button, Flex, Result, Steps } from 'antd';
+import { useCallback, useMemo, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import { useGetScheduleDetails } from '~/features/schedules/api/get-schedule-details';
 import Completion from '~/features/schedules/components/completion/Completion';
@@ -10,22 +10,25 @@ import PaymentConfirmation from '~/features/schedules/components/payment/Payment
 
 const ScheduleDetailsPage = () => {
   const { id } = useParams();
-  const [fakeDeparture, fakeArrival] = [1, 12];
-
-  const [currentStep, setCurrentStep] = useState(0);
-
-  const nextStep = () => {
-    setCurrentStep((pre) => pre + 1);
-  };
-  const prevStep = () => {
-    setCurrentStep((pre) => pre - 1);
-  };
+  const [searchParams] = useSearchParams();
+  const departureStation = parseInt(searchParams.get('departure_station'));
+  const arrivalStation = parseInt(searchParams.get('arrival_station'));
 
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [passengerInformation, setPassengerInformation] = useState([]);
+
   const { data: scheduleDetails } = useGetScheduleDetails({ id, queryConfig: { enabled: !!id } });
 
-  const { formatTrainData, totalDistance } = useMemo(() => {
+  const { departureRouteIndex, arrivalRouteIndex, formatTrainData, totalDistance } = useMemo(() => {
     if (!scheduleDetails) return {};
+    const departureRouteIndex = scheduleDetails?.train?.routeSegments?.findIndex(
+      (route) => route.station.id === parseInt(departureStation),
+    );
+
+    const arrivalRouteIndex = scheduleDetails?.train?.routeSegments?.findIndex(
+      (route) => route.station.id === parseInt(arrivalStation),
+    );
+
     const formatTrainData = {
       ...scheduleDetails?.train,
       carriages: scheduleDetails?.train?.carriages?.map((carriage) => ({
@@ -34,6 +37,7 @@ const ScheduleDetailsPage = () => {
           ...carriage.carriageLayout,
           seats: carriage.carriageLayout.seats.map((seat) => ({
             ...seat,
+            carriageId: carriage.id,
             carriagePosition: carriage.position,
             carriageName: carriage.carriageLayout.name,
             seatType:
@@ -44,22 +48,26 @@ const ScheduleDetailsPage = () => {
       })),
     };
     const totalDistance =
-      scheduleDetails?.train?.routeSegments?.[fakeArrival]?.distance -
-      scheduleDetails?.train?.routeSegments?.[fakeDeparture]?.distance;
-    return { formatTrainData, totalDistance };
-  }, [scheduleDetails, fakeArrival, fakeDeparture]);
+      scheduleDetails?.train?.routeSegments?.[arrivalRouteIndex]?.distance -
+      scheduleDetails?.train?.routeSegments?.[departureRouteIndex]?.distance;
+
+    return { departureRouteIndex, arrivalRouteIndex, formatTrainData, totalDistance };
+  }, [scheduleDetails, departureStation, arrivalStation]);
+
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const nextStep = useCallback(() => {
+    setCurrentStep((pre) => pre + 1);
+  }, []);
+  const prevStep = useCallback(() => {
+    setCurrentStep((pre) => pre - 1);
+  }, []);
 
   const steps = useMemo(
     () => [
       {
         title: 'Chọn ghế',
-        content: (
-          <General
-            departureDate={scheduleDetails?.departureDate}
-            selectedDeparture={fakeDeparture}
-            selectedArrival={fakeArrival}
-          />
-        ),
+        content: <General />,
       },
       {
         title: 'Xác nhận thông tin',
@@ -74,7 +82,7 @@ const ScheduleDetailsPage = () => {
         content: <Completion />,
       },
     ],
-    [scheduleDetails, fakeDeparture, fakeArrival],
+    [],
   );
 
   const items = useMemo(
@@ -86,22 +94,66 @@ const ScheduleDetailsPage = () => {
     [steps],
   );
 
-  console.log('scheduleDetails', scheduleDetails);
+  // initial context value
+  const scheduleDetailContextValue = useMemo(
+    () => ({
+      departureDate: scheduleDetails?.departureDate,
+      departureStation,
+      arrivalStation,
+      departureRouteIndex,
+      arrivalRouteIndex,
+      train: formatTrainData,
+      routeSegments: scheduleDetails?.train?.routeSegments,
+      totalDistance,
+      selectedSeats,
+      setSelectedSeats,
+      passengerInformation,
+      setPassengerInformation,
+      nextStep,
+      prevStep,
+    }),
+    [
+      departureRouteIndex,
+      arrivalRouteIndex,
+      departureStation,
+      arrivalStation,
+      formatTrainData,
+      scheduleDetails,
+      totalDistance,
+      selectedSeats,
+      passengerInformation,
+      nextStep,
+      prevStep,
+    ],
+  );
+
+  if (departureRouteIndex === -1 || arrivalRouteIndex === -1 || departureRouteIndex >= arrivalRouteIndex) {
+    return (
+      <Flex align="center" justify="center">
+        <Result
+          status="warning"
+          title="Không tìm thấy chuyến tàu phù hợp!"
+          subTitle="Vui lòng kiểm tra lại thông tin chuyến tàu và lịch trình di chuyển của tàu để tìm chuyến tàu phù hợp với hành trình của bạn."
+          extra={[
+            <Link to="/" key={1}>
+              <Button type="primary" key="console">
+                Trang chủ
+              </Button>
+            </Link>,
+            <Link to="/contacts" key={2}>
+              <Button key="buy">Liên hệ hỗ trợ</Button>
+            </Link>,
+          ]}
+        />
+      </Flex>
+    );
+  }
+
   return (
-    <ScheduleDetailContext.Provider
-      value={{
-        train: formatTrainData,
-        routeSegments: scheduleDetails?.train?.routeSegments,
-        totalDistance,
-        selectedSeats,
-        setSelectedSeats,
-        nextStep,
-        prevStep,
-      }}
-    >
+    <ScheduleDetailContext.Provider value={scheduleDetailContextValue}>
       <h1 className="text-lg text-center font-semibold mt-6 text-primary">
-        {scheduleDetails?.train?.routeSegments?.[fakeDeparture]?.station?.name} -{' '}
-        {scheduleDetails?.train?.routeSegments?.[fakeArrival]?.station?.name}
+        {scheduleDetails?.train?.routeSegments?.[departureRouteIndex]?.station?.name} -{' '}
+        {scheduleDetails?.train?.routeSegments?.[arrivalRouteIndex]?.station?.name}
       </h1>
       <Steps current={currentStep} items={items} className="pt-6" />
       <div className="py-6">{steps[currentStep].content}</div>

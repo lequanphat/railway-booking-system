@@ -8,8 +8,9 @@ import PropTypes from 'prop-types';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import SeatsTab from './SeatsTab';
 
-const General = ({ departureDate, selectedDeparture, selectedArrival }) => {
-  const { routeSegments, selectedSeats, nextStep } = useContext(ScheduleDetailContext);
+const General = () => {
+  const { departureDate, departureRouteIndex, arrivalRouteIndex, routeSegments, selectedSeats, nextStep } =
+    useContext(ScheduleDetailContext);
   const items = useMemo(
     () => [
       {
@@ -50,7 +51,7 @@ const General = ({ departureDate, selectedDeparture, selectedArrival }) => {
               </Col>
               <Col span={16} className="mt-2">
                 <p className="text-[16px]">
-                  {`${routeSegments?.[selectedArrival]?.station?.name} - ${routeSegments?.[selectedDeparture]?.station?.name}`}
+                  {`${routeSegments?.[arrivalRouteIndex]?.station?.name} - ${routeSegments?.[departureRouteIndex]?.station?.name}`}
                 </p>
               </Col>
               <Col span={8} className="mt-2">
@@ -58,7 +59,7 @@ const General = ({ departureDate, selectedDeparture, selectedArrival }) => {
               </Col>
               <Col span={16} className="mt-2">
                 <p className="text-[16px]">
-                  {routeSegments?.[selectedArrival]?.distance - routeSegments?.[selectedDeparture]?.distance}
+                  {routeSegments?.[arrivalRouteIndex]?.distance - routeSegments?.[departureRouteIndex]?.distance}
                   km
                 </p>
               </Col>
@@ -67,7 +68,7 @@ const General = ({ departureDate, selectedDeparture, selectedArrival }) => {
               </Col>
               <Col span={16} className="mt-2">
                 <p className="text-[16px]">
-                  {routeSegments?.[selectedDeparture]?.departure_time} {departureDate}
+                  {routeSegments?.[departureRouteIndex]?.departure_time} {departureDate}
                 </p>
               </Col>
               <Col span={8} className="mt-2">
@@ -75,7 +76,7 @@ const General = ({ departureDate, selectedDeparture, selectedArrival }) => {
               </Col>
               <Col span={16} className="mt-2">
                 <p className="text-[16px]">
-                  {routeSegments?.[selectedArrival]?.arrival_time} {departureDate}
+                  {routeSegments?.[arrivalRouteIndex]?.arrival_time} {departureDate}
                 </p>
               </Col>
             </Row>

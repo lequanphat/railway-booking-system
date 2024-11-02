@@ -1,6 +1,6 @@
 const PAYMENT_METHOD_OPTIONS = Object.freeze([
   {
-    value: 1,
+    value: 'VNPAY',
     title: 'Thanh toán trực tuyến qua cổng thanh toán VNPAY',
     logo: 'https://dsvn.vn/images/logo-dvtt-VNP.png',
     descriptions: [
@@ -11,14 +11,14 @@ const PAYMENT_METHOD_OPTIONS = Object.freeze([
     enabled: true,
   },
   {
-    value: 2,
+    value: 'MOMO',
     logo: 'https://dsvn.vn/images/logo-dvtt-MOM.png',
     title: 'Thanh toán trực tuyến qua ví điện tử MoMo',
     descriptions: ['Nhập mã MOMODSVN giảm đến 100k tại mục Ưu đãi'],
     enabled: true,
   },
   {
-    value: 3,
+    value: 'ZALOPAY',
     logo: 'https://dsvn.vn/images/logo-dvtt-ZLP.png',
     title: 'Thanh toán trực tuyến qua ví điện tử ZaloPay',
     descriptions: [
@@ -28,7 +28,7 @@ const PAYMENT_METHOD_OPTIONS = Object.freeze([
     enabled: false,
   },
   {
-    value: 4,
+    value: 'EPAY',
     logo: 'https://dsvn.vn/images/logo-dvtt-EPA.png',
     title: 'Thanh toán trực tuyến qua cổng thanh toán Epay',
     descriptions: ['Ví điện tử, thẻ nội địa, thẻ quốc tế qua cổng thanh toán EPay'],
@@ -36,4 +36,43 @@ const PAYMENT_METHOD_OPTIONS = Object.freeze([
   },
 ]);
 
-export { PAYMENT_METHOD_OPTIONS };
+const OBJECT_TYPE_OPTIONS = [
+  {
+    label: <span>Người Việt Nam</span>,
+    title: 'Vietnamese',
+    options: [
+      {
+        label: <span>Người lớn</span>,
+        value: '1',
+      },
+      {
+        label: <span>Trẻ em</span>,
+        value: '2',
+      },
+      {
+        label: <span>Sinh viên</span>,
+        value: '3',
+      },
+      {
+        label: <span>Người cao tuổi</span>,
+        value: '4',
+      },
+    ],
+  },
+  {
+    label: <span>Người nước ngoài</span>,
+    title: 'Foreigner',
+    options: [
+      {
+        label: <span>Người lớn</span>,
+        value: '5',
+      },
+      {
+        label: <span>Trẻ em</span>,
+        value: '6',
+      },
+    ],
+  },
+];
+
+export { PAYMENT_METHOD_OPTIONS, OBJECT_TYPE_OPTIONS };

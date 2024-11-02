@@ -73,8 +73,7 @@ const TrainsManagement = () => {
           seatPricesList: validatedSeatPrices,
         };
         mutation.mutate({ data });
-      } catch (error) {
-        console.log(error);
+      } catch () {
         message.error('Vui lòng nhập giá vé cho tất cả các loại ghế');
       }
     });

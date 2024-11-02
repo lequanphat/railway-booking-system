@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RouteSegmentRepository extends JpaRepository<RouteSegment, Long> {
     @Transactional
     void deleteByTrainId(Long trainId);
+
+    RouteSegment getRouteSegmentByTrainIdAndStationId(Long trainId, Long stationId);
 }

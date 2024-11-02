@@ -194,6 +194,13 @@ const createAppRouter = () =>
             return { Component: TrainScheDulesPage.default };
           },
         },
+        {
+          path: 'orders',
+          lazy: async () => {
+            const OrderManagement = await import('./routes/admin/orders');
+            return { Component: OrderManagement.default };
+          },
+        },
       ],
     },
     // Auth routes

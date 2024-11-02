@@ -32,16 +32,14 @@ const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
                   vertical
                   align="center"
                   className={`${
-                    selectedSeats.find((item) => item.carriagePosition === seat.carriagePosition && item.id === seat.id)
+                    selectedSeats.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)
                       ? 'bg-primary text-white'
                       : ''
                   } w-[100px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-pointer`}
                   onClick={() => {
                     setSelectedSeats((prev) => {
-                      if (prev.find((item) => item.carriagePosition === seat.carriagePosition && item.id === seat.id)) {
-                        return prev.filter(
-                          (item) => item.carriagePosition !== seat.carriagePosition || item.id !== seat.id,
-                        );
+                      if (prev.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
+                        return prev.filter((item) => item.carriageId !== seat.carriageId || item.id !== seat.id);
                       }
                       return [
                         ...prev,

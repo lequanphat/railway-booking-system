@@ -52,8 +52,6 @@ const TrainDetails = () => {
     }));
   }, [trainData?.carriages]);
 
-  console.log('trainData?.carriages', trainData?.carriages);
-
   return (
     <div>
       <Flex align="center" justify="space-between" className="mb-2">

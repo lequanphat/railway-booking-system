@@ -1,4 +1,5 @@
 import { Button, Col, Flex, Row, Typography } from 'antd';
+import { Link } from 'react-router-dom';
 import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
 
@@ -50,9 +51,11 @@ export const ScheduleItem = () => {
           <Typography className="text-[18px] font-medium">Discount</Typography>
           <Typography className="text-[24px] font-medium text-primary">{Math.floor(Math.random() * 100)}%</Typography>
         </Flex>
-        <Button type="primary" className="rounded-full" href="schedules/1">
-          CHOOSE ROUTE
-        </Button>
+        <Link to={`/schedules/1?departure_station=6&arrival_station=${Math.floor(Math.random() * 10)}`}>
+          <Button type="primary" className="rounded-full" href="schedules/1">
+            CHOOSE ROUTE
+          </Button>
+        </Link>
       </div>
     </Flex>
   );

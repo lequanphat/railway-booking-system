@@ -60,8 +60,8 @@ const adminMenu = Object.freeze([
       },
       {
         key: '3-2',
-        label: 'Danh sách đặt vé',
-        path: '/bookings/list',
+        label: 'Quản lý hóa đơn',
+        path: '/admin/orders',
       },
       {
         key: '3-3',

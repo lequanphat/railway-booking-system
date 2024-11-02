@@ -14,4 +14,6 @@ public interface SeatPriceRepository extends JpaRepository<SeatPrice, Long> {
 
     SeatPrice findByTrainIdAndSeatTypeId(Long trainId, Long seatTypeId);
 
+
+
 }

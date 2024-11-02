@@ -1,23 +1,65 @@
-import { Alert, Button, Card, Col, Divider, Flex, Form, Input, Row, Table } from 'antd';
+import { Alert, Button, Card, Col, Divider, Flex, Form, Input, Row, Select, Table } from 'antd';
 import { useContext, useMemo } from 'react';
+import { OBJECT_TYPE_OPTIONS } from '~/config';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import { convertToVnCurrency } from '~/utils/convert';
+import { formatTicketsInformationData } from '../../utils/helpers';
 
 const InfoConfirmation = () => {
-  const { selectedSeats, totalDistance, prevStep, nextStep } = useContext(ScheduleDetailContext);
-  console.log(selectedSeats);
+  const [form] = Form.useForm();
+  const { selectedSeats, totalDistance, prevStep, nextStep, setPassengerInformation } =
+    useContext(ScheduleDetailContext);
 
   const columns = useMemo(
     () => [
       {
         title: '#',
-        dataIndex: 'index',
         key: 'index',
+        render: (text, record, index) => index + 1,
       },
       {
         title: 'Thông tin khách hàng',
-        dataIndex: 'name',
-        key: 'name',
+        key: 'passenger',
+        render: (record) => (
+          <Form form={form} name="advanced_search" onFinish={null}>
+            <Form.Item
+              name={`fullName_${record?.id}-${record?.carriageId}`}
+              label="Họ tên"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập họ tên!',
+                },
+              ]}
+            >
+              <Input placeholder="Nhập họ và tên..." />
+            </Form.Item>
+            <Form.Item
+              name={`object_${record?.id}-${record?.carriageId}`}
+              label="Đối tượng"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng chọn đối tượng!',
+                },
+              ]}
+            >
+              <Select onChange={null} options={OBJECT_TYPE_OPTIONS} />
+            </Form.Item>
+            <Form.Item
+              name={`identity_${record?.id}-${record?.carriageId}`}
+              label="Số CMND"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập số CMND hoặc ngày sinh trẻ em!',
+                },
+              ]}
+            >
+              <Input placeholder="Nhập số CMND hoặc ngày sinh trẻ em..." />
+            </Form.Item>
+          </Form>
+        ),
       },
       {
         title: 'Thông tin chỗ',
@@ -25,7 +67,7 @@ const InfoConfirmation = () => {
         render: (record) => {
           return (
             <div>
-              <p>Ghế: {`[${record?.code}] - ${record?.seatType?.name}`}</p>
+              <p>Ghế: {`[${record?.code}] - ${record?.seatType?.name} [${record?.position}]`}</p>
               <p>Toa {`${record?.carriagePosition}: ${record?.carriageName}`}</p>
               <p>
                 Giá:{' '}
@@ -57,8 +99,27 @@ const InfoConfirmation = () => {
         },
       },
     ],
-    [],
+    [form, totalDistance],
   );
+
+  const handleNextStep = async () => {
+    try {
+      await form.validateFields().then((values) => {
+        const data = {
+          fullName: values.fullName,
+          identity: values.identity,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+          tickets: formatTicketsInformationData(values),
+        };
+        setPassengerInformation(data);
+        nextStep();
+      });
+    } catch (error) {
+      console.log('Validation failed:', error);
+    }
+  };
+
   return (
     <div>
       <Card>
@@ -81,12 +142,12 @@ const InfoConfirmation = () => {
             type="info"
             showIcon
           />
-          <Form form={null} name="advanced_search" onFinish={null} className="pt-6">
+          <Form form={form} name="advanced_search" className="pt-6">
             <Row gutter={[48, 12]}>
               <Col span={12}>
                 <Form.Item
-                  name={'name'}
-                  label={`Họ tên`}
+                  name="fullName"
+                  label="Họ tên"
                   rules={[
                     {
                       required: true,
@@ -99,8 +160,8 @@ const InfoConfirmation = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name={'citizen_id'}
-                  label={'Số CMND/Hộ chiếu'}
+                  name="identity"
+                  label="Số CMND/Hộ chiếu"
                   rules={[
                     {
                       required: true,
@@ -113,8 +174,8 @@ const InfoConfirmation = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name={'email'}
-                  label={'Email'}
+                  name="email"
+                  label="Email"
                   rules={[
                     {
                       required: true,
@@ -127,7 +188,7 @@ const InfoConfirmation = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name={'phone_number'}
+                  name={'phoneNumber'}
                   label={'Số điện thoại'}
                   rules={[
                     {
@@ -146,7 +207,7 @@ const InfoConfirmation = () => {
 
       <Flex align="center" justify="space-between" className="py-4">
         <Button onClick={prevStep}>Quay lại</Button>
-        <Button type="primary" onClick={nextStep}>
+        <Button type="primary" onClick={handleNextStep}>
           Tiếp tục
         </Button>
       </Flex>
