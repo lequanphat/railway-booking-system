@@ -3,6 +3,7 @@ import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
+import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.OrderMapper;
 import com.backend.railwaybookingsystem.mappers.TicketMapper;
 import com.backend.railwaybookingsystem.mappers.TrainMapper;
@@ -42,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     private SeatPriceRepository seatPriceRepository;
 
     @Autowired
-    private SeatTypeRepository seatTypeRepository;
+    private TicketRepository ticketRepository;
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -71,6 +72,13 @@ public class OrderServiceImpl implements OrderService {
 
         for(int i=0; i< request.getTickets().size(); i++){
             PlaceOrderRequest.TicketDto ticketDto = request.getTickets().get(i);
+
+            Ticket findTicket = ticketRepository.findByScheduleIdAndCarriageIdAndSeatId(schedule.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId());
+            if(findTicket != null){
+                log.error("Ticket already booked");
+                throw new BadRequestException("Ticket already booked");
+            }
+
             SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
             SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(schedule.getTrain().getId(), seatType.getId());
             ticketDto.setSchedule(scheduleDto);

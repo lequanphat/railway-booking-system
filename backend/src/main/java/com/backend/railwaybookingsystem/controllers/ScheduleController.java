@@ -2,7 +2,7 @@ package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsReponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +37,8 @@ public class ScheduleController {
     }
 
     @GetMapping("public/schedules/{id}/details")
-    public ResponseEntity<ScheduleDetailsReponse> getScheduleDetails(@PathVariable Long id) {
-        ScheduleDetailsReponse schedules = scheduleService.getScheduleDetails(id);
+    public ResponseEntity<ScheduleDetailsResponse> getScheduleDetails(@PathVariable Long id) {
+        ScheduleDetailsResponse schedules = scheduleService.getScheduleDetails(id);
         return ResponseEntity.ok(schedules);
     }
 }

@@ -20,7 +20,7 @@ const PaymentConfirmation = () => {
         nextStep();
       },
       onError: () => {
-        message.error('Đã có lỗi xảy ra, vui lòng thử lại sau!');
+        message.error('Đã có lỗi xảy ra, vui lòng kiểm tra lại thông tin vé đã chọn!');
       },
     },
   });
