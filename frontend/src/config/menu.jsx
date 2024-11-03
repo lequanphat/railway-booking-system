@@ -230,12 +230,12 @@ const adminMenu = Object.freeze([
 ]);
 
 const userMenu = Object.freeze([
-  { title: 'Home', href: '/' },
-  { title: 'Schedule', href: '/schedules' },
-  { title: 'Tickets', href: '/tickets' },
-  { title: 'Orders', href: '/orders' },
-  { title: 'Contact', href: '/contacts' },
-  { title: 'About', href: '/about' },
+  { title: 'Trang chủ', href: '/' },
+  { title: 'Lịch trình', href: '/schedules' },
+  { title: 'Vé tàu', href: '/tickets' },
+  { title: 'Đơn hàng', href: '/orders' },
+  { title: 'Liên hệ', href: '/contacts' },
+  { title: 'Về chúng t', href: '/about' },
 ]);
 
 export { adminMenu, userMenu };
