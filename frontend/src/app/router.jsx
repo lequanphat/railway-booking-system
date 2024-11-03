@@ -6,19 +6,20 @@ import AuthLayout from '~/components/layouts/auth-layout';
 import MainLayout from '~/components/layouts/main-layout';
 import AdminRoutes from './guards/admin-routes';
 import AuthRoutes from './guards/auth-routes';
+import UserRoutes from './guards/user-routes';
 import PrivateRoutes from './guards/private-routes';
 
 const queryClient = new QueryClient();
 
 const createAppRouter = () =>
   createBrowserRouter([
-    // Home route
+    // user routes
     {
       path: '/',
       element: (
-        <PrivateRoutes>
+        <UserRoutes>
           <MainLayout />
-        </PrivateRoutes>
+        </UserRoutes>
       ),
       errorElement: async () => {
         let NotFoundRoute = await import('./routes/not-found');
@@ -53,13 +54,7 @@ const createAppRouter = () =>
             return { Component: TicketsPage.default };
           },
         },
-        {
-          path: '/orders',
-          lazy: async () => {
-            const OrdersPage = await import('./routes/customer/orders');
-            return { Component: OrdersPage.default };
-          },
-        },
+
         {
           path: '/contacts',
           lazy: async () => {
@@ -72,6 +67,41 @@ const createAppRouter = () =>
           lazy: async () => {
             const AboutPage = await import('./routes/customer/about');
             return { Component: AboutPage.default };
+          },
+        },
+      ],
+    },
+    // private routes
+    {
+      path: '/orders',
+      element: (
+        <PrivateRoutes>
+          <MainLayout />
+        </PrivateRoutes>
+      ),
+      children: [
+        {
+          path: '',
+          lazy: async () => {
+            const OrdersPage = await import('./routes/customer/orders');
+            return { Component: OrdersPage.default };
+          },
+        },
+      ],
+    },
+    {
+      path: '/tickets',
+      element: (
+        <PrivateRoutes>
+          <MainLayout />
+        </PrivateRoutes>
+      ),
+      children: [
+        {
+          path: '',
+          lazy: async () => {
+            const TicketPage = await import('./routes/customer/tickets');
+            return { Component: TicketPage.default };
           },
         },
       ],

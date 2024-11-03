@@ -1,7 +1,7 @@
 import { Table, Tag } from 'antd';
-import { useOrders } from '../../orders/api/get-orders';
 import dayjs from 'dayjs';
 import { convertToVnCurrency } from '~/utils/convert';
+import { useMyOrders } from '../api/get-my-orders';
 
 const expandColumns = [
   {
@@ -80,28 +80,28 @@ const columns = [
     render: (value) => <Tag color="cyan">{value}</Tag>,
   },
   {
-    title: 'Tổng giá',
-    dataIndex: 'totalPrice',
-    key: 'paymentMethod',
-    render: (value) => <strong className="text-red-500">{convertToVnCurrency(value)}</strong>,
-  },
-  {
     title: 'Trạng thái',
     dataIndex: 'status',
     key: 'status',
     render: (value) => <Tag color="green">{value}</Tag>,
   },
   {
+    title: 'Tổng giá',
+    dataIndex: 'totalPrice',
+    key: 'paymentMethod',
+    render: (value) => <strong className="text-red-500">{convertToVnCurrency(value)}</strong>,
+  },
+
+  {
     title: 'Date',
     key: 'createdAt',
     render: ({ createdAt }) => <p>{dayjs(createdAt).format('HH:mm:ss DD/MM/YYYY')}</p>,
   },
 ];
-const OrdersTable = () => {
-  const { data } = useOrders({
+const MyOrdersTable = () => {
+  const { data } = useMyOrders({
     page: 1,
     size: 10,
-    keyword: '',
   });
   return (
     <Table
@@ -120,4 +120,4 @@ const expandedRowRender = ({ tickets }) => {
   return <Table columns={expandColumns} dataSource={tickets} pagination={false} />;
 };
 
-export default OrdersTable;
+export default MyOrdersTable;
