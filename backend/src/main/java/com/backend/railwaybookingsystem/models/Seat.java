@@ -18,11 +18,11 @@ public class Seat {
 
 	private int position;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "seat_type_id")
 	private SeatType seatType;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "carriage_layout_id")
 	private CarriageLayout carriageLayout;
 

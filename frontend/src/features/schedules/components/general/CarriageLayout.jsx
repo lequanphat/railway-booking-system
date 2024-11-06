@@ -7,6 +7,17 @@ import { convertToVnCurrency } from '~/utils/convert';
 
 const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
   const { totalDistance, selectedSeats, setSelectedSeats } = useContext(ScheduleDetailContext);
+
+  const renderSeatColor = (seat) => {
+    if (seat.is_occupied) {
+      return 'bg-gray-300';
+    }
+    if (selectedSeats.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
+      return 'bg-primary text-white';
+    }
+    return '';
+  };
+
   return (
     <Flex vertical align="center" gap={18} className="border border-[#ccc] rounded-md p-6">
       <h1 className="text-base font-semibold">{name}</h1>
@@ -31,13 +42,14 @@ const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
                 <Flex
                   vertical
                   align="center"
-                  className={`${
-                    selectedSeats.find((item) => item.id === seat.id) ? 'bg-primary text-white' : ''
-                  } w-[100px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-pointer`}
+                  className={`${renderSeatColor(
+                    seat,
+                  )} w-[100px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-pointer`}
                   onClick={() => {
+                    if (seat.is_occupied) return;
                     setSelectedSeats((prev) => {
-                      if (prev.find((item) => item.id === seat.id)) {
-                        return prev.filter((item) => item.id !== seat.id);
+                      if (prev.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
+                        return prev.filter((item) => item.carriageId !== seat.carriageId || item.id !== seat.id);
                       }
                       return [
                         ...prev,

@@ -4,10 +4,12 @@ import { useLoginMutation } from '~/features/auth/api/login';
 import fb from '~/assets/svg/fb.svg';
 import gg from '~/assets/svg/gg.svg';
 import wt from '~/assets/svg/wt.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAuthStore from '~/stores/auth-store';
 
 const LoginRoute = () => {
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
 
@@ -17,7 +19,7 @@ const LoginRoute = () => {
       onSuccess: (data) => {
         localStorage.setItem('token', data?.token);
         setUser(data?.user);
-        navigate('/');
+        navigate(redirect ? redirect : '/');
       },
       onError: ({ response }) => {
         message.error(response?.data?.detail || 'Something went wrong!');

@@ -28,6 +28,7 @@ const SeatsTab = () => {
     () => train?.carriages?.find((carriage) => carriage?.id === selectedCarriage),
     [selectedCarriage, train],
   );
+
   return (
     <Flex vertical gap={20}>
       <Flex gap={4} justify="center" className="py-4">

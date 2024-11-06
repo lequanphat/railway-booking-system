@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react';
-import SeatPricesTable from './SeatPriceTable';
 import { Flex } from 'antd';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
+import SeatPricesTable from './SeatPriceTable';
 
 const DetailsTab = () => {
   const { train } = useContext(ScheduleDetailContext);
