@@ -10,4 +10,6 @@ public interface OrderService {
     PlaceOrderResponse placeOrder(PlaceOrderRequest request);
 
     Page<GetOrdersListResponse> getOrders(String keyword, int page, int size);
+
+    Page<GetOrdersListResponse> getMyOrders(int page, int size);
 }
