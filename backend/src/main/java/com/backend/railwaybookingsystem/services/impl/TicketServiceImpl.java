@@ -1,15 +1,16 @@
 package com.backend.railwaybookingsystem.services.impl;
+
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
-import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
+import com.backend.railwaybookingsystem.dtos.tickets.responses.MyTicketResponse;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.OrderMapper;
 import com.backend.railwaybookingsystem.mappers.TicketMapper;
-import com.backend.railwaybookingsystem.mappers.TrainMapper;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.OrderService;
+import com.backend.railwaybookingsystem.services.TicketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,25 +23,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Optional;
 
 @Service
 @Slf4j
-public class OrderServiceImpl implements OrderService {
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-
-    @Autowired
-    private RouteSegmentRepository routeSegmentRepository;
-
-    @Autowired
-    private SeatRepository seatRepository;
-
-    @Autowired
-    private SeatPriceRepository seatPriceRepository;
+public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -48,84 +35,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-
     @Override
-    public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
-        log.info("Order placing process started" + request.toString());
-        Schedule schedule = scheduleRepository.findById(request.getScheduleId()).orElse(null);
-        assert schedule != null;
-
-        RouteSegment departureRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), request.getDepartureStation());
-        RouteSegment arrivalRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), request.getArrivalStation());
-
-        assert departureRouteSegment != null;
-        assert arrivalRouteSegment != null;
-
-        double totalDistance = arrivalRouteSegment.getDistance() - departureRouteSegment.getDistance();
-
-        PlaceOrderRequest.TicketDto.ScheduleDto scheduleDto = new PlaceOrderRequest.TicketDto.ScheduleDto();
-        scheduleDto.setId(request.getScheduleId());
-
-        Order order = OrderMapper.INSTANCE.convertToOrder(request);
-        order.getTickets().clear();
-
-        double totalPrice = 0;
-
-        for(int i=0; i< request.getTickets().size(); i++){
-            PlaceOrderRequest.TicketDto ticketDto = request.getTickets().get(i);
-
-            Ticket findTicket = ticketRepository.findByScheduleIdAndCarriageIdAndSeatId(schedule.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId());
-            if(findTicket != null){
-                log.error("Ticket already booked");
-                throw new BadRequestException("Ticket already booked");
-            }
-
-            SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
-            SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(schedule.getTrain().getId(), seatType.getId());
-            ticketDto.setSchedule(scheduleDto);
-            ticketDto.setDepartureStation(departureRouteSegment.getStation().getName());
-            ticketDto.setArrivalStation(arrivalRouteSegment.getStation().getName());
-            ticketDto.setDepartureTime(arrivalRouteSegment.getDeparture_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
-            ticketDto.setArrivalTime(departureRouteSegment.getArrival_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
-            ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * totalDistance);
-            ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * totalDistance);
-
-            Ticket ticket = TicketMapper.INSTANCE.convertToTicket(ticketDto);
-            ticket.setOrder(order);
-            order.getTickets().add(ticket);
-
-            totalPrice += ticket.getPrice();
-        }
-
-        // Get the currently authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();
-        }
-        Optional<User> user = userRepository.findByEmail(email);
-
-        order.setUser(user.orElse(null));
-        order.setTotalPrice(totalPrice);
-        Order savedOrder = orderRepository.save(order);
-        log.info("Order placed successfully");
-        return OrderMapper.INSTANCE.convertToPlaceOrderResponse(savedOrder);
-    }
-
-    @Override
-    public Page<GetOrdersListResponse> getOrders(String keyword, int page, int size){
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-
-        Page<GetOrdersListResponse> orders = orderRepository.findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrFullNameNotContainingIgnoreCase(keyword, keyword, keyword, pageRequest)
-                .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
-
-        return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());
-    }
-
-    @Override
-    public Page<GetOrdersListResponse> getMyOrders(int page, int size){
+    public Page<MyTicketResponse> getMyTickets(String keyword, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
         // Get the currently authenticated user
@@ -138,10 +49,10 @@ public class OrderServiceImpl implements OrderService {
 
         assert user.isPresent();
 
-        Page<GetOrdersListResponse> orders = orderRepository.findByUserId(user.get().getId(), pageRequest)
-                .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
+        Page<MyTicketResponse> tickets = ticketRepository.findTicketByOrderUserId(user.get().getId(), pageRequest)
+                .map(TicketMapper.INSTANCE::convertToMyTicketResponse);
 
-        return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());
+        return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());
     }
 
 }
