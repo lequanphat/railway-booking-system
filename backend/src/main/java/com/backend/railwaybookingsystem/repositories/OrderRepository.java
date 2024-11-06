@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrFullNameNotContainingIgnoreCase(String email, String fullName, String phone, Pageable pageable);
+
+    Page<Order> findByUserId(Long userId, Pageable pageable);
+
 }

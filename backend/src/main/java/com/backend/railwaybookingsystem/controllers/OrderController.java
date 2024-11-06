@@ -37,4 +37,13 @@ public class OrderController {
         Page<GetOrdersListResponse> orders = orderService.getOrders(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(orders));
     }
+
+    @GetMapping("user/orders/me")
+    @Operation(tags = "Orders", description = "Get my orders")
+    public ResponseEntity<CustomPagination<GetOrdersListResponse>> getMyOrders(@RequestParam(defaultValue = "1") int page,
+                                                                             @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<GetOrdersListResponse> orders = orderService.getMyOrders(page - 1, size);
+        return ResponseEntity.ok(new CustomPagination<>(orders));
+    }
 }

@@ -2,11 +2,9 @@ package com.backend.railwaybookingsystem.services.impl;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
-import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.OrderMapper;
 import com.backend.railwaybookingsystem.mappers.TicketMapper;
-import com.backend.railwaybookingsystem.mappers.TrainMapper;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.OrderService;
@@ -16,13 +14,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -44,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -95,6 +96,16 @@ public class OrderServiceImpl implements OrderService {
 
             totalPrice += ticket.getPrice();
         }
+
+        // Get the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = "";
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            email = userDetails.getUsername();
+        }
+        Optional<User> user = userRepository.findByEmail(email);
+
+        order.setUser(user.orElse(null));
         order.setTotalPrice(totalPrice);
         Order savedOrder = orderRepository.save(order);
         log.info("Order placed successfully");
@@ -103,9 +114,29 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<GetOrdersListResponse> getOrders(String keyword, int page, int size){
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<GetOrdersListResponse> orders = orderRepository.findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrFullNameNotContainingIgnoreCase(keyword, keyword, keyword, pageRequest)
+                .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
+
+        return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());
+    }
+
+    @Override
+    public Page<GetOrdersListResponse> getMyOrders(int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+
+        // Get the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = "";
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            email = userDetails.getUsername();
+        }
+        Optional<User> user = userRepository.findByEmail(email);
+
+        assert user.isPresent();
+
+        Page<GetOrdersListResponse> orders = orderRepository.findByUserId(user.get().getId(), pageRequest)
                 .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
 
         return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());
