@@ -3,7 +3,6 @@ package com.backend.railwaybookingsystem.controllers;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
-import com.backend.railwaybookingsystem.dtos.trains.responses.*;
 import com.backend.railwaybookingsystem.services.OrderService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +26,16 @@ public class OrderController {
         PlaceOrderResponse savedOrder = orderService.placeOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
     }
+
+    @GetMapping("public/orders/callback/{id}")
+    @Operation(tags = "Orders", description = "Place order callback")
+    public ResponseEntity<Void> placeOrderCallback(@PathVariable Long id,
+                                                                 @RequestParam() String vnp_ResponseCode) {
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", orderService.placeOrderCallback(id, vnp_ResponseCode))
+                .build();
+    }
+
 
     @GetMapping("ad/orders")
     @Operation(tags = "Orders", description = "Get orders")

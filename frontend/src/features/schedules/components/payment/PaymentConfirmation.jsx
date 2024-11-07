@@ -9,15 +9,15 @@ import lodash from 'lodash';
 
 const PaymentConfirmation = () => {
   const { id } = useParams();
-  const { departureStation, arrivalStation, selectedSeats, totalDistance, passengerInformation, prevStep, nextStep } =
+  const { departureStation, arrivalStation, selectedSeats, totalDistance, passengerInformation, prevStep } =
     useContext(ScheduleDetailContext);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const [isAcceptTerm, setIsAcceptTerm] = useState(false);
 
   const placeOrderMutation = usePlaceOrder({
     mutationConfig: {
-      onSuccess: () => {
-        nextStep();
+      onSuccess: (data) => {
+        window.location.href = data?.paymentUrl;
       },
       onError: () => {
         message.error('Đã có lỗi xảy ra, vui lòng kiểm tra lại thông tin vé đã chọn!');

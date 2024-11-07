@@ -1,7 +1,7 @@
 import { Table, Tag } from 'antd';
-import { useOrders } from '../../orders/api/get-orders';
 import dayjs from 'dayjs';
 import { convertToVnCurrency } from '~/utils/convert';
+import { useOrders } from '../api/get-orders';
 
 const expandColumns = [
   {

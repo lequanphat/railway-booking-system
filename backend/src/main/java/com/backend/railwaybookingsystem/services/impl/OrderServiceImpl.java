@@ -1,13 +1,17 @@
 package com.backend.railwaybookingsystem.services.impl;
+import com.backend.railwaybookingsystem.configurations.VNPayConfiguration;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
+import com.backend.railwaybookingsystem.enums.OrderStatus;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.OrderMapper;
 import com.backend.railwaybookingsystem.mappers.TicketMapper;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.OrderService;
+import com.backend.railwaybookingsystem.strategies.VNPayStrategy;
+import contexts.PaymentContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -109,7 +113,33 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(totalPrice);
         Order savedOrder = orderRepository.save(order);
         log.info("Order placed successfully");
-        return OrderMapper.INSTANCE.convertToPlaceOrderResponse(savedOrder);
+
+        PaymentContext paymentContext;
+        switch (order.getPaymentMethod()){
+            case VNPAY -> paymentContext = new PaymentContext(new VNPayStrategy());
+            case MOMO -> paymentContext = new PaymentContext(null);
+            case ZALOPAY -> paymentContext = new PaymentContext(null);
+            case PAYPAL -> paymentContext = new PaymentContext(null);
+            default -> paymentContext = new PaymentContext(new VNPayStrategy());
+        }
+        String paymentUrl = paymentContext.executePayment(savedOrder.getId(), Math.round(savedOrder.getTotalPrice()));
+
+        return new PlaceOrderResponse(200, "Order placed successfully", paymentUrl);
+    }
+
+    @Override
+    public String placeOrderCallback(Long orderId, String code){
+        Order existingOrder = orderRepository.findById(orderId).orElse(null);
+        assert existingOrder != null;
+        if(code.equals(VNPayConfiguration.vnp_SuccessCode)){
+            existingOrder.setStatus(OrderStatus.COMPLETED);
+            log.error("Order already completed");
+            orderRepository.save(existingOrder);
+            return VNPayConfiguration.paymentSuccessCallback + "&order=" + orderId;
+        }else{
+            orderRepository.deleteById(existingOrder.getId());
+        }
+        return VNPayConfiguration.paymentFailCallback;
     }
 
     @Override

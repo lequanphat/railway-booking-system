@@ -44,7 +44,7 @@ const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
                   align="center"
                   className={`${renderSeatColor(
                     seat,
-                  )} w-[100px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-pointer`}
+                  )} w-[100px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-not-allowed`}
                   onClick={() => {
                     if (seat.is_occupied) return;
                     setSelectedSeats((prev) => {
