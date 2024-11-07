@@ -1,46 +1,58 @@
-import { Button, Card, Col, DatePicker, Flex, Form, Pagination, Radio, Row, Select } from 'antd';
+import { App, Button, Card, Col, DatePicker, Form, Radio, Row, Select, Space } from 'antd';
 import dayjs from 'dayjs';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useStations } from '~/features/home/api/get-stations';
 import { ScheduleItem } from '~/features/home/components/ScheduleItem';
 import { searchWithoutDiacritics } from '~/utils/searchWithoutDiacritics';
 import { SearchOutlined } from '@ant-design/icons';
+import { useSearchSchedules } from '~/features/home/api/search-schedules';
 
 const HomeRoute = () => {
+  const [schedules, setSchedules] = useState([]);
+
+  console.log(schedules);
+
   return (
     <div className="py-6">
-      <Card
-        className="border border-primary rounded-2xl 
-      shadow-primary shadow-sm"
-      >
-        <SearchTrainForm />
+      <Card className="border border-primary rounded-2xl shadow-primary shadow-sm">
+        <SearchTrainForm onSearchComplete={setSchedules} />
       </Card>
-      <Flex vertical className="py-12" gap={24}>
-        <ScheduleItem />
-        <ScheduleItem />
-        <ScheduleItem />
-        <ScheduleItem />
-        <ScheduleItem />
-      </Flex>
-      <Flex justify="end">
-        <Pagination defaultCurrent={1} total={50} />
-      </Flex>
+      <Space direction="vertical" className="pt-12 w-full" size="middle">
+        {schedules.map((schedule) => (
+          <ScheduleItem key={schedule.id} {...schedule} />
+        ))}
+      </Space>
     </div>
   );
 };
 
-const SearchTrainForm = () => {
-  const { data, isLoading } = useStations();
+const SearchTrainForm = ({ onSearchComplete }) => {
+  const { message } = App.useApp();
+  const { data: stationsData, isLoading: isStationsLoading } = useStations();
   const [form] = Form.useForm();
-  Form.useWatch('trip_type', form);
+  const tripType = Form.useWatch('trip_type', form);
+  const { refetch: refetchSchedules } = useSearchSchedules({
+    queryConfig: {
+      enabled: false,
+    },
+    departureDate: dayjs(Form.useWatch('departure_date', form)).format('YYYY-MM-DD'),
+    departureStation: Form.useWatch('departure_id', form),
+    arrivalStation: Form.useWatch('destination_id', form),
+  });
 
-  const onFinish = (values) => {
-    console.log('Received values of form:', values);
+  const onFinish = async () => {
+    const result = await refetchSchedules();
+    if (result.data) {
+      if (result.data.length === 0) {
+        message.error('Không tìm thấy chuyến tàu phù hợp');
+      }
+      onSearchComplete(result.data);
+    }
   };
 
   const stationsSelectOptions = useMemo(() => {
-    return !isLoading
-      ? data?.map((province) => ({
+    return !isStationsLoading
+      ? stationsData?.map((province) => ({
           label: province.name,
           options: province.stations.map((station) => ({
             label: `Ga ${station.name}`,
@@ -48,10 +60,10 @@ const SearchTrainForm = () => {
           })),
         }))
       : [];
-  }, [data, isLoading]);
+  }, [stationsData, isStationsLoading]);
 
   return (
-    <Form form={form} onFinish={onFinish} variant="filled" layout="vertical">
+    <Form form={form} onFinish={onFinish} layout="vertical">
       <Form.Item name="trip_type" initialValue={'one-way'}>
         <Radio.Group>
           <Radio value={'one-way'}>Một chiều</Radio>
@@ -102,21 +114,20 @@ const SearchTrainForm = () => {
               placeholder="Chọn ngày về"
               disabledDate={(current) => current && current.isBefore(dayjs().startOf('day'))}
               className="w-full"
-              disabled={form.getFieldValue('trip_type') == 'one-way'}
+              disabled={tripType == 'one-way'}
             />
           </Form.Item>
         </Col>
       </Row>
-      <Flex justify="center">
-        <Button
-          type="primary"
-          htmlType="submit"
-          className="py-6 px-8 min-w-[220px] rounded-full translate-y-[48px] text-base"
-          icon={<SearchOutlined />}
-        >
-          Tìm chuyến tàu
-        </Button>
-      </Flex>
+      <Button
+        type="primary"
+        htmlType="submit"
+        shape="round"
+        className="py-6 px-8 min-w-[220px] translate-y-12 text-base left-1/2 -translate-x-1/2"
+        icon={<SearchOutlined />}
+      >
+        Tìm chuyến tàu
+      </Button>
     </Form>
   );
 };

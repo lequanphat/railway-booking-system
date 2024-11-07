@@ -1,5 +1,4 @@
-import { Card, Divider, Flex } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Card, Divider, Empty, Flex } from 'antd';
 import { useContext, useMemo } from 'react';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import { convertToVnCurrency } from '~/utils/convert';
@@ -14,18 +13,21 @@ const TicketInformation = () => {
   }, [selectedSeats, totalDistance]);
 
   return (
-    <Card className="rounded-xl border-[1px] border-[#ddd]">
-      <Title level={5}>THÔNG TIN ĐẶT VÉ</Title>
+    <Card title="Thông tin đặt vé">
       <Flex vertical gap={12} className="pt-2 text-[16px]">
-        {selectedSeats.map((seat) => (
-          <ChildTicketItem
-            key={seat.id}
-            code={seat.code}
-            price={seat?.seatType?.original_price_per_km * totalDistance}
-            seatName={seat?.seatType?.name}
-            carriageName={`${seat?.carriagePosition}: ${seat?.carriageName}`}
-          />
-        ))}
+        {selectedSeats.length > 0 ? (
+          selectedSeats.map((seat) => (
+            <ChildTicketItem
+              key={seat.id}
+              code={seat.code}
+              price={seat?.seatType?.original_price_per_km * totalDistance}
+              seatName={seat?.seatType?.name}
+              carriageName={`${seat?.carriagePosition}: ${seat?.carriageName}`}
+            />
+          ))
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa chọn ghế" />
+        )}
       </Flex>
       <Flex vertical>
         <Divider />

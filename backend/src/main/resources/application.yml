@@ -15,13 +15,16 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # if you have problems with db, change to 'create' at the first time you run application
-    database-platform: org.hibernate.dialect.MySQLDialect
+      ddl-auto: create # if you have problems with db, change to 'create' at the first time you run application
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
     defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
   sql:
     init:
-      mode: never # always khi ddl-auto = create, never khi ddl-auto = update
+      mode: always # always khi ddl-auto = create, never khi ddl-auto = update
       data-locations: classpath:/procedures.sql, classpath:/data.sql
       separator: ^;
 
