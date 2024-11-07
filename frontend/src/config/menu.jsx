@@ -235,7 +235,6 @@ const userMenu = Object.freeze([
   { title: 'Vé tàu', href: '/tickets' },
   { title: 'Đơn hàng', href: '/orders' },
   { title: 'Liên hệ', href: '/contacts' },
-  { title: 'Về chúng t', href: '/about' },
 ]);
 
 export { adminMenu, userMenu };

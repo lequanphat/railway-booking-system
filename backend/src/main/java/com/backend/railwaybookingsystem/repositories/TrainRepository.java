@@ -11,6 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface TrainRepository extends JpaRepository<Train, Long> {
 
     Train findById(long id);
-    Page<Train>  findByNameContainingIgnoreCase(String name, Pageable pageable);
-
+    Page<Train> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

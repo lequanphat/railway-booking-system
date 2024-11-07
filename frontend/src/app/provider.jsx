@@ -13,9 +13,10 @@ const AppProvider = ({ children }) => {
       theme={{
         token: {
           fontFamily: 'Inter',
-          borderRadius: 4,
+          borderRadius: 6,
           controlHeight: 34,
           colorPrimary: '#006dae',
+          colorLinkHover: '#0050a3',
         },
         components: {
           Table: {

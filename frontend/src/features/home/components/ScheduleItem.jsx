@@ -1,59 +1,52 @@
-import { Button, Col, Flex, Row, Typography } from 'antd';
+import { Button, Flex, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
+import { EyeOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { calculateTravelTime } from '~/utils/calculateTravelTime';
+const { Text } = Typography;
 
-export const ScheduleItem = () => {
+export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segment }) => {
   return (
-    <Flex
-      align="center"
-      justify="space-between"
-      gap={10}
-      className="border-[1px] border-[#ddd] p-4 rounded-xl bg-white"
-    >
+    <Flex align="center" justify="space-between" gap={10} className="border p-4 rounded-xl bg-white">
       <Flex vertical>
-        <Typography level={3} className="text-[24px] font-bold text-primary">
-          SE06
-        </Typography>
-        <Typography level={3} className="text-[18px] font-semibold text-[#5e5e5e]">
-          #123123123
+        <span className="text-xs mb-1 text-gray-500">Số hiệu</span>
+        <Typography level={3} className="text-xl font-bold text-primary">
+          {train_name}
         </Typography>
       </Flex>
       <Flex vertical>
         <Flex align="center">
-          <Typography className="text-[22px] font-medium">07:45</Typography>
+          <Flex align="flex-end" vertical>
+            <Text className="text-[22px] font-medium">
+              {dayjs(departure_segment.departure_time, 'HH:mm:ss').format('HH:mm')}
+            </Text>
+            <Text className="text-sm text-end">Ga {departure_segment.station_name}</Text>
+          </Flex>
           <Flex align="center" className="mx-4">
             <img src={PickupIcon} alt="" />
-            <div className="border-b-[2px] border-[#ccc] border-dotted w-[100px]"></div>
+            <div className="border-b-2 border-[#ccc] border-dotted w-[100px]"></div>
             <Flex vertical justify="center" align="center">
-              <Typography className="text-[16px]">12 hours</Typography>
-              <Typography>(Asian/Ho Chi Minh)</Typography>
+              <Text className="text-sm  px-4">{calculateTravelTime(departure_segment, arrival_segment)}</Text>
             </Flex>
             <div className="border-b-[2px] border-[#ccc] border-dotted w-[100px]"></div>
             <img src={StationIcon} alt="" />
           </Flex>
-          <Typography className="text-[22px] font-medium">03:50</Typography>
+          <Flex vertical>
+            <Text className="text-[22px] font-medium">
+              {dayjs(arrival_segment.arrival_time, 'HH:mm:ss').format('HH:mm')}
+            </Text>
+            <Text className="text-sm text-start">Ga {arrival_segment.station_name}</Text>
+          </Flex>
         </Flex>
-        <Row className="pt-4" gutter={24}>
-          <Col span={24} md={12} xl={8}>
-            <Typography>Type 01: 45 seats</Typography>
-          </Col>
-          <Col span={24} md={12} xl={8}>
-            Type 02: 02 seats
-          </Col>
-          <Col span={24} md={12} xl={8}>
-            Type 03: 14 seats
-          </Col>
-        </Row>
       </Flex>
       <div>
-        <Flex gap={8} align="center" className="mb-2">
-          <Typography className="text-[18px] font-medium">Discount</Typography>
-          <Typography className="text-[24px] font-medium text-primary">{Math.floor(Math.random() * 100)}%</Typography>
-        </Flex>
-        <Link to={`/schedules/1?departure_station=6&arrival_station=${Math.floor(Math.random() * 10)}`}>
-          <Button type="primary" className="rounded-full" href="schedules/1">
-            CHOOSE ROUTE
+        <Link
+          to={`/schedules/${id}?departure_station=${departure_segment.station_id}&arrival_station=${arrival_segment.station_id}`}
+        >
+          <Button variant="filled" color="primary" shape="round" icon={<EyeOutlined />}>
+            Chọn
           </Button>
         </Link>
       </div>

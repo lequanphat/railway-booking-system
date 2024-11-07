@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.mappers;
 
+import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateRouteSegmentRequest;
 import com.backend.railwaybookingsystem.models.RouteSegment;
 import org.mapstruct.Mapper;
@@ -26,4 +27,10 @@ public interface RouteSegmentMapper {
     default LocalTime stringToLocalTime(String time) {
         return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
+
+    @Mapping(source = "station.id", target = "stationId")
+    @Mapping(source = "station.name", target = "stationName")
+    @Mapping(source = "departure_time", target = "departureTime")
+    @Mapping(source = "arrival_time", target = "arrivalTime")
+    SearchScheduleResponse.RouteSegmentDto toSearchScheduleResponseRouteSegmentDto(RouteSegment routeSegment);
 }

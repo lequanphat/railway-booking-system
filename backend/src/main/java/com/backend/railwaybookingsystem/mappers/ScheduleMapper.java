@@ -2,6 +2,7 @@ package com.backend.railwaybookingsystem.mappers;
 
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
 import com.backend.railwaybookingsystem.models.Schedule;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
