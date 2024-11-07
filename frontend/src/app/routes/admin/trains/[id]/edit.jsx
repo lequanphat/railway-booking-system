@@ -92,7 +92,8 @@ const EditTrainPage = () => {
           seatPricesList: validatedSeatPrices,
         };
         mutation.mutate({ data });
-      } catch () {
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) {
         message.error('Vui lòng nhập giá vé cho tất cả các loại ghế');
       }
     });

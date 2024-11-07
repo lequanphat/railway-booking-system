@@ -29,6 +29,4 @@ public class Schedule {
 
     @Column(name = "departure_date")
     private LocalDate departureDate;
-
-
 }

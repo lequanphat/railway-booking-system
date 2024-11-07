@@ -21,7 +21,8 @@ const About = () => {
               <Avatar className="w-[80px] h-[80px]" src="https://avatars.githubusercontent.com/u/93178609?v=4" />
               <h1 className="text-lg font-semibold my-2">Le Quan Phat</h1>
               <p className="text-base text-center opacity-80 my-2">
-                CEO - Chúng tôi thích nói về việc làm thế nào chúng ta có thể làm việc cùng nhau
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab soluta id quae suscipit fugit officia
+                recusandae reiciendis a quam placeat?
               </p>
             </Flex>
           </Card>
@@ -39,7 +40,8 @@ const About = () => {
               <Avatar className="w-[80px] h-[80px] " src="https://avatars.githubusercontent.com/u/45101901?s=64&v=4" />
               <h1 className="text-lg font-semibold my-2">Tran Nhat Sinh</h1>
               <p className="text-base text-center opacity-80 my-2">
-                CTO - Chúng tôi hân hạnh hỗ trợ bạn với bất kì vấn đề hoặc câu hỏi nào
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab soluta id quae suscipit fugit officia
+                recusandae reiciendis a quam placeat?
               </p>
             </Flex>
           </Card>
@@ -57,7 +59,8 @@ const About = () => {
               <Avatar className="w-[80px] h-[80px] " src="https://avatars.githubusercontent.com/u/117495162?s=64&v=4" />
               <h1 className="text-lg font-semibold my-2">Tang Hong Nguyen Dan</h1>
               <p className="text-base text-center opacity-80 my-2">
-                Bảo vệ - Chúng tôi hân hạnh giữ xe cho bạn, hãy an tâm khi đến với chúng tôi
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab soluta id quae suscipit fugit officia
+                recusandae reiciendis a quam placeat?
               </p>
             </Flex>
           </Card>
