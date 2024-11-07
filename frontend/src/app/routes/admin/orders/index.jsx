@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import PageHeader from '~/components/ui/page-header';
-import OrdersTable from '~/features/my-orders/components/MyOrdersTable';
+import OrdersTable from '~/features/orders/components/OrdersTable';
 
 const OrderManagement = () => {
   return (

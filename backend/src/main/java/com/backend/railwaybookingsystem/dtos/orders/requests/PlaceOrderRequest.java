@@ -1,7 +1,7 @@
 package com.backend.railwaybookingsystem.dtos.orders.requests;
 
 import com.backend.railwaybookingsystem.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,7 +17,7 @@ public class PlaceOrderRequest implements Serializable {
     String identity;
     double totalPrice;
     OrderStatus status = OrderStatus.PENDING;
-    String paymentMethod;
+    PaymentMethod paymentMethod = PaymentMethod.VNPAY;
     Timestamp createdAt = new Timestamp(System.currentTimeMillis());
     List<TicketDto> tickets;
 

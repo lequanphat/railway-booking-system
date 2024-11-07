@@ -3,7 +3,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import { useGetScheduleDetails } from '~/features/schedules/api/get-schedule-details';
-import Completion from '~/features/schedules/components/completion/Completion';
 import General from '~/features/schedules/components/general/General';
 import InfoConfirmation from '~/features/schedules/components/info-confirmation/InfoConfirmation';
 import PaymentConfirmation from '~/features/schedules/components/payment/PaymentConfirmation';
@@ -87,10 +86,6 @@ const ScheduleDetailsPage = () => {
       {
         title: 'Thanh toán',
         content: <PaymentConfirmation />,
-      },
-      {
-        title: 'Hoàn tất',
-        content: <Completion />,
       },
     ],
     [],
