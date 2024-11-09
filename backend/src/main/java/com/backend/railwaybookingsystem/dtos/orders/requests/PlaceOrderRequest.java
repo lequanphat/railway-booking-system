@@ -16,9 +16,9 @@ public class PlaceOrderRequest implements Serializable {
     String email;
     String identity;
     double totalPrice;
-    OrderStatus status = OrderStatus.PENDING;
-    PaymentMethod paymentMethod = PaymentMethod.VNPAY;
-    Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    OrderStatus status;
+    PaymentMethod paymentMethod;
+    Timestamp createdAt;
     List<TicketDto> tickets;
 
     Long departureStation;
@@ -29,20 +29,25 @@ public class PlaceOrderRequest implements Serializable {
 
     @Data
     public static class TicketDto implements Serializable {
+        String seatType;
+        String carriageType;
         double originalPrice;
         double price;
         String fullName;
-        String object;
         String identity;
-        String seatType;
-        String carriageType;
         String departureStation;
         String arrivalStation;
         String departureTime;
         String arrivalTime;
+        PersonTypeDto object;
         ScheduleDto schedule;
         SeatDto seat;
         CarriageDto carriage;
+
+        @Data
+        public static class PersonTypeDto implements Serializable {
+            Long id;
+        }
 
         @Data
         public static class ScheduleDto implements Serializable {

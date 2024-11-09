@@ -4,6 +4,26 @@ INSERT INTO users (id, email, name, password, provider, user_role, is_verified, 
 
 INSERT INTO users (id, email, name, password, provider, user_role, is_verified, is_deleted) VALUES (2, "admin@gmail.com", "Le Quan Phat", "$2a$10$4UBL7hzqFHLNRswL67ffR.V25uGBD1WnnEGwv6Wlk.cMnlJmGjmnu", "EMAIL", "ADMIN", 1, 0)^;
 
+-- Data for table `person_types`
+
+INSERT INTO person_types (id, name , percentage, parent_id) VALUES
+    (1,'Người Việt Nam', 10,null)^;
+
+INSERT INTO person_types (id, name , percentage, parent_id) VALUES
+    (2,'Người Nước Ngoài', 0,null)^;
+
+INSERT INTO person_types (id, name , percentage, parent_id) VALUES
+    (3,'Trẻ em', 5,1)^;
+
+INSERT INTO person_types (id, name , percentage, parent_id) VALUES
+    (4,'Người lớn', 0,1)^;
+
+INSERT INTO person_types (id, name , percentage, parent_id) VALUES
+    (5,'Trẻ em', 5,2)^;
+
+INSERT INTO person_types (id, name , percentage, parent_id) VALUES
+    (6,'Người lớn', 0,2)^;
+
 
 -- Data for table `provinces`
 INSERT INTO provinces (id, name) VALUES (1, "An Giang")^;

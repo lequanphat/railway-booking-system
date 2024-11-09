@@ -40,8 +40,8 @@ public class OrderController {
     @GetMapping("ad/orders")
     @Operation(tags = "Orders", description = "Get orders")
     public ResponseEntity<CustomPagination<GetOrdersListResponse>> getOrders(@RequestParam(defaultValue = "1") int page,
-                                                                         @RequestParam(defaultValue = "10") int size,
-                                                                         @RequestParam(defaultValue = "") String keyword
+                                                                             @RequestParam(defaultValue = "10") int size,
+                                                                             @RequestParam(defaultValue = "") String keyword
     ) {
         Page<GetOrdersListResponse> orders = orderService.getOrders(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(orders));

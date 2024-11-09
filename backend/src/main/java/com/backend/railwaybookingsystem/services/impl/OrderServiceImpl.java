@@ -66,9 +66,8 @@ public class OrderServiceImpl implements OrderService {
         assert arrivalRouteSegment != null;
 
         double totalDistance = arrivalRouteSegment.getDistance() - departureRouteSegment.getDistance();
-
         PlaceOrderRequest.TicketDto.ScheduleDto scheduleDto = new PlaceOrderRequest.TicketDto.ScheduleDto();
-        scheduleDto.setId(request.getScheduleId());
+        scheduleDto.setId(schedule.getId());
 
         Order order = OrderMapper.INSTANCE.convertToOrder(request);
         order.getTickets().clear();

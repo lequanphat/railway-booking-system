@@ -22,7 +22,6 @@ public class VNPayStrategy implements PaymentStrategy {
         vnp_Params.put("vnp_TmnCode", VNPayConfiguration.vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount * 100));
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", VNPayConfiguration.getRandomNumber(8));
         vnp_Params.put("vnp_OrderInfo", "orderId:" + orderId);
         vnp_Params.put("vnp_OrderType", "order");
