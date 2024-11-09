@@ -10,6 +10,7 @@ const formatTicketsInformationData = (data) => {
       const seatIndex = acc.findIndex(
         (obj) => obj.seat.id === Number(seatId) && obj.carriage.id === Number(carriageId),
       );
+      console.log('field', field);
 
       if (seatIndex === -1) {
         acc.push({
@@ -19,14 +20,17 @@ const formatTicketsInformationData = (data) => {
           carriage: {
             id: Number(carriageId),
           },
-          [field]: value,
+          [field]: field === 'object' ? { id: value } : value,
         });
       } else {
-        acc[seatIndex][field] = value;
+        if (field === 'object') acc[seatIndex][field] = { id: value };
+        else acc[seatIndex][field] = value;
       }
     }
     return acc;
   }, []);
+
+  console.log('result', result);
   return result;
 };
 

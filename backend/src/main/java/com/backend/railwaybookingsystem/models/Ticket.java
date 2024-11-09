@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -36,8 +35,7 @@ public class Ticket {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "object")
-    private String object;
+
 
     @Column(name="identity")
     private String identity;
@@ -53,6 +51,10 @@ public class Ticket {
 
     @Column(name = "arrival_time")
     private String arrivalTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "object_id", referencedColumnName = "id")
+    private PersonType object;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")

@@ -20,7 +20,7 @@ public class TicketController {
     @Operation(tags = "Orders", description = "Get my orders")
     public ResponseEntity<CustomPagination<MyTicketResponse>> getMyOrders(@RequestParam(defaultValue = "1") int page,
                                                                           @RequestParam(defaultValue = "10") int size,
-                                                                            @RequestParam(defaultValue = "") String keyword
+                                                                          @RequestParam(defaultValue = "") String keyword
     ) {
         Page<MyTicketResponse> tickets = ticketService.getMyTickets(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(tickets));
