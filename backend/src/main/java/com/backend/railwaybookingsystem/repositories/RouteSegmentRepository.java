@@ -12,22 +12,4 @@ public interface RouteSegmentRepository extends JpaRepository<RouteSegment, Long
     void deleteByTrainId(Long trainId);
 
     RouteSegment getRouteSegmentByTrainIdAndStationId(Long trainId, Long stationId);
-
-    @Query("""
-            SELECT rs
-            FROM RouteSegment rs
-            WHERE rs.train.id = :trainId
-            ORDER BY rs.distance ASC
-            LIMIT 1
-            """)
-    RouteSegment getFirstSegmentByTrainId(Long trainId);
-
-    @Query("""
-            SELECT rs
-            FROM RouteSegment rs
-            WHERE rs.train.id = :trainId
-            ORDER BY rs.distance DESC
-            LIMIT 1
-            """)
-    RouteSegment getLastSegmentByTrainId(Long trainId);
 }

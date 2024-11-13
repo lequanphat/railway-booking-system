@@ -1,6 +1,5 @@
 package com.backend.railwaybookingsystem.repositories;
 
-import com.backend.railwaybookingsystem.models.CarriageLayout;
 import com.backend.railwaybookingsystem.models.Train;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

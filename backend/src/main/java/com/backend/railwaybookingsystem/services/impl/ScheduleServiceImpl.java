@@ -71,8 +71,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         var response = schedules.stream().map(
                 schedule -> {
-                    var firstSegment = routeSegmentRepository.getFirstSegmentByTrainId(schedule.getTrain().getId());
-                    var lastSegment = routeSegmentRepository.getLastSegmentByTrainId(schedule.getTrain().getId());
+                    var firstSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), departureStation);
+                    var lastSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), arrivalStation);
                     return SearchScheduleResponse.builder()
                             .scheduleId(schedule.getId())
                             .trainId(schedule.getTrain().getId())

@@ -9,7 +9,7 @@ const { Text } = Typography;
 
 export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segment }) => {
   return (
-    <Flex align="center" justify="space-between" gap={10} className="border p-4 rounded-xl bg-white">
+    <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white">
       <Flex vertical>
         <span className="text-xs mb-1 text-gray-500">Số hiệu</span>
         <Typography level={3} className="text-xl font-bold text-primary">
