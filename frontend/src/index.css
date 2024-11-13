@@ -120,3 +120,7 @@
 .ant-form-item-explain-error {
   font-size: 13px;
 }
+
+.ant-menu-light.ant-menu-horizontal >.ant-menu-item:hover::after,.ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after {
+  border: none;
+}

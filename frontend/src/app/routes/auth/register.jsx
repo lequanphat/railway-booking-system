@@ -1,5 +1,5 @@
 import { Button, Flex, Form, Input, message, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import RULES from '~/config/rule';
 import { useRegisterMutation } from '~/features/auth/api/register';
 
@@ -22,14 +22,9 @@ const RegisterRoute = () => {
     mutation.mutate({ data: form.getFieldsValue() });
   };
   return (
-    <div
-      className="p-8 rounded-[8px] w-[90%] md:w-[460px]"
-      style={{
-        boxShadow: 'rgba(0, 0, 0, 0.15) 0px 2px 8px',
-      }}
-    >
+    <div className="p-8 rounded-[8px] w-[90%] md:w-[460px] bg-white border shadow-sm">
       <Typography className="text-[22px] font-semibold">Đăng ký</Typography>
-      <Form form={form} className="pt-4" onFinish={handleRegister} layout="vertical">
+      <Form form={form} className="pt-4" onFinish={handleRegister} layout="vertical" variant="filled">
         <Flex vertical>
           <Form.Item label="Họ tên" name="name" rules={RULES.register.name} required={false}>
             <Input placeholder="Nhập họ tên..." />
@@ -46,7 +41,7 @@ const RegisterRoute = () => {
             Tạo tài khoản
           </Button>
           <Typography className="text-center mt-6">
-            Bạn đã có tài khoản? <a href="login">Đăng nhập</a>
+            Bạn đã có tài khoản? <Link to="/auth/login">Đăng nhập</Link>
           </Typography>
         </Form.Item>
       </Form>

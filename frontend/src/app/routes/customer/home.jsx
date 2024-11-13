@@ -6,6 +6,7 @@ import { ScheduleItem } from '~/features/home/components/ScheduleItem';
 import { searchWithoutDiacritics } from '~/utils/searchWithoutDiacritics';
 import { SearchOutlined } from '@ant-design/icons';
 import { useSearchSchedules } from '~/features/home/api/search-schedules';
+import { useNavigate } from 'react-router-dom';
 
 const HomeRoute = () => {
   const [schedules, setSchedules] = useState([]);
@@ -13,16 +14,19 @@ const HomeRoute = () => {
   console.log(schedules);
 
   return (
-    <div className="py-6">
-      <Card className="border border-primary rounded-2xl shadow-primary shadow-sm">
-        <SearchTrainForm onSearchComplete={setSchedules} />
-      </Card>
-      <Space direction="vertical" className="pt-12 w-full" size="middle">
-        {schedules.map((schedule) => (
-          <ScheduleItem key={schedule.id} {...schedule} />
-        ))}
-      </Space>
-    </div>
+    <>
+      <div className="py-6">
+        <Card className="rounded-2xl shadow-sm mt-[-200px]">
+          <SearchTrainForm onSearchComplete={setSchedules} />
+        </Card>
+        <Space direction="vertical" className="pt-12 w-full" size="middle">
+          {schedules.map((schedule) => (
+            <ScheduleItem key={schedule.id} {...schedule} />
+          ))}
+        </Space>
+        <PopularJouneys />
+      </div>
+    </>
   );
 };
 
@@ -31,6 +35,8 @@ const SearchTrainForm = ({ onSearchComplete }) => {
   const { data: stationsData, isLoading: isStationsLoading } = useStations();
   const [form] = Form.useForm();
   const tripType = Form.useWatch('trip_type', form);
+  const navigate = useNavigate();
+
   const { refetch: refetchSchedules } = useSearchSchedules({
     queryConfig: {
       enabled: false,
@@ -40,7 +46,32 @@ const SearchTrainForm = ({ onSearchComplete }) => {
     arrivalStation: Form.useWatch('destination_id', form),
   });
 
-  const onFinish = async () => {
+  const onFinish = async (values) => {
+    if (
+      !values.departure_id ||
+      !values.destination_id ||
+      !values.departure_date ||
+      (values.trip_type === 'round-trip' && !values.return_date)
+    ) {
+      message.warning('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    if (values.departure_id === values.destination_id) {
+      message.warning('Ga đi và ga đến không được trùng nhau');
+      return;
+    }
+
+    const searchParams = new URLSearchParams({
+      departure_id: values.departure_id,
+      destination_id: values.destination_id,
+      departure_date: dayjs(values.departure_date).format('YYYY-MM-DD'),
+      return_date: values.return_date ? dayjs(values.return_date).format('YYYY-MM-DD') : undefined,
+      trip_type: values.trip_type,
+    }).toString();
+
+    // navigate(`/search?${searchParams}`);
+
     const result = await refetchSchedules();
     if (result.data) {
       if (result.data.length === 0) {
@@ -63,7 +94,7 @@ const SearchTrainForm = ({ onSearchComplete }) => {
   }, [stationsData, isStationsLoading]);
 
   return (
-    <Form form={form} onFinish={onFinish} layout="vertical">
+    <Form form={form} onFinish={onFinish} layout="vertical" size="large">
       <Form.Item name="trip_type" initialValue={'one-way'}>
         <Radio.Group>
           <Radio value={'one-way'}>Một chiều</Radio>
@@ -129,6 +160,58 @@ const SearchTrainForm = ({ onSearchComplete }) => {
         Tìm chuyến tàu
       </Button>
     </Form>
+  );
+};
+
+const PopularJouneys = () => {
+  return (
+    <div className="mt-12">
+      <h2 className="text-2xl font-bold mb-8">Tuyến phố biến</h2>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          {
+            from: 'Ho Chi Minh City',
+            to: 'Hanoi',
+            image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-ha-noi.jpg',
+          },
+          {
+            from: 'Hanoi',
+            to: 'Haiphong',
+            image: 'https://tructhang.vn/wp-content/uploads/2022/08/Vinh-Ha-Long.jpg',
+          },
+          {
+            from: 'Ho Chi Minh City',
+            to: 'Da Nang',
+            image:
+              'https://vcdn1-dulich.vnecdn.net/2022/06/01/CauVangDaNang-1654082224-7229-1654082320.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=MeVMb72UZA27ivcyB3s7Kg',
+          },
+          {
+            from: 'Ho Chi Minh City',
+            to: 'Nha Trang',
+            image:
+              'https://i2.ex-cdn.com/crystalbay.com/files/content/2024/01/26/anh-nha-trang-dep-moi-nhat-1-1544.jpeg',
+          },
+        ].map((journey, index) => (
+          <div key={index} className="overflow-hidden group cursor-pointer rounded-md">
+            <div className="relative h-48">
+              <img
+                src={journey.image}
+                alt={`${journey.from} to ${journey.to}`}
+                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <div className="flex items-center justify-between">
+                  <span>{journey.from}</span>
+                  <span className="mx-2">→</span>
+                  <span>{journey.to}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

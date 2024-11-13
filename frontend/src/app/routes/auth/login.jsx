@@ -4,7 +4,7 @@ import { useLoginMutation } from '~/features/auth/api/login';
 import fb from '~/assets/svg/fb.svg';
 import gg from '~/assets/svg/gg.svg';
 import wt from '~/assets/svg/wt.svg';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useAuthStore from '~/stores/auth-store';
 
 const LoginRoute = () => {
@@ -82,7 +82,7 @@ const LoginRoute = () => {
             </Col>
           </Row>
           <Typography className="text-center mt-6">
-            Bạn chưa có tài khoản? <a href="register">Đăng ký</a>
+            Bạn chưa có tài khoản? <Link to="/auth/register">Đăng ký</Link>
           </Typography>
         </Form.Item>
       </Form>

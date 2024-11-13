@@ -3,7 +3,7 @@ import { Footer as FooterAnt } from 'antd/es/layout/layout';
 import bgFooter from '~/assets/images/bg-footer.png';
 import bgFooter2 from '~/assets/images/bg-footer-2.svg';
 import trainImage from '~/assets/images/train.png';
-import whiteLogoImage from '~/assets/images/white-logo.png';
+import whiteLogoImage from '~/assets/logo-dsvn.png';
 
 const Footer = () => {
   return (
@@ -19,10 +19,10 @@ const Footer = () => {
         />
         <img src={bgFooter} alt="" className="absolute bottom-[-6px] left-0 w-[90%] h-auto" />
       </div>
-      <Flex className="bg-[#004f8c] w-full h-[60px] ">-</Flex>
-      <Flex vertical align="center" justify="center" className="bg-primary w-full py-8 text-white" gap={4}>
+      <Flex className="bg-[#004f8c] w-full h-3 text-[#004f8c]">-</Flex>
+      <Flex vertical align="center" justify="center" className="bg-white w-full py-8 text-[#4a5568]" gap={4}>
         <img src={whiteLogoImage} alt="" className="w-[200px] h-auto mb-2" />
-        <h1 className="text-[20px] font-semibold">TỔNG CÔNG TY ĐƯỜNG SẮT VIỆT NAM</h1>
+        <h1 className="text-[20px] font-bold text-primary">TỔNG CÔNG TY ĐƯỜNG SẮT VIỆT NAM</h1>
         <p>
           <strong>Địa chỉ: </strong>157/89 Dương Bá Trạc, phường 01, quận 08, TP.HCM
         </p>
