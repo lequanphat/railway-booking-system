@@ -2,6 +2,7 @@ package com.backend.railwaybookingsystem.dtos.orders.response;
 
 import com.backend.railwaybookingsystem.enums.AuthProvider;
 import com.backend.railwaybookingsystem.enums.OrderStatus;
+import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import com.backend.railwaybookingsystem.enums.UserGender;
 import lombok.Value;
 
@@ -21,7 +22,7 @@ public class GetOrdersListResponse implements Serializable {
     String identity;
     double totalPrice;
     OrderStatus status;
-    String paymentMethod;
+    PaymentMethod paymentMethod;
     Timestamp createdAt;
     UserDto user;
     List<TicketDto> tickets;
@@ -52,11 +53,32 @@ public class GetOrdersListResponse implements Serializable {
         double originalPrice;
         double price;
         String fullName;
-        String object;
         String identity;
         String departureStation;
         String arrivalStation;
         String departureTime;
         String arrivalTime;
+        PersonTypeDto object;
+
+        /**
+         * DTO for {@link com.backend.railwaybookingsystem.models.PersonType}
+         */
+        @Value
+        public static class PersonTypeDto implements Serializable {
+            Long id;
+            String name;
+            double percentage;
+            PersonTypeParentDto parent;
+
+            /**
+             * DTO for {@link com.backend.railwaybookingsystem.models.PersonType}
+             */
+            @Value
+            public static class PersonTypeParentDto implements Serializable {
+                Long id;
+                String name;
+                double percentage;
+            }
+        }
     }
 }

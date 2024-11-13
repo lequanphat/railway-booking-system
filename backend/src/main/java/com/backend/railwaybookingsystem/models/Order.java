@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.models;
 
 import com.backend.railwaybookingsystem.enums.OrderStatus;
+import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,11 +36,13 @@ public class Order {
     @Column(name = "total_price")
     private double totalPrice;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private OrderStatus status = OrderStatus.PENDING;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
-    private String paymentMethod;
+    private PaymentMethod paymentMethod = PaymentMethod.VNPAY;
 
     @CreatedDate
     @Column(name = "created_at")

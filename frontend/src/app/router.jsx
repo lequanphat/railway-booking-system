@@ -48,6 +48,13 @@ const createAppRouter = () =>
           },
         },
         {
+          path: '/ticket-booking/callback',
+          lazy: async () => {
+            const TicketBookingCallback = await import('./routes/customer/ticket-booking/callback');
+            return { Component: TicketBookingCallback.default };
+          },
+        },
+        {
           path: '/tickets',
           lazy: async () => {
             const TicketsPage = await import('./routes/customer/tickets');
@@ -106,6 +113,7 @@ const createAppRouter = () =>
         },
       ],
     },
+
     // Admin routes
     {
       path: '/admin',

@@ -1,7 +1,7 @@
 import { Table, Tag } from 'antd';
-import { useOrders } from '../../orders/api/get-orders';
 import dayjs from 'dayjs';
 import { convertToVnCurrency } from '~/utils/convert';
+import { useOrders } from '../api/get-orders';
 
 const expandColumns = [
   {
@@ -10,7 +10,9 @@ const expandColumns = [
     render: ({ fullName, object, identity }) => (
       <div>
         <p>Họ tên: {fullName}</p>
-        <p>Đối tượng: {object}</p>
+        <p>
+          Đối tượng: {object?.parent?.name} - {object.name}
+        </p>
         <p>Định danh: {identity}</p>
       </div>
     ),

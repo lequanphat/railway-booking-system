@@ -1,14 +1,27 @@
 import { Alert, Button, Card, Col, Divider, Flex, Form, Input, Row, Select, Table } from 'antd';
 import { useContext, useMemo } from 'react';
-import { OBJECT_TYPE_OPTIONS } from '~/config';
 import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import { convertToVnCurrency } from '~/utils/convert';
 import { formatTicketsInformationData } from '../../utils/helpers';
+import { useGetAllPersonTypes } from '../../api/get-all-person-types';
 
 const InfoConfirmation = () => {
   const [form] = Form.useForm();
   const { selectedSeats, totalDistance, prevStep, nextStep, setPassengerInformation } =
     useContext(ScheduleDetailContext);
+
+  const { data: personTypes } = useGetAllPersonTypes({});
+
+  console.log(personTypes);
+
+  const OBJECT_TYPE_OPTIONS = personTypes?.map((item) => ({
+    label: <span>{item.name}</span>,
+    title: item.name,
+    options: item?.children?.map((type) => ({
+      label: <span>{type.name}</span>,
+      value: type.id,
+    })),
+  }));
 
   const columns = useMemo(
     () => [
@@ -21,7 +34,14 @@ const InfoConfirmation = () => {
         title: 'Thông tin khách hàng',
         key: 'passenger',
         render: (record) => (
-          <Form form={form} name="advanced_search" onFinish={null}>
+          <Form
+            form={form}
+            initialValues={{
+              [`object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
+            }}
+            name="advanced_search"
+            onFinish={null}
+          >
             <Form.Item
               name={`fullName_${record?.id}-${record?.carriageId}`}
               label="Họ tên"
@@ -99,7 +119,7 @@ const InfoConfirmation = () => {
         },
       },
     ],
-    [form, totalDistance],
+    [form, totalDistance, OBJECT_TYPE_OPTIONS],
   );
 
   const handleNextStep = async () => {
