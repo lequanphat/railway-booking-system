@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
@@ -54,23 +56,22 @@ public class SecurityConfiguration {
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(request -> request.requestMatchers(
-																			"/api/auth/**",
-																		  "api/public/**",
-																	      "/v3/api-docs/**",
-																          "/swagger-ui/**",
-																	      "/swagger-ui.html",
-																	      "/actuator/**")
-													   .permitAll()
-														.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-														.requestMatchers("/api/user/**").hasAuthority("USER")
-													   .anyRequest()
-													   .authenticated())
+								"/api/auth/**",
+								"/api/oauth2/**",
+								"api/public/**",
+								"/v3/api-docs/**",
+								"/swagger-ui/**",
+								"/swagger-ui.html",
+								"/actuator/**")
+						.permitAll()
+						.requestMatchers("/api/ad/**").hasAuthority("ADMIN")
+						.requestMatchers("/api/user/**").hasAuthority("USER")
+						.anyRequest()
+						.authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(handler -> handler.authenticationEntryPoint(unauthorizedHandler))
 				.build();
 
 		//@formatter:on
     }
-
-
 }

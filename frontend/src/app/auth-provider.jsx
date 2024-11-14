@@ -5,24 +5,15 @@ import useAuthStore from '~/stores/auth-store';
 
 const AuthProvider = ({ children }) => {
   const { setUser } = useAuthStore();
-  const {
-    data: { user, token },
-    error,
-    isFetching,
-  } = useAuthentication();
+  const { data: user, error, isLoading } = useAuthentication();
 
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
       setUser(user);
-      localStorage.setItem('token', token);
     }
+  }, [user, setUser, error]);
 
-    if (error) {
-      localStorage.removeItem('token');
-    }
-  }, [user, token, setUser, error]);
-
-  if (isFetching) return <LoadingScreen />;
+  if (isLoading) return <LoadingScreen />;
 
   return children;
 };

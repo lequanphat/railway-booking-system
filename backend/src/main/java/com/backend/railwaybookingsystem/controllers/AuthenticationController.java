@@ -5,11 +5,11 @@ import com.backend.railwaybookingsystem.dtos.auth.request.RefreshTokenRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
+import com.backend.railwaybookingsystem.dtos.auth.response.RefreshTokenResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
-import com.backend.railwaybookingsystem.exceptions.NotFoundException;
+import com.backend.railwaybookingsystem.exceptions.AuthenticationException;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.security.jwt.JwtTokenService;
-import com.backend.railwaybookingsystem.services.RefreshTokenService;
 import com.backend.railwaybookingsystem.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -22,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+
+
 @RestController
 @RequestMapping("api/auth")
 @Slf4j
@@ -30,8 +32,6 @@ public class AuthenticationController {
     private JwtTokenService jwtTokenService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
     @Operation(tags = "Authentication", description = "You must log in with the correct information to successfully obtain the token information.")
@@ -52,14 +52,10 @@ public class AuthenticationController {
 
     @PostMapping("/refresh")
     @Operation(tags = "Authentication", description = "You can refresh your token by sending your refresh token.")
-    public ResponseEntity<String> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<RefreshTokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         String token = request.getRefreshToken();
 
-        return refreshTokenService.findByToken(token)
-                .map(refreshTokenService::verifyExpiration)
-                .map(refreshToken -> jwtTokenService.generateTokenFromRefreshToken(refreshToken))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().body("Invalid refresh token"));
+        return ResponseEntity.ok(jwtTokenService.executeRefreshToken(token));
     }
 
     @GetMapping("/me")
@@ -68,14 +64,10 @@ public class AuthenticationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new NotFoundException("User not found");
+            throw new AuthenticationException("Authenticated is required");
         }
-        String email = authentication.getName();
-        User user = userService.findAuthenticatedUserByEmail(email);
-        String token = jwtTokenService.generateAccessToken(user);
-
-        AuthenticationResponse authResponse = new AuthenticationResponse(user, token);
-        return ResponseEntity.ok(authResponse);
+        Long userId = Long.parseLong(authentication.getName());
+        return ResponseEntity.ok(userService.findMe(userId));
     }
 
     @GetMapping("/verify-account/{token}")

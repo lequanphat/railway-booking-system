@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { App as AntApp, ConfigProvider } from 'antd';
 import AuthProvider from './auth-provider';
 import viVN from 'antd/locale/vi_VN';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
+import { GOOGLE_OAUTH_CLIENT_ID } from '~/config/env';
 dayjs.locale('vi');
 
 const queryClient = new QueryClient();
@@ -31,11 +33,13 @@ const AppProvider = ({ children }) => {
       }}
       locale={viVN}
     >
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <AntApp>{children}</AntApp>
-        </AuthProvider>
-      </QueryClientProvider>
+      <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <AntApp>{children}</AntApp>
+          </AuthProvider>
+        </QueryClientProvider>
+      </GoogleOAuthProvider>
     </ConfigProvider>
   );
 };
