@@ -1,6 +1,4 @@
 package com.backend.railwaybookingsystem.dtos.auth.response;
-
-import com.backend.railwaybookingsystem.enums.UserRole;
 import lombok.*;
 
 @Getter
@@ -8,14 +6,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthenticationResponse {
-	private Long id;
-
+public class GoogleUserInfo {
 	private String name;
-
 	private String email;
-
-	private String avatar;
-
-	private UserRole userRole;
+	private String picture;
 }
+
+

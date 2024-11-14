@@ -33,16 +33,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
+		log.info("Request URL : {}", request.getRequestURL());
+		log.info("Query String : {}", request.getQueryString());
 		final String header = request.getHeader(SecurityConstants.HEADER_STRING);
 
-		String username = null;
+		Long userId = null;
 		String authToken = null;
 		if (Objects.nonNull(header) && header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 
 			authToken = header.replace(SecurityConstants.TOKEN_PREFIX, Strings.EMPTY);
 
 			try {
-				username = jwtTokenManager.getUsernameFromToken(authToken);
+				userId = jwtTokenManager.getUserIdFromToken(authToken);
 			}
 			catch (Exception e) {
 				log.error("Authentication Exception : {}", e.getMessage());
@@ -53,26 +55,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		final SecurityContext securityContext = SecurityContextHolder.getContext();
 
-		final boolean canBeStartTokenValidation = Objects.nonNull(username) && Objects.isNull(securityContext.getAuthentication());
+		final boolean canBeStartTokenValidation = Objects.nonNull(userId) && Objects.isNull(securityContext.getAuthentication());
 
 		if (!canBeStartTokenValidation) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		final UserDetails user = userDetailsService.loadUserByUsername(username);
-		final boolean validToken = jwtTokenManager.validateToken(authToken, user.getUsername());
-
-//		if (!validToken) {
-//			chain.doFilter(request, response);
-//			return;
-//		}
+		final UserDetails user = userDetailsService.loadUserByUsername(userId.toString());
+		final boolean validToken = jwtTokenManager.validateToken(authToken, Long.parseLong(user.getUsername()));
 
 		final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		securityContext.setAuthentication(authentication);
 
-		log.info("Authentication successful. Logged in username : {} ", username);
+		log.info("Authentication successful. Logged in userId : {} ", user.getUsername());
 
 		chain.doFilter(request, response);
 	}

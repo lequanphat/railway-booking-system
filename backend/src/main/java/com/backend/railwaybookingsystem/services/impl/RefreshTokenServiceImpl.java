@@ -7,7 +7,6 @@ import com.backend.railwaybookingsystem.repositories.RefreshTokenRepository;
 import com.backend.railwaybookingsystem.repositories.UserRepository;
 import com.backend.railwaybookingsystem.security.jwt.JwtProperties;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,15 +21,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private JwtProperties jwtProperties;
-
-    @Override
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByToken(token);
-    }
 
     @Override
     public RefreshToken createRefreshToken(User user) {
@@ -44,16 +40,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    public RefreshToken verifyExpiration(RefreshToken token) {
-        if(token.getExpiryDate().compareTo(Instant.now()) < 0) {
-            refreshTokenRepository.delete(token);
+    public RefreshToken validateRefreshToken(String token){
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByToken(token);
+
+        if(refreshToken.isEmpty()){
+            throw new TokenRefreshException("Token not found. Please issue a new request");
+        }
+        if(refreshToken.get().getExpiryDate().compareTo(Instant.now()) < 0) {
+            refreshTokenRepository.delete(refreshToken.get());
             throw new TokenRefreshException("Expired token. Please issue a new request");
         }
-        return token;
-    }
+        return createRefreshToken(refreshToken.get().getUser());
 
-    @Transactional
-    public int deleteByUserId(Long userId) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
     }
 }

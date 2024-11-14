@@ -1,13 +1,15 @@
 package com.backend.railwaybookingsystem.security.jwt;
 
+import com.backend.railwaybookingsystem.dtos.auth.response.RefreshTokenResponse;
+import com.backend.railwaybookingsystem.enums.AuthProvider;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.UserMapper;
 import com.backend.railwaybookingsystem.models.RefreshToken;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.dtos.auth.request.LoginRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
+import com.backend.railwaybookingsystem.repositories.UserRepository;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
-import com.backend.railwaybookingsystem.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import java.util.Optional;
 public class JwtTokenService {
 
 	@Autowired
-	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@Autowired
 	private final RefreshTokenService refreshTokenService;
@@ -40,12 +42,14 @@ public class JwtTokenService {
 		final String email = loginRequest.getEmail();
 		final String password = loginRequest.getPassword();
 
-		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
-		Optional<User> user = userService.findUserByEmail(email);
+
+		Optional<User> user = userRepository.findUserByEmailAndProvider(email, AuthProvider.EMAIL);
 		if (user.isEmpty()) {
 			throw new BadRequestException("Email does not exist");
 		}
+
+		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user.get().getId(), password);
 		try {
 			authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 		}catch (Exception e){
@@ -67,14 +71,13 @@ public class JwtTokenService {
 				.build();
 	}
 
-	public String generateTokenFromRefreshToken(RefreshToken refreshToken) {
-		final User user = refreshToken.getUser();
-		final String token = jwtTokenManager.generateToken(user);
-		log.info("{} has successfully refreshed the token!", user.getEmail());
-		return token;
-	}
-
 	public String generateAccessToken(User user) {
 		return jwtTokenManager.generateToken(user);
+	}
+
+	public RefreshTokenResponse executeRefreshToken(String token){
+		RefreshToken refreshToken = refreshTokenService.validateRefreshToken(token);
+		String accessToken = generateAccessToken(refreshToken.getUser());
+		return new RefreshTokenResponse(accessToken, refreshToken.getToken());
 	}
 }

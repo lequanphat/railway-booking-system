@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.services;
 
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
+import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
@@ -13,15 +14,18 @@ import java.util.Optional;
 
 public interface UserService {
     Page<UserResponse> getUsers(UserRole role, String keyword, int page, int size);
+
     UserResponse saveUser(CreateUserRequest request);
+
     UserResponse updateUser(Long id, UpdateUserRequest updateRequest);
+
     UserResponse deleteUser(Long id);
 
     RegistrationResponse registration(RegistrationRequest registrationRequest);
-    User findAuthenticatedUserByEmail(String email);
-    Boolean userExists(String email);
 
-    Optional<User> findUserByEmail(String email);
+    User findAuthenticatedUserByEmail(String email);
 
     User verifyAccount(String token);
+
+    AuthenticationResponse findMe(Long id);
 }

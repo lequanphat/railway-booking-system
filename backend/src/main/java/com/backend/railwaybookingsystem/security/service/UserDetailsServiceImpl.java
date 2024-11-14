@@ -1,6 +1,7 @@
 package com.backend.railwaybookingsystem.security.service;
 
 import com.backend.railwaybookingsystem.enums.UserRole;
+import com.backend.railwaybookingsystem.repositories.UserRepository;
 import com.backend.railwaybookingsystem.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,19 +23,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private static final String USERNAME_OR_PASSWORD_INVALID = "Invalid username or password.";
 
 	@Autowired
-	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) {
+	public UserDetails loadUserByUsername(String userId) {
+		log.info("userId: {}", userId);
 
-		final com.backend.railwaybookingsystem.models.User authenticatedUser = userService.findAuthenticatedUserByEmail(email);
+		final com.backend.railwaybookingsystem.models.User authenticatedUser = userRepository.findById(Long.parseLong(userId)).orElse(null);
 
 		if (Objects.isNull(authenticatedUser)) {
 			throw new UsernameNotFoundException(USERNAME_OR_PASSWORD_INVALID);
 		}
 
-		final String authenticatedEmail = authenticatedUser.getEmail();
-		final String authenticatedPassword = authenticatedUser.getPassword();
+		final String authenticatedEmail = authenticatedUser.getId().toString();
+		final String authenticatedPassword = authenticatedUser.getPassword() != null ? authenticatedUser.getPassword() : "NOT_SET";
 		final UserRole userRole = authenticatedUser.getUserRole();
 		final SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userRole.name());
 

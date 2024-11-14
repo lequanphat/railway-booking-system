@@ -20,32 +20,34 @@ public class JwtTokenManager {
 
 	public String generateToken(User user) {
 
-		final String username = user.getEmail();
+		final Long userId = user.getId();
 		final UserRole role = user.getUserRole();
 
 		//@formatter:off
 		return JWT.create()
-				.withSubject(username)
+				.withSubject(userId.toString())
 				.withIssuer(jwtProperties.getIssuer())
 				.withClaim("role", role.name())
+				.withClaim("email", user.getEmail())
+				.withClaim("userId", userId)
 				.withIssuedAt(new Date())
 				.withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMinute() * SecurityConstants.EXPIRATION_TIME))
 				.sign(Algorithm.HMAC256(jwtProperties.getSecretKey().getBytes()));
 		//@formatter:on
 	}
 
-	public String getUsernameFromToken(String token) {
+	public Long getUserIdFromToken(String token) {
 
 		final DecodedJWT decodedJWT = getDecodedJWT(token);
 
-		return decodedJWT.getSubject();
+		return decodedJWT.getClaim("userId").asLong();
 	}
 
-	public boolean validateToken(String token, String authenticatedUsername) {
+	public boolean validateToken(String token, Long userId) {
 
-		final String usernameFromToken = getUsernameFromToken(token);
+		final Long userIdFromToken = getUserIdFromToken(token);
 
-		final boolean equalsUsername = usernameFromToken.equals(authenticatedUsername);
+		final boolean equalsUsername = userIdFromToken.equals(userId);
 		final boolean tokenExpired = isTokenExpired(token);
 
 		return equalsUsername && !tokenExpired;

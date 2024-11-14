@@ -1,11 +1,13 @@
 import { Button, Col, Divider, Flex, Form, Input, message, Row, Typography } from 'antd';
+
 import RULES from '~/config/rule';
-import { useLoginMutation } from '~/features/auth/api/login';
+import { useGoogleLoginMutation, useLoginMutation } from '~/features/auth/api/login';
 import fb from '~/assets/svg/fb.svg';
-import gg from '~/assets/svg/gg.svg';
 import wt from '~/assets/svg/wt.svg';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useAuthStore from '~/stores/auth-store';
+import LocalStorageManager from '~/utils/localStorageManager';
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginRoute = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +19,22 @@ const LoginRoute = () => {
   const mutation = useLoginMutation({
     mutationConfig: {
       onSuccess: (data) => {
-        localStorage.setItem('token', data?.token);
+        LocalStorageManager.setAccessToken(data?.token);
+        LocalStorageManager.setRefreshToken(data?.refreshToken);
+        setUser(data?.user);
+        navigate(redirect ? redirect : '/');
+      },
+      onError: ({ response }) => {
+        message.error(response?.data?.detail || 'Something went wrong!');
+      },
+    },
+  });
+
+  const googleLoginMutation = useGoogleLoginMutation({
+    mutationConfig: {
+      onSuccess: (data) => {
+        LocalStorageManager.setAccessToken(data?.token);
+        LocalStorageManager.setRefreshToken(data?.refreshToken);
         setUser(data?.user);
         navigate(redirect ? redirect : '/');
       },
@@ -29,6 +46,10 @@ const LoginRoute = () => {
 
   const handleLogin = () => {
     mutation.mutate({ data: form.getFieldsValue() });
+  };
+
+  const handleGoogleLogin = (credential) => {
+    googleLoginMutation.mutate({ data: credential });
   };
 
   return (
@@ -63,10 +84,13 @@ const LoginRoute = () => {
           </Divider>
           <Row gutter={12}>
             <Col span={8}>
-              <Button className="w-full">
-                <img src={gg} alt="" />
-                Google
-              </Button>
+              <GoogleLogin
+                text="Google"
+                onSuccess={handleGoogleLogin}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+              />
             </Col>
             <Col span={8}>
               <Button className="w-full">

@@ -5,7 +5,6 @@ import com.backend.railwaybookingsystem.enums.UserGender;
 import com.backend.railwaybookingsystem.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Data
 @Entity
@@ -22,7 +21,6 @@ public class User {
 
 	private String password;
 
-	@Column(unique = true)
 	private String email;
 
 	@Enumerated(EnumType.STRING)
@@ -31,6 +29,8 @@ public class User {
 	private String phone;
 
 	private String address;
+
+	private String avatar;
 
 	@Enumerated(EnumType.STRING)
 	private UserGender gender;

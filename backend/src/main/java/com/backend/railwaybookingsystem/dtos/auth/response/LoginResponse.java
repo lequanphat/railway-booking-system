@@ -1,7 +1,6 @@
 package com.backend.railwaybookingsystem.dtos.auth.response;
 
 import com.backend.railwaybookingsystem.enums.UserRole;
-import com.backend.railwaybookingsystem.models.User;
 import lombok.*;
 
 @Getter
@@ -25,6 +24,8 @@ public class LoginResponse {
 		private String name;
 
 		private String email;
+
+		private String avatar;
 
 		private UserRole userRole;
 

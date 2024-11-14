@@ -39,6 +39,18 @@ spring:
           auth: true
           starttls:
             enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 622494579867-8igtkg8u1i20sllcgvc01jf80gcrumff.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3001/api/oauth2/google/callback}"
+            scope: openid, profile, email
+
+
+
 springdoc:
   show-actuator: true
 
@@ -63,8 +75,8 @@ logging:
 jwt:
   secretKey: secret
   issuer: nhatsinh.id.vn
-  expirationMinute: 10
-  expirationRefreshMinute: 30
+  expirationMinute: 1
+  expirationRefreshMinute: 5
 
 swagger:
   contact-name: Tran Nhat Sinh
@@ -75,3 +87,4 @@ swagger:
   app-version: 3.3.1
   app-license-url: https://www.apache.org/licenses/LICENSE-2.0.html
   app-license: Apache 2.0
+

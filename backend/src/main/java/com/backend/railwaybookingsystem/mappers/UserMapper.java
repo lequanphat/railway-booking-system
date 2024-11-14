@@ -1,6 +1,8 @@
 package com.backend.railwaybookingsystem.mappers;
 
+import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.LoginResponse;
+import com.backend.railwaybookingsystem.dtos.auth.response.OAuthUser;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UserResponse;
@@ -30,4 +32,10 @@ public interface UserMapper {
     User convertToUser(RegistrationRequest registrationRequest);
 
     LoginResponse.AuthenticatedUserDto convertToAuthenticatedUserDto(User user);
+
+    @Mapping(source = "userRole", target = "userRole")
+    User convertToUser(OAuthUser oAuthUser);
+
+    @Mapping(source = "userRole", target = "userRole")
+    AuthenticationResponse convertToAuthenticationResponse(User user);
 }

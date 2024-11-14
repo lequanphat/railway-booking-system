@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.repositories;
 
+import com.backend.railwaybookingsystem.enums.AuthProvider;
 import com.backend.railwaybookingsystem.enums.UserRole;
 import com.backend.railwaybookingsystem.models.User;
 import org.springframework.data.domain.Page;
@@ -30,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Page<User> searchUserByFields(@Param("role") UserRole role, @Param("keyword") String keyword, Pageable pageable);
 
 	Page<User> findByUserRole(UserRole role, Pageable pageable);
+
+	Optional<User> findUserByEmailAndProvider(String email, AuthProvider provider);
 }

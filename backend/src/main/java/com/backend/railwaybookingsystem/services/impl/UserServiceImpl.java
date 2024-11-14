@@ -1,9 +1,11 @@
 package com.backend.railwaybookingsystem.services.impl;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
+import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UserResponse;
+import com.backend.railwaybookingsystem.enums.AuthProvider;
 import com.backend.railwaybookingsystem.enums.UserRole;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.DuplicatedException;
@@ -101,10 +103,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegistrationResponse registration(RegistrationRequest registrationRequest) {
-        User existingUser = this.findAuthenticatedUserByEmail(registrationRequest.getEmail());
-        if (existingUser != null) {
-            throw new DuplicatedException("User with username {} already exists", registrationRequest.getEmail());
+        User existingUser = userRepository.findUserByEmailAndProvider(registrationRequest.getEmail(), AuthProvider.EMAIL)
+                .orElse(null);
+        if(existingUser != null){
+            throw new NotFoundException("No user found with username {}", registrationRequest.getEmail());
         }
+
         final User user = UserMapper.INSTANCE.convertToUser(registrationRequest);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setUserRole(UserRole.USER);
@@ -129,16 +133,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean userExists(String email){
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public Optional<User> findUserByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
     public  User verifyAccount(String token){
         User user = userVerificationService.validateToken(token);
         if(user == null){
@@ -146,6 +140,14 @@ public class UserServiceImpl implements UserService {
         }
         user.setIs_verified(true);
         return userRepository.save(user);
+    }
+
+    @Override
+    public AuthenticationResponse findMe(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("No user found with id {}", id));
+
+        return UserMapper.INSTANCE.convertToAuthenticationResponse(user);
     }
 }
 
