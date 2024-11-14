@@ -9,9 +9,9 @@ public class SecurityConstants {
 	// FIXME : Customize security constants for your application.
 
 	/**
-	 * Token expiration time 30s
+	 * Token expiration time 30m
 	 */
-	public static final long EXPIRATION_TIME = 30000;
+	public static final long EXPIRATION_TIME = 30*60*1000;
 
 	/**
 	 * Secret key for signature
