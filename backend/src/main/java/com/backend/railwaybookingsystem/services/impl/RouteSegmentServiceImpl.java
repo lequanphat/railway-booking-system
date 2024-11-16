@@ -49,7 +49,7 @@ public class RouteSegmentServiceImpl implements RouteSegmentService {
     }
 
     @Override
-    public SearchScheduleResponse.RouteSegmentDto getRouteSegmentByTrainAndStation(Long trainId, Long stationId) {
+    public SearchScheduleResponse.ScheduleDto.RouteSegmentDto getRouteSegmentByTrainAndStation(Long trainId, Long stationId) {
         var segment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(trainId, stationId);
         return RouteSegmentMapper.INSTANCE.toSearchScheduleResponseRouteSegmentDto(segment);
     }

@@ -72,7 +72,7 @@ const SearchPage = () => {
               opacity: 0.5,
             }}
           >
-            <ReturnCard params={params} returnSchedules={return_schedules} />
+            <ReturnCard params={params} returnSchedules={return_schedules} isRefetching={isRefetching} />
           </Col>
         )}
       </Row>

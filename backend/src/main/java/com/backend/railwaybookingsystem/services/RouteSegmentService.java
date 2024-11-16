@@ -9,5 +9,5 @@ import java.util.List;
 public interface RouteSegmentService {
     GetTrainRouteSegmentsResponse getTrainRouteSegments(Long id);
     GetTrainRouteSegmentsResponse saveRouteSegment(Long id, List<CreateRouteSegmentRequest> request);
-    SearchScheduleResponse.RouteSegmentDto getRouteSegmentByTrainAndStation(Long trainId, Long stationId);
+    SearchScheduleResponse.ScheduleDto.RouteSegmentDto getRouteSegmentByTrainAndStation(Long trainId, Long stationId);
 }
