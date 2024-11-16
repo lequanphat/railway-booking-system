@@ -38,7 +38,7 @@ const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
     <Card>
       <Flex vertical align="center" gap={18}>
         <h1 className="text-base font-semibold">{name}</h1>
-        <Row gutter={[20, 20]}>
+        <Row gutter={[10, 10]}>
           {seats?.map((seat) => (
             <Col key={seat.id} span={24 / (floors * row_count)}>
               <Flex vertical align="center">
@@ -66,7 +66,7 @@ const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
                       handleSelectSeat(seat);
                     }}
                   >
-                    <h1 className="font-semibold text-lg">{seat?.position}</h1>
+                    <h1 className="font-semibold text-base">{seat?.position}</h1>
                     <p className="text-xs">
                       {formatSeatCode({ layoutId: id, code: seat?.seatType?.code, position: seat?.position })}
                     </p>
