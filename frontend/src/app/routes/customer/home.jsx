@@ -7,6 +7,7 @@ import { searchWithoutDiacritics } from '~/utils/searchWithoutDiacritics';
 import { SearchOutlined } from '@ant-design/icons';
 import { useSearchSchedules } from '~/features/home/api/search-schedules';
 import { useNavigate } from 'react-router-dom';
+import ScheduleBookingModal from '~/features/home/components/scheddule-booking-modal/ScheduleBookingModal';
 
 const HomeRoute = () => {
   const [schedules, setSchedules] = useState([]);
@@ -35,7 +36,6 @@ const SearchTrainForm = ({ onSearchComplete }) => {
   const { data: stationsData, isLoading: isStationsLoading } = useStations();
   const [form] = Form.useForm();
   const tripType = Form.useWatch('trip_type', form);
-  const navigate = useNavigate();
 
   const { refetch: refetchSchedules } = useSearchSchedules({
     queryConfig: {
@@ -159,6 +159,7 @@ const SearchTrainForm = ({ onSearchComplete }) => {
       >
         Tìm chuyến tàu
       </Button>
+      <ScheduleBookingModal />
     </Form>
   );
 };
