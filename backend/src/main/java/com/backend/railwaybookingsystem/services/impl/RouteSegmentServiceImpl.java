@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.services.impl;
 
+import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateRouteSegmentRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
@@ -45,5 +46,11 @@ public class RouteSegmentServiceImpl implements RouteSegmentService {
         trainRepository.save(train);
 
         return TrainMapper.INSTANCE.convertToGetTrainRouteSegmentsResponse(train);
+    }
+
+    @Override
+    public SearchScheduleResponse.RouteSegmentDto getRouteSegmentByTrainAndStation(Long trainId, Long stationId) {
+        var segment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(trainId, stationId);
+        return RouteSegmentMapper.INSTANCE.toSearchScheduleResponseRouteSegmentDto(segment);
     }
 }

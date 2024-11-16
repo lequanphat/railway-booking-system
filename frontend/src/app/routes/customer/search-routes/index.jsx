@@ -1,19 +1,19 @@
-import { Breadcrumb, Card, Col, Flex, Row, Space, Spin, Typography } from 'antd';
+import { Breadcrumb, Col, Row, Space, Spin } from 'antd';
 import { useSearchParams } from 'react-router-dom';
-import DateSelection from '~/features/home/components/DateSelection';
-import { ScheduleItem } from '~/features/home/components/ScheduleItem';
-import SearchForm from '~/features/search-routes/SearchForm';
-import soldOutImage from '~/assets/images/sold-out-train.webp';
+import DateSelection from '~/features/search-routes/components/DateSelection';
+import { ScheduleItem } from '~/features/search-routes/components/ScheduleItem';
+import SearchForm from '~/features/search-routes/components/SearchForm';
 import dayjs from 'dayjs';
-import { useSearchSchedules } from '~/features/home/api/search-schedules';
+import { useSearchSchedules } from '~/features/search-routes/api/search-schedules';
 import { TripType } from '~/enums/trip-type';
-const { Text, Title } = Typography;
+import EmptyRoutes from '~/features/search-routes/components/EmptyRoutes';
+import ReturnCard from '~/features/search-routes/components/ReturnCard';
 
 const SearchPage = () => {
   const [params, setParams] = useSearchParams();
 
   const {
-    data: schedules,
+    data,
     refetch: refetchSchedules,
     isRefetching,
   } = useSearchSchedules({
@@ -23,9 +23,11 @@ const SearchPage = () => {
     departureDate: dayjs(params.get('departure_date')).format('YYYY-MM-DD'),
     returnDate: dayjs(params.get('return_date')).format('YYYY-MM-DD'),
     departureStation: params.get('departure_id'),
-    arrivalStation: params.get('destination_id'),
+    arrivalStation: params.get('arrival_id'),
     tripType: params.get('trip_type'),
   });
+
+  const { departure_schedules, return_schedules } = data;
 
   return (
     <Space className="py-4 w-full" direction="vertical" size="middle">
@@ -36,12 +38,12 @@ const SearchPage = () => {
             href: '/',
           },
           {
-            title: 'Vé tàu hoả :departure_station đi :arrival_station',
+            title: 'Vé tàu hoả :departure_name đi :arrival_name',
           },
         ]}
         params={{
-          departure_station: 'Hà Nội',
-          arrival_station: 'Sài Gòn',
+          departure_name: params.get('departure_name'),
+          arrival_name: params.get('arrival_name'),
         }}
       />
       <SearchForm params={params} setParams={setParams} refetchSchedules={refetchSchedules} />
@@ -50,14 +52,14 @@ const SearchPage = () => {
           <DateSelection params={params} setParams={setParams} />
           <Space direction="vertical" className="w-full mt-4" size="middle">
             {!isRefetching ? (
-              schedules.length > 0 ? (
-                schedules.map((schedule) => <ScheduleItem key={schedule.id} {...schedule} />)
+              departure_schedules && departure_schedules.length > 0 ? (
+                departure_schedules.map((schedule) => <ScheduleItem key={schedule.id} {...schedule} />)
               ) : (
                 <EmptyRoutes />
               )
             ) : (
               <div className="text-center py-10">
-                <Spin tip="Loading" />
+                <Spin />
               </div>
             )}
           </Space>
@@ -70,36 +72,11 @@ const SearchPage = () => {
               opacity: 0.5,
             }}
           >
-            <Card
-              title="Chọn chiều về"
-              bordered={false}
-              styles={{
-                body: {
-                  paddingBottom: 12,
-                  paddingTop: 12,
-                },
-              }}
-              className="shadow-sm"
-            >
-              <Title level={5}>Nha trang → Sài Gòn</Title>
-              <Text>Thứ 7, 20/11/2024</Text>
-            </Card>
+            <ReturnCard params={params} returnSchedules={return_schedules} />
           </Col>
         )}
       </Row>
     </Space>
-  );
-};
-
-const EmptyRoutes = () => {
-  return (
-    <Flex justify="center" align="center" gap={20} vertical>
-      <img src={soldOutImage} width={200} alt="empty" />
-      <div className="text-center text-base">
-        <p>Không có vé cho ngày bạn đã chọn.</p>
-        <p>Vui lòng chọn một ngày khác hoặc kiểm tra lịch trình.</p>
-      </div>
-    </Flex>
   );
 };
 

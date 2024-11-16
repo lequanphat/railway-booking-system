@@ -4,6 +4,7 @@ import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRe
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponseV2;
 import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class ScheduleController {
     }
 
     @GetMapping("public/schedules/search")
-    public ResponseEntity<List<SearchScheduleResponse>> searchSchedules(
+    public ResponseEntity<SearchScheduleResponseV2> searchSchedules(
             @RequestParam Long departureStation,
             @RequestParam Long arrivalStation,
             @RequestParam LocalDate departureDate,
@@ -56,7 +57,7 @@ public class ScheduleController {
     ) {
         log.info("Searching schedules for departureStation: {}, arrivalStation: {}, departureDate: {}, returnDate: {}, tripType: {}",
                 departureStation, arrivalStation, departureDate, returnDate, tripType);
-        var schedules = scheduleService.searchSchedules(departureStation, arrivalStation, departureDate);
+        var schedules = scheduleService.searchSchedules(departureStation, arrivalStation, departureDate, returnDate, tripType);
         return ResponseEntity.ok(schedules);
     }
 }

@@ -23,8 +23,13 @@ export const useSearchSchedules = ({
 }) => {
   return useQuery({
     queryKey: ['schedules', { departureStation, arrivalStation, departureDate, returnDate, tripType }],
-    initialData: [],
     queryFn: () => searchSchedules({ departureStation, arrivalStation, departureDate, returnDate, tripType }),
+    initialData: {
+      departure_name: '',
+      arrival_name: '',
+      departure_schedules: [],
+      return_schedules: [],
+    },
     ...queryConfig,
   });
 };
