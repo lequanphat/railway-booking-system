@@ -35,17 +35,10 @@ const createAppRouter = () =>
             },
           },
           {
-            path: '/schedules',
+            path: '/booking',
             lazy: async () => {
-              const SchedulePage = await import('./routes/customer/schedules');
-              return { Component: SchedulePage.default };
-            },
-          },
-          {
-            path: '/schedules/:id',
-            lazy: async () => {
-              const SchedulePage = await import('./routes/customer/schedules/[schedule_id]');
-              return { Component: SchedulePage.default };
+              const BookingPage = await import('./routes/customer/booking');
+              return { Component: BookingPage.default };
             },
           },
           {
@@ -121,7 +114,6 @@ const createAppRouter = () =>
           },
         ],
       },
-
       // Admin routes
       {
         path: '/admin',
@@ -300,7 +292,7 @@ const createAppRouter = () =>
     {
       future: {
         v7_relativeSplatPath: true,
-        v7_fetcherPersist: true
+        v7_fetcherPersist: true,
       },
     },
   );

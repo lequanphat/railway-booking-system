@@ -1,18 +1,14 @@
 import { Alert, Button, Card, Col, Divider, Flex, Form, Input, Row, Select, Table } from 'antd';
-import { useContext, useMemo } from 'react';
-import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
+import { useMemo } from 'react';
+import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
-import { formatTicketsInformationData } from '../../utils/helpers';
 import { useGetAllPersonTypes } from '../../api/get-all-person-types';
+import { formatTicketsInformationData } from '../../utils/helpers';
 
 const InfoConfirmation = () => {
   const [form] = Form.useForm();
-  const { selectedSeats, totalDistance, prevStep, nextStep, setPassengerInformation } =
-    useContext(ScheduleDetailContext);
-
+  const { selectedSeats, totalDistance, nextStep, setPassengerInformation } = useBookingStore();
   const { data: personTypes } = useGetAllPersonTypes({});
-
-  console.log(personTypes);
 
   const OBJECT_TYPE_OPTIONS = personTypes?.map((item) => ({
     label: <span>{item.name}</span>,
@@ -134,6 +130,10 @@ const InfoConfirmation = () => {
         };
         setPassengerInformation(data);
         nextStep();
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
       });
     } catch (error) {
       console.log('Validation failed:', error);
@@ -225,8 +225,7 @@ const InfoConfirmation = () => {
         </div>
       </Card>
 
-      <Flex align="center" justify="space-between" className="py-4">
-        <Button onClick={prevStep}>Quay lại</Button>
+      <Flex align="center" justify="end" className="py-4">
         <Button type="primary" onClick={handleNextStep}>
           Tiếp tục
         </Button>
