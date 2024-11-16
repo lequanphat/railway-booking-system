@@ -1,13 +1,15 @@
 import { Button, Flex, Tag, Typography } from 'antd';
-import { Link } from 'react-router-dom';
 import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
-import { EyeOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { calculateTravelTime } from '~/utils/calculateTravelTime';
+import ScheduleBookingModal from '~/features/home/components/scheddule-booking-modal/ScheduleBookingModal';
+import { useBoolean } from '~/hooks/useBoolean';
 const { Text } = Typography;
 
 export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segment }) => {
+  const { value: isModalOpen, setTrue: openModal, setFalse: closeModal } = useBoolean();
+
   return (
     <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white">
       <Flex gap={10} vertical>
@@ -45,13 +47,16 @@ export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segmen
         </Flex>
       </Flex>
       <div>
-        <Link
-          to={`/schedules/${id}?departure_station=${departure_segment.station_id}&arrival_station=${arrival_segment.station_id}`}
-        >
-          <Button variant="filled" color="primary" shape="round" icon={<EyeOutlined />}>
-            Chọn chỗ
-          </Button>
-        </Link>
+        <Button variant="solid" color="primary" size="large" onClick={openModal}>
+          Chọn chỗ
+        </Button>
+        <ScheduleBookingModal
+          open={isModalOpen}
+          scheduleId={id}
+          onCancel={closeModal}
+          departureStation={departure_segment.station_id}
+          arrivalStation={arrival_segment.station_id}
+        />
       </div>
     </Flex>
   );

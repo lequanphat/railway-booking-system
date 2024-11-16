@@ -67,7 +67,7 @@ const SearchForm = ({ params, setParams }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      return_date: tripType === TripType.OneWay ? null : form.getFieldValue('departure_date'),
+      return_date: tripType === TripType.OneWay ? null : form.getFieldValue('return_date'),
     });
   }, [form, params, tripType]);
 

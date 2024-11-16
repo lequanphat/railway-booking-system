@@ -10,7 +10,7 @@ import {
 import TicketInformation from './TicketInformation';
 import { Link } from 'react-router-dom';
 
-const ScheduleBookingModal = ({ open = true, scheduleId = 1, departureStation = 6, arrivalStation = 1 }) => {
+const ScheduleBookingModal = ({ open, onCancel, scheduleId = 1, departureStation = 6, arrivalStation = 1 }) => {
   const {
     departureDate,
     train,
@@ -104,8 +104,8 @@ const ScheduleBookingModal = ({ open = true, scheduleId = 1, departureStation = 
       centered
       open={open}
       onOk={null}
-      onCancel={null}
-      width={1400}
+      onCancel={onCancel}
+      width={1200}
       footer={
         <>
           <Link to={'/booking'}>

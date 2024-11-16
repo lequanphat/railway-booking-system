@@ -14,7 +14,7 @@ const TicketInformation = () => {
 
   return (
     <Card title="Thông tin đặt vé">
-      <Flex vertical gap={12} className="pt-2 text-[16px]">
+      <Flex vertical gap={12} className="pt-2 text-[16px] max-h-[350px] overflow-y-auto overflow-x-hidden">
         {selectedSeats.length > 0 ? (
           <Row gutter={[8, 8]}>
             {selectedSeats.map((seat) => (

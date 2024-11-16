@@ -26,12 +26,7 @@ const DateSelection = ({ params, type = TripType.OneWay, setParams }) => {
   }, [params]);
 
   const handleChooseDate = (date) => {
-    if (type === TripType.OneWay) {
-      console.log(date.format('YYYY-MM-DD'));
-      params.set('departure_date', date.format('YYYY-MM-DD'));
-    } else {
-      params.set('return_date', date.format('YYYY-MM-DD'));
-    }
+    params.set('departure_date', date.format('YYYY-MM-DD'));
     setParams(params);
   };
 
@@ -64,7 +59,7 @@ const DateSelection = ({ params, type = TripType.OneWay, setParams }) => {
             spaceBetween: 10,
           },
         }}
-        modules={[Navigation]} // Thêm modules
+        modules={[Navigation]}
         navigation
         pagination={{ clickable: true }}
         className="date-swiper"
