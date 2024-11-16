@@ -12,7 +12,7 @@ const MainLayout = () => {
     <Layout className="bg-background">
       <HeaderV2 />
       {isHomePage && <HomeBanner />}
-      <div className="w-[90%] md:w-[90%] xl:w-[1128px] 2xl:w-[1128px] mx-auto">
+      <div className="w-[90%] md:w-[90%] xl:w-[1228px] 2xl:w-[1228px] mx-auto">
         <Outlet />
       </div>
       <Footer style={{ textAlign: 'center' }} />

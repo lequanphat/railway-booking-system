@@ -1,4 +1,4 @@
-import { Button, Flex, Typography } from 'antd';
+import { Button, Flex, Tag, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
@@ -10,19 +10,22 @@ const { Text } = Typography;
 export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segment }) => {
   return (
     <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white">
-      <Flex vertical>
-        <span className="text-xs mb-1 text-gray-500">Số hiệu</span>
+      <Flex gap={10} vertical>
+        <span className="text-xs text-gray-500">Số hiệu</span>
         <Typography level={3} className="text-xl font-bold text-primary">
           {train_name}
         </Typography>
+        <Tag color="cyan" bordered={false}>
+          Còn 200 chỗ
+        </Tag>
       </Flex>
       <Flex vertical>
         <Flex align="center">
           <Flex align="flex-end" vertical>
+            <Text className="text-sm text-end text-gray-500">Ga {departure_segment.station_name}</Text>
             <Text className="text-[22px] font-medium">
               {dayjs(departure_segment.departure_time, 'HH:mm:ss').format('HH:mm')}
             </Text>
-            <Text className="text-sm text-end">Ga {departure_segment.station_name}</Text>
           </Flex>
           <Flex align="center" className="mx-4">
             <img src={PickupIcon} alt="" />
@@ -34,10 +37,10 @@ export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segmen
             <img src={StationIcon} alt="" />
           </Flex>
           <Flex vertical>
+            <Text className="text-sm text-start text-gray-500">Ga {arrival_segment.station_name}</Text>
             <Text className="text-[22px] font-medium">
               {dayjs(arrival_segment.arrival_time, 'HH:mm:ss').format('HH:mm')}
             </Text>
-            <Text className="text-sm text-start">Ga {arrival_segment.station_name}</Text>
           </Flex>
         </Flex>
       </Flex>
@@ -46,7 +49,7 @@ export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segmen
           to={`/schedules/${id}?departure_station=${departure_segment.station_id}&arrival_station=${arrival_segment.station_id}`}
         >
           <Button variant="filled" color="primary" shape="round" icon={<EyeOutlined />}>
-            Chọn
+            Chọn chỗ
           </Button>
         </Link>
       </div>
