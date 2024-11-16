@@ -4,7 +4,9 @@ import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRe
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.services.ScheduleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api")
+@Slf4j
 public class ScheduleController {
 
     @Autowired
@@ -47,7 +50,12 @@ public class ScheduleController {
     public ResponseEntity<List<SearchScheduleResponse>> searchSchedules(
             @RequestParam Long departureStation,
             @RequestParam Long arrivalStation,
-            @RequestParam LocalDate departureDate) {
+            @RequestParam LocalDate departureDate,
+            @RequestParam LocalDate returnDate,
+            @RequestParam TripType tripType
+    ) {
+        log.info("Searching schedules for departureStation: {}, arrivalStation: {}, departureDate: {}, returnDate: {}, tripType: {}",
+                departureStation, arrivalStation, departureDate, returnDate, tripType);
         var schedules = scheduleService.searchSchedules(departureStation, arrivalStation, departureDate);
         return ResponseEntity.ok(schedules);
     }

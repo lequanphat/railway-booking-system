@@ -19,7 +19,7 @@ const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
   };
 
   return (
-    <Flex vertical align="center" gap={18} className="border border-[#ccc] rounded-md p-6">
+    <Flex vertical align="center" gap={18} className="border rounded-md p-6">
       <h1 className="text-base font-semibold">{name}</h1>
       <Row gutter={[20, 20]}>
         {seats?.map((seat) => (
@@ -44,8 +44,9 @@ const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
                   align="center"
                   className={`${renderSeatColor(
                     seat,
-                  )} w-[100px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-pointer`}
+                  )} w-[100px] h-[60px] border p-2 rounded-md cursor-pointer`}
                   onClick={() => {
+                    console.log(seat);
                     if (seat.is_occupied) return;
                     setSelectedSeats((prev) => {
                       if (prev.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {

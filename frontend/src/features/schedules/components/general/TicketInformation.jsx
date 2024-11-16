@@ -14,21 +14,23 @@ const TicketInformation = () => {
 
   return (
     <Card title="Thông tin đặt vé">
-      <Flex vertical gap={12} className="pt-2 text-[16px]">
-        {selectedSeats.length > 0 ? (
-          selectedSeats.map((seat) => (
-            <ChildTicketItem
-              key={seat.id}
-              code={seat.code}
-              price={seat?.seatType?.original_price_per_km * totalDistance}
-              seatName={seat?.seatType?.name}
-              carriageName={`${seat?.carriagePosition}: ${seat?.carriageName}`}
-            />
-          ))
-        ) : (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa chọn ghế" />
-        )}
-      </Flex>
+      <div className="overflow-y-auto max-h-[300px]">
+        <Flex vertical gap={12} className="pt-2 text-[16px]">
+          {selectedSeats.length > 0 ? (
+            selectedSeats.map((seat) => (
+              <ChildTicketItem
+                key={seat.id}
+                code={seat.code}
+                price={seat?.seatType?.original_price_per_km * totalDistance}
+                seatName={seat?.seatType?.name}
+                carriageName={`${seat?.carriagePosition}: ${seat?.carriageName}`}
+              />
+            ))
+          ) : (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa chọn ghế" />
+          )}
+        </Flex>
+      </div>
       <Flex vertical>
         <Divider />
         <Flex justify="space-between">
