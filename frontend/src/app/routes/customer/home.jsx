@@ -5,8 +5,8 @@ import { useStations } from '~/features/home/api/get-stations';
 import { ScheduleItem } from '~/features/home/components/ScheduleItem';
 import { searchWithoutDiacritics } from '~/utils/searchWithoutDiacritics';
 import { SearchOutlined } from '@ant-design/icons';
-import { useSearchSchedules } from '~/features/home/api/search-schedules';
 import { useNavigate } from 'react-router-dom';
+import { TripType } from '~/enums/trip-type';
 
 const HomeRoute = () => {
   const [schedules, setSchedules] = useState([]);
@@ -30,21 +30,12 @@ const HomeRoute = () => {
   );
 };
 
-const SearchTrainForm = ({ onSearchComplete }) => {
+const SearchTrainForm = () => {
   const { message } = App.useApp();
   const { data: stationsData, isLoading: isStationsLoading } = useStations();
   const [form] = Form.useForm();
   const tripType = Form.useWatch('trip_type', form);
   const navigate = useNavigate();
-
-  const { refetch: refetchSchedules } = useSearchSchedules({
-    queryConfig: {
-      enabled: false,
-    },
-    departureDate: dayjs(Form.useWatch('departure_date', form)).format('YYYY-MM-DD'),
-    departureStation: Form.useWatch('departure_id', form),
-    arrivalStation: Form.useWatch('destination_id', form),
-  });
 
   const onFinish = async (values) => {
     if (
@@ -65,20 +56,16 @@ const SearchTrainForm = ({ onSearchComplete }) => {
     const searchParams = new URLSearchParams({
       departure_id: values.departure_id,
       destination_id: values.destination_id,
-      departure_date: dayjs(values.departure_date).format('YYYY-MM-DD'),
-      return_date: values.return_date ? dayjs(values.return_date).format('YYYY-MM-DD') : undefined,
+      departure_date: values.departure_date
+        ? dayjs(values.departure_date).format('YYYY-MM-DD')
+        : dayjs().format('YYYY-MM-DD'),
+      return_date: values.return_date
+        ? dayjs(values.return_date).format('YYYY-MM-DD')
+        : dayjs(values.departure_date).format('YYYY-MM-DD'),
       trip_type: values.trip_type,
     }).toString();
 
-    // navigate(`/search?${searchParams}`);
-
-    const result = await refetchSchedules();
-    if (result.data) {
-      if (result.data.length === 0) {
-        message.error('Không tìm thấy chuyến tàu phù hợp');
-      }
-      onSearchComplete(result.data);
-    }
+    navigate(`/search?${searchParams}`);
   };
 
   const stationsSelectOptions = useMemo(() => {
@@ -94,11 +81,11 @@ const SearchTrainForm = ({ onSearchComplete }) => {
   }, [stationsData, isStationsLoading]);
 
   return (
-    <Form form={form} onFinish={onFinish} layout="vertical" size="large">
-      <Form.Item name="trip_type" initialValue={'one-way'}>
+    <Form form={form} onFinish={onFinish} layout="vertical" size="large" variant="filled">
+      <Form.Item name="trip_type" initialValue={TripType.OneWay} className="mb-2">
         <Radio.Group>
-          <Radio value={'one-way'}>Một chiều</Radio>
-          <Radio value={'round-trip'}>Khứ hồi</Radio>
+          <Radio value={TripType.OneWay}>Một chiều</Radio>
+          <Radio value={TripType.RoundTrip}>Khứ hồi</Radio>
         </Radio.Group>
       </Form.Item>
       <Row gutter={24}>
@@ -145,7 +132,7 @@ const SearchTrainForm = ({ onSearchComplete }) => {
               placeholder="Chọn ngày về"
               disabledDate={(current) => current && current.isBefore(dayjs().startOf('day'))}
               className="w-full"
-              disabled={tripType == 'one-way'}
+              disabled={tripType == TripType.OneWay}
             />
           </Form.Item>
         </Col>

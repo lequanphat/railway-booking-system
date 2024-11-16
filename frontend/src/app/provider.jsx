@@ -8,7 +8,13 @@ import 'dayjs/locale/vi';
 import { GOOGLE_OAUTH_CLIENT_ID } from '~/config/env';
 dayjs.locale('vi');
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 const AppProvider = ({ children }) => {
   return (
     <ConfigProvider

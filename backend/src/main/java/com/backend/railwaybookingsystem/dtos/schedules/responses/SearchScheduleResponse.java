@@ -10,7 +10,6 @@ import java.time.LocalTime;
 @Data
 @Builder
 public class SearchScheduleResponse {
-
     @JsonProperty("id")
     private Long scheduleId;
 

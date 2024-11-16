@@ -31,8 +31,8 @@ const HeaderV2 = () => {
   const navigate = useNavigate();
 
   return (
-    <AntHeader className="sticky top-0 z-50  bg-white border-b px-4 ">
-      <div className="flex items-center justify-between w-[90%] md:w-[90%] xl:w-[1128px] 2xl:w-[1128px] mx-auto">
+    <AntHeader className="sticky top-0 z-50  bg-white border-b px-4 shadow-sm">
+      <div className="flex items-center justify-between w-[90%] md:w-[90%] xl:w-[1228px] 2xl:w-[1228px] mx-auto">
         <Flex align="center" gap={40} className="flex-1">
           <Link to="/">
             <img src={logo} alt="logo" className="h-16 w-auto object-cover" />
