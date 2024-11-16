@@ -6,6 +6,7 @@ import { ScheduleItem } from '~/features/home/components/ScheduleItem';
 import { searchWithoutDiacritics } from '~/utils/searchWithoutDiacritics';
 import { SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import ScheduleBookingModal from '~/features/home/components/scheddule-booking-modal/ScheduleBookingModal';
 import { TripType } from '~/enums/trip-type';
 
 const HomeRoute = () => {
@@ -35,7 +36,6 @@ const SearchTrainForm = () => {
   const { data: stationsData, isLoading: isStationsLoading } = useStations();
   const [form] = Form.useForm();
   const tripType = Form.useWatch('trip_type', form);
-  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     if (
@@ -146,6 +146,7 @@ const SearchTrainForm = () => {
       >
         Tìm chuyến tàu
       </Button>
+      <ScheduleBookingModal />
     </Form>
   );
 };

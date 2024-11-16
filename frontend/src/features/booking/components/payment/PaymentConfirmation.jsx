@@ -1,16 +1,14 @@
 import { Button, Card, Checkbox, Col, Divider, Flex, Form, Input, List, message, Radio, Row } from 'antd';
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PAYMENT_METHOD_OPTIONS } from '~/config';
-import ScheduleDetailContext from '~/contexts/ScheduleDetailContext';
 import { convertToVnCurrency } from '~/utils/convert';
 import { usePlaceOrder } from '../../api/place-order';
-import { useParams } from 'react-router-dom';
 import lodash from 'lodash';
+import useBookingStore from '~/stores/booking-store';
 
 const PaymentConfirmation = () => {
-  const { id } = useParams();
-  const { departureStation, arrivalStation, selectedSeats, totalDistance, passengerInformation, prevStep } =
-    useContext(ScheduleDetailContext);
+  const { scheduleId, departureStation, arrivalStation, selectedSeats, totalDistance, passengerInformation, prevStep } =
+    useBookingStore();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const [isAcceptTerm, setIsAcceptTerm] = useState(false);
 
@@ -51,7 +49,7 @@ const PaymentConfirmation = () => {
       paymentMethod: selectedPaymentMethod,
       departureStation,
       arrivalStation,
-      scheduleId: parseInt(id),
+      scheduleId: parseInt(scheduleId),
     };
     placeOrderMutation.mutate({ data });
   };
