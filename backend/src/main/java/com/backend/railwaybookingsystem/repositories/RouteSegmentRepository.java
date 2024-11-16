@@ -10,6 +10,5 @@ import java.util.List;
 public interface RouteSegmentRepository extends JpaRepository<RouteSegment, Long> {
     @Transactional
     void deleteByTrainId(Long trainId);
-
     RouteSegment getRouteSegmentByTrainIdAndStationId(Long trainId, Long stationId);
 }

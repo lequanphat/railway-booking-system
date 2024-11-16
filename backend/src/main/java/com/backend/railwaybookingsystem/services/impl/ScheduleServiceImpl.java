@@ -4,14 +4,15 @@ import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRe
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
-import com.backend.railwaybookingsystem.mappers.RouteSegmentMapper;
 import com.backend.railwaybookingsystem.mappers.ScheduleMapper;
 import com.backend.railwaybookingsystem.models.Schedule;
 import com.backend.railwaybookingsystem.models.Train;
-import com.backend.railwaybookingsystem.repositories.RouteSegmentRepository;
 import com.backend.railwaybookingsystem.repositories.ScheduleRepository;
+import com.backend.railwaybookingsystem.repositories.StationRepository;
 import com.backend.railwaybookingsystem.repositories.TrainRepository;
+import com.backend.railwaybookingsystem.services.RouteSegmentService;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private TrainRepository trainRepository;
+
     @Autowired
-    private RouteSegmentRepository routeSegmentRepository;
+    private StationRepository stationRepository;
+
+    @Autowired
+    private RouteSegmentService routeSegmentService;
 
     @Override
     public List<GetScheduleByDateResponse> getSchedulesByDate(LocalDate date) {
@@ -66,23 +71,51 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<SearchScheduleResponse> searchSchedules(Long departureStation, Long arrivalStation, LocalDate departureDate) {
-        List<Schedule> schedules = scheduleRepository.searchSchedules(departureDate, departureStation, arrivalStation);
+    public SearchScheduleResponse searchSchedules(
+            Long departureStation,
+            Long arrivalStation,
+            LocalDate departureDate,
+            LocalDate returnDate,
+            TripType tripType
+    ) {
+        List<Schedule> departureSchedules = scheduleRepository.searchSchedules(departureDate, departureStation, arrivalStation);
+        var departureResponse = mapSchedulesToResponse(departureSchedules, departureStation, arrivalStation);
 
-        var response = schedules.stream().map(
-                schedule -> {
-                    var firstSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), departureStation);
-                    var lastSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), arrivalStation);
-                    return SearchScheduleResponse.builder()
-                            .scheduleId(schedule.getId())
-                            .trainId(schedule.getTrain().getId())
-                            .trainName(schedule.getTrain().getName())
-                            .departureSegment(RouteSegmentMapper.INSTANCE.toSearchScheduleResponseRouteSegmentDto(firstSegment))
-                            .arrivalSegment(RouteSegmentMapper.INSTANCE.toSearchScheduleResponseRouteSegmentDto(lastSegment))
-                            .build();
-                }
-        ).toList();
+        if (tripType == TripType.ONE_WAY) {
+            return buildSearchScheduleResponse(departureStation, arrivalStation, departureDate, returnDate, departureResponse, null, tripType);
+        }
 
-        return response;
+        List<Schedule> returnSchedules = scheduleRepository.searchSchedules(returnDate, arrivalStation, departureStation);
+        var returnResponse = mapSchedulesToResponse(returnSchedules, arrivalStation, departureStation);
+
+        return buildSearchScheduleResponse(departureStation, arrivalStation, departureDate, returnDate, departureResponse, returnResponse, tripType);
+    }
+
+    private List<SearchScheduleResponse.ScheduleDto> mapSchedulesToResponse(List<Schedule> schedules, Long departureStation, Long arrivalStation) {
+        return schedules.stream()
+                .map(schedule -> ScheduleMapper.INSTANCE.convertToSearchScheduleResponse(schedule, routeSegmentService, departureStation, arrivalStation))
+                .toList();
+    }
+
+    private SearchScheduleResponse buildSearchScheduleResponse(
+            Long departureStation,
+            Long arrivalStation,
+            LocalDate departureDate,
+            LocalDate returnDate,
+            List<SearchScheduleResponse.ScheduleDto> departureResponse,
+            List<SearchScheduleResponse.ScheduleDto> returnResponse,
+            TripType tripType
+    ) {
+        return ScheduleMapper.INSTANCE.convertToSearchScheduleResponseV2(
+                departureStation,
+                arrivalStation,
+                stationRepository.findById(departureStation).get().getName(),
+                stationRepository.findById(arrivalStation).get().getName(),
+                departureDate.toString(),
+                returnDate.toString(),
+                departureResponse,
+                returnResponse,
+                tripType.name()
+        );
     }
 }

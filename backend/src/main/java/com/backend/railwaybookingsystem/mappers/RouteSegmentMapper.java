@@ -32,5 +32,5 @@ public interface RouteSegmentMapper {
     @Mapping(source = "station.name", target = "stationName")
     @Mapping(source = "departure_time", target = "departureTime")
     @Mapping(source = "arrival_time", target = "arrivalTime")
-    SearchScheduleResponse.RouteSegmentDto toSearchScheduleResponseRouteSegmentDto(RouteSegment routeSegment);
+    SearchScheduleResponse.ScheduleDto.RouteSegmentDto toSearchScheduleResponseRouteSegmentDto(RouteSegment routeSegment);
 }

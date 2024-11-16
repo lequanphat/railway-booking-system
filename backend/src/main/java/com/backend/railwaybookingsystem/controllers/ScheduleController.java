@@ -47,7 +47,7 @@ public class ScheduleController {
     }
 
     @GetMapping("public/schedules/search")
-    public ResponseEntity<List<SearchScheduleResponse>> searchSchedules(
+    public ResponseEntity<SearchScheduleResponse> searchSchedules(
             @RequestParam Long departureStation,
             @RequestParam Long arrivalStation,
             @RequestParam LocalDate departureDate,
@@ -56,7 +56,7 @@ public class ScheduleController {
     ) {
         log.info("Searching schedules for departureStation: {}, arrivalStation: {}, departureDate: {}, returnDate: {}, tripType: {}",
                 departureStation, arrivalStation, departureDate, returnDate, tripType);
-        var schedules = scheduleService.searchSchedules(departureStation, arrivalStation, departureDate);
+        var schedules = scheduleService.searchSchedules(departureStation, arrivalStation, departureDate, returnDate, tripType);
         return ResponseEntity.ok(schedules);
     }
 }
