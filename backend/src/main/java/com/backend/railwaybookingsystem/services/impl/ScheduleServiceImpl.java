@@ -16,6 +16,7 @@ import com.backend.railwaybookingsystem.services.RouteSegmentService;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -71,6 +72,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Cacheable(value = "schedules", key = "T(String).valueOf(#departureStation) + T(String).valueOf(#arrivalStation) + T(String).valueOf(#departureDate) + T(String).valueOf(#returnDate) + T(String).valueOf(#tripType)")
     public SearchScheduleResponse searchSchedules(
             Long departureStation,
             Long arrivalStation,

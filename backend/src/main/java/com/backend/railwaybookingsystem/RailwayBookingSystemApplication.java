@@ -3,6 +3,7 @@ package com.backend.railwaybookingsystem;
 import com.backend.railwaybookingsystem.exceptions.ApiExceptionHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 @EnableAspectJAutoProxy
 @Import(ApiExceptionHandler.class)
+@EnableCaching
 public class RailwayBookingSystemApplication {
 
 	public static void main(String[] args) {

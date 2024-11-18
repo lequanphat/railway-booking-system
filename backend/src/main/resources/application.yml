@@ -15,9 +15,9 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # if you have problems with db, change to 'create' at the first time you run application
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-#    show-sql: true
+      ddl-auto: create-drop # if you have problems with db, change to 'create' at the first time you run application
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
     defer-datasource-initialization: true
   sql:
     init:
@@ -45,6 +45,12 @@ spring:
             client-secret: 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
             redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3001/api/oauth2/google/callback}"
             scope: openid, profile, email
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 10000
+
 
 
 
