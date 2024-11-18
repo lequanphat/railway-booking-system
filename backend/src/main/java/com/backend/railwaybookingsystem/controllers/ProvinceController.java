@@ -1,6 +1,8 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.province.requests.UpdateProvinceRequest;
+import com.backend.railwaybookingsystem.dtos.province.responses.GetAllProvinceResponse;
+import com.backend.railwaybookingsystem.mappers.ProvinceMapper;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import com.backend.railwaybookingsystem.dtos.province.requests.CreateProvinceRequest;
 import com.backend.railwaybookingsystem.models.Province;
@@ -27,13 +29,12 @@ public class ProvinceController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Province>> getAllProvinces() {
-        List<Province> provinces = provinceService.getAllProvinces();
-        return ResponseEntity.ok(
-                provinces.stream().filter(
-                        province -> province.getStations().size() > 0F
-                ).toList()
-        );
+    public ResponseEntity<List<GetAllProvinceResponse>> getAllProvinces() {
+        var provinces = provinceService.getAllProvinces()
+                .stream()
+                .filter(province -> province.getStations().size() > 0)
+                .toList();
+         return new ResponseEntity<>(provinces, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

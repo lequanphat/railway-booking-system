@@ -2,12 +2,14 @@ package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.province.requests.CreateProvinceRequest;
 import com.backend.railwaybookingsystem.dtos.province.requests.UpdateProvinceRequest;
+import com.backend.railwaybookingsystem.dtos.province.responses.GetAllProvinceResponse;
 import com.backend.railwaybookingsystem.exceptions.DuplicatedException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ProvinceMapper;
 import com.backend.railwaybookingsystem.models.Province;
 import com.backend.railwaybookingsystem.repositories.ProvinceRepository;
 import com.backend.railwaybookingsystem.services.ProvinceService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,9 @@ public class ProvinceServiceImpl implements ProvinceService {
     }
 
     @Override
-    public List<Province> getAllProvinces() {
-        return provinceRepository.findAll();
+    @Cacheable(value = "provinces")
+    public List<GetAllProvinceResponse> getAllProvinces() {
+        return ProvinceMapper.INSTANCE.toGetAllProvinceResponseList(provinceRepository.findAll());
     }
 
     @Override
