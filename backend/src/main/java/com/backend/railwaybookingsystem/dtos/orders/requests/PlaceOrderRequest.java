@@ -21,11 +21,19 @@ public class PlaceOrderRequest implements Serializable {
     Timestamp createdAt;
     List<TicketDto> tickets;
 
-    Long departureStation;
+    String type;
 
-    Long arrivalStation;
+    Long oneWayDepartureStation;
 
-    Long scheduleId;
+    Long oneWayArrivalStation;
+
+    Long roundTripDepartureStation;
+
+    Long roundTripArrivalStation;
+
+    Long oneWayScheduleId;
+
+    Long roundTripScheduleId;
 
     @Data
     public static class TicketDto implements Serializable {
@@ -43,6 +51,8 @@ public class PlaceOrderRequest implements Serializable {
         ScheduleDto schedule;
         SeatDto seat;
         CarriageDto carriage;
+
+        Long scheduleId;
 
         @Data
         public static class PersonTypeDto implements Serializable {

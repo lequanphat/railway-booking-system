@@ -5,4 +5,9 @@ const USER_ROLES = {
 
 const ROW_PER_PAGE = 8;
 
-export { USER_ROLES, ROW_PER_PAGE };
+const BOOKING_TYPE = {
+  ONE_WAY: 'ONE_WAY',
+  ROUND_TRIP: 'ROUND_TRIP',
+};
+
+export { USER_ROLES, ROW_PER_PAGE, BOOKING_TYPE };

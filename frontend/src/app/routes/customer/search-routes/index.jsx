@@ -8,9 +8,13 @@ import { useSearchSchedules } from '~/features/search-routes/api/search-schedule
 import { TripType } from '~/enums/trip-type';
 import EmptyRoutes from '~/features/search-routes/components/EmptyRoutes';
 import ReturnCard from '~/features/search-routes/components/ReturnCard';
+import { useEffect } from 'react';
+import useBookingStore from '~/stores/booking-store';
 
 const SearchPage = () => {
   const [params, setParams] = useSearchParams();
+
+  const { setBookingType } = useBookingStore();
 
   const {
     data,
@@ -28,6 +32,10 @@ const SearchPage = () => {
   });
 
   const { departure_schedules, return_schedules } = data;
+
+  useEffect(() => {
+    setBookingType(params.get('trip_type'));
+  }, [params, setBookingType]);
 
   return (
     <Space className="py-4 w-full" direction="vertical" size="middle">

@@ -4,7 +4,10 @@ import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
 
 const TicketInformation = () => {
-  const { totalDistance, selectedSeats } = useBookingStore();
+  const { getTotalDistance, getSelectedSeats } = useBookingStore();
+
+  const totalDistance = getTotalDistance();
+  const selectedSeats = getSelectedSeats();
 
   const totalPrice = useMemo(() => {
     return selectedSeats.reduce((acc, seat) => {

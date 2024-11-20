@@ -5,7 +5,7 @@ import PaymentConfirmation from '~/features/booking/components/payment/PaymentCo
 import useBookingStore from '~/stores/booking-store';
 
 const ScheduleDetailsPage = () => {
-  const { currentStep, routeSegments, departureRouteIndex, arrivalRouteIndex } = useBookingStore();
+  const { paymentStep } = useBookingStore();
 
   const steps = useMemo(
     () => [
@@ -37,10 +37,11 @@ const ScheduleDetailsPage = () => {
   return (
     <div>
       <h1 className="text-lg text-center font-semibold mt-6 text-primary">
-        {routeSegments?.[departureRouteIndex]?.station?.name} - {routeSegments?.[arrivalRouteIndex]?.station?.name}
+        {/* {routeSegments?.[departureRouteIndex]?.station?.name} - {routeSegments?.[arrivalRouteIndex]?.station?.name} */}
+        ABC - XYZ
       </h1>
-      <Steps current={currentStep} items={items} className="pt-6" />
-      <div className="py-6">{steps[currentStep].content}</div>
+      <Steps current={paymentStep} items={items} className="pt-6" />
+      <div className="py-6">{steps[paymentStep].content}</div>
     </div>
   );
 };

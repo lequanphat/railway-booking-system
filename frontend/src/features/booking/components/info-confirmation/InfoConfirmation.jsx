@@ -4,10 +4,11 @@ import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
 import { useGetAllPersonTypes } from '../../api/get-all-person-types';
 import { formatTicketsInformationData } from '../../utils/helpers';
+import { TripType } from '~/enums/trip-type';
 
 const InfoConfirmation = () => {
   const [form] = Form.useForm();
-  const { selectedSeats, totalDistance, nextStep, setPassengerInformation } = useBookingStore();
+  const { type, oneWay, roundTrip, nextPaymentStep, setTickets, setBillerInformation } = useBookingStore();
   const { data: personTypes } = useGetAllPersonTypes({});
 
   const OBJECT_TYPE_OPTIONS = personTypes?.map((item) => ({
@@ -19,7 +20,7 @@ const InfoConfirmation = () => {
     })),
   }));
 
-  const columns = useMemo(
+  const oneWayColumns = useMemo(
     () => [
       {
         title: '#',
@@ -33,13 +34,13 @@ const InfoConfirmation = () => {
           <Form
             form={form}
             initialValues={{
-              [`object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
+              [`oneWay_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
             }}
             name="advanced_search"
             onFinish={null}
           >
             <Form.Item
-              name={`fullName_${record?.id}-${record?.carriageId}`}
+              name={`oneWay__fullName_${record?.id}-${record?.carriageId}`}
               label="Họ tên"
               rules={[
                 {
@@ -51,7 +52,7 @@ const InfoConfirmation = () => {
               <Input placeholder="Nhập họ và tên..." />
             </Form.Item>
             <Form.Item
-              name={`object_${record?.id}-${record?.carriageId}`}
+              name={`oneWay_object_${record?.id}-${record?.carriageId}`}
               label="Đối tượng"
               rules={[
                 {
@@ -63,7 +64,7 @@ const InfoConfirmation = () => {
               <Select onChange={null} options={OBJECT_TYPE_OPTIONS} />
             </Form.Item>
             <Form.Item
-              name={`identity_${record?.id}-${record?.carriageId}`}
+              name={`oneWay_identity_${record?.id}-${record?.carriageId}`}
               label="Số CMND"
               rules={[
                 {
@@ -88,7 +89,7 @@ const InfoConfirmation = () => {
               <p>
                 Giá:{' '}
                 <span className="text-red-500">
-                  {convertToVnCurrency(record?.seatType?.original_price_per_km * totalDistance)}
+                  {convertToVnCurrency(record?.seatType?.original_price_per_km * oneWay.totalDistance)}
                 </span>
               </p>
             </div>
@@ -109,27 +110,132 @@ const InfoConfirmation = () => {
         render: (record) => {
           return (
             <span className="text-red-500 font-medium">
-              {convertToVnCurrency(record?.seatType?.original_price_per_km * totalDistance)}
+              {convertToVnCurrency(record?.seatType?.original_price_per_km * oneWay.totalDistance)}
             </span>
           );
         },
       },
     ],
-    [form, totalDistance, OBJECT_TYPE_OPTIONS],
+    [form, oneWay, OBJECT_TYPE_OPTIONS],
+  );
+
+  const roundTripColumns = useMemo(
+    () => [
+      {
+        title: '#',
+        key: 'index',
+        render: (text, record, index) => index + 1,
+      },
+      {
+        title: 'Thông tin khách hàng',
+        key: 'passenger',
+        render: (record) => (
+          <Form
+            form={form}
+            initialValues={{
+              [`roundTrip_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
+            }}
+            name="advanced_search"
+            onFinish={null}
+          >
+            <Form.Item
+              name={`roundTrip_fullName_${record?.id}-${record?.carriageId}`}
+              label="Họ tên"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập họ tên!',
+                },
+              ]}
+            >
+              <Input placeholder="Nhập họ và tên..." />
+            </Form.Item>
+            <Form.Item
+              name={`roundTrip_object_${record?.id}-${record?.carriageId}`}
+              label="Đối tượng"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng chọn đối tượng!',
+                },
+              ]}
+            >
+              <Select onChange={null} options={OBJECT_TYPE_OPTIONS} />
+            </Form.Item>
+            <Form.Item
+              name={`roundTrip_identity_${record?.id}-${record?.carriageId}`}
+              label="Số CMND"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập số CMND hoặc ngày sinh trẻ em!',
+                },
+              ]}
+            >
+              <Input placeholder="Nhập số CMND hoặc ngày sinh trẻ em..." />
+            </Form.Item>
+          </Form>
+        ),
+      },
+      {
+        title: 'Thông tin chỗ',
+        key: 'seat',
+        render: (record) => {
+          return (
+            <div>
+              <p>Ghế: {`[${record?.code}] - ${record?.seatType?.name} [${record?.position}]`}</p>
+              <p>Toa {`${record?.carriagePosition}: ${record?.carriageName}`}</p>
+              <p>
+                Giá:{' '}
+                <span className="text-red-500">
+                  {convertToVnCurrency(record?.seatType?.original_price_per_km * roundTrip.totalDistance)}
+                </span>
+              </p>
+            </div>
+          );
+        },
+      },
+      {
+        title: 'Khuyến mãi',
+        dataIndex: 'price',
+        key: 'price',
+        render: () => {
+          return <span>0%</span>;
+        },
+      },
+      {
+        title: 'Thành tiền',
+        key: 'seat',
+        render: (record) => {
+          return (
+            <span className="text-red-500 font-medium">
+              {convertToVnCurrency(record?.seatType?.original_price_per_km * roundTrip.totalDistance)}
+            </span>
+          );
+        },
+      },
+    ],
+    [form, roundTrip, OBJECT_TYPE_OPTIONS],
   );
 
   const handleNextStep = async () => {
     try {
       await form.validateFields().then((values) => {
-        const data = {
+        const billerInformation = {
           fullName: values.fullName,
           identity: values.identity,
           email: values.email,
           phoneNumber: values.phoneNumber,
-          tickets: formatTicketsInformationData(values),
         };
-        setPassengerInformation(data);
-        nextStep();
+
+        setBillerInformation(billerInformation);
+
+        setTickets({
+          oneWayTickets: formatTicketsInformationData(values, TripType.OneWay),
+          roundTripTickets: formatTicketsInformationData(values, TripType.RoundTrip),
+        });
+
+        nextPaymentStep();
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
@@ -150,9 +256,17 @@ const InfoConfirmation = () => {
           showIcon
         />
         <div className="py-4">
-          <h1 className="text-base font-medium mb-2 text-primary">Thông tin hành khách</h1>
-          <Table columns={columns} dataSource={selectedSeats} size="middle" pagination={false} />
+          <h1 className="text-base font-medium mb-2 text-primary">
+            {type === TripType.RoundTrip ? 'Thông tin chiều đi' : 'Thông tin khách  hàng'}
+          </h1>
+          <Table columns={oneWayColumns} dataSource={oneWay.selectedSeats} size="middle" pagination={false} />
         </div>
+        {type === TripType.RoundTrip && (
+          <div className="py-4">
+            <h1 className="text-base font-medium mb-2 text-primary">Thông tin chiều về</h1>
+            <Table columns={roundTripColumns} dataSource={roundTrip.selectedSeats} size="middle" pagination={false} />
+          </div>
+        )}
         <Divider />
         <div className="py-4">
           <h1 className="text-base font-medium mb-2 text-primary">Thông tin người đặt vé</h1>

@@ -53,14 +53,16 @@ public class OrderServiceImpl implements OrderService {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    @Override
-    public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
-        log.info("Order placing process started" + request.toString());
-        Schedule schedule = scheduleRepository.findById(request.getScheduleId()).orElse(null);
+    public Order onewayBookingHandler (PlaceOrderRequest request) {
+        log.info("Oneway Booking Handler");
+        Schedule schedule = scheduleRepository.findById(request.getOneWayScheduleId()).orElse(null);
+
         assert schedule != null;
 
-        RouteSegment departureRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), request.getDepartureStation());
-        RouteSegment arrivalRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(schedule.getTrain().getId(), request.getArrivalStation());
+        RouteSegment departureRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(
+                schedule.getTrain().getId(), request.getOneWayDepartureStation());
+        RouteSegment arrivalRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(
+                schedule.getTrain().getId(), request.getOneWayArrivalStation());
 
         assert departureRouteSegment != null;
         assert arrivalRouteSegment != null;
@@ -102,19 +104,122 @@ public class OrderServiceImpl implements OrderService {
 
         // Get the currently authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = "";
+        String userId = "";
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();
+            userId = userDetails.getUsername();
+            Optional<User> user = userRepository.findById(Long.parseLong(userId));
+            order.setUser(user.orElse(null));
         }
-        Optional<User> user = userRepository.findByEmail(email);
-
-        order.setUser(user.orElse(null));
         order.setTotalPrice(totalPrice);
-        Order savedOrder = orderRepository.save(order);
+        return orderRepository.save(order);
+    }
+
+    public Order roundTripBookingHandler (PlaceOrderRequest request) {
+        log.info("RoundTrip Booking Handler");
+
+        double discountPercentage = 0.1;
+
+        Schedule oneWaySchedule = scheduleRepository.findById(request.getOneWayScheduleId()).orElse(null);
+        assert oneWaySchedule != null;
+
+        Schedule roundTripSchedule = scheduleRepository.findById(request.getRoundTripScheduleId()).orElse(null);
+        assert roundTripSchedule != null;
+
+        RouteSegment oneWayDepartureRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(
+                oneWaySchedule.getTrain().getId(), request.getOneWayDepartureStation());
+        assert oneWayDepartureRouteSegment != null;
+
+        RouteSegment oneWayArrivalRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(
+                oneWaySchedule.getTrain().getId(), request.getOneWayArrivalStation());
+        assert oneWayArrivalRouteSegment != null;
+
+        RouteSegment roundTripDepartureRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(
+                roundTripSchedule.getTrain().getId(), request.getRoundTripDepartureStation());
+        assert roundTripDepartureRouteSegment != null;
+
+        RouteSegment roundTripArrivalRouteSegment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(
+                roundTripSchedule.getTrain().getId(), request.getRoundTripArrivalStation());
+        assert roundTripArrivalRouteSegment != null;
+
+        double oneWayTotalDistance = oneWayArrivalRouteSegment.getDistance() - oneWayDepartureRouteSegment.getDistance();
+        double roundTripTotalDistance = roundTripArrivalRouteSegment.getDistance() - roundTripDepartureRouteSegment.getDistance();
+
+        Order order = OrderMapper.INSTANCE.convertToOrder(request);
+        order.getTickets().clear();
+
+        double totalPrice = 0;
+
+        for(int i=0; i< request.getTickets().size(); i++){
+            PlaceOrderRequest.TicketDto ticketDto = request.getTickets().get(i);
+
+            PlaceOrderRequest.TicketDto.ScheduleDto scheduleDto = new PlaceOrderRequest.TicketDto.ScheduleDto();
+
+            if(Objects.equals(ticketDto.getScheduleId(), request.getOneWayScheduleId())){ // oneway tickets
+                scheduleDto.setId(oneWaySchedule.getId());
+
+                SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
+                SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(oneWaySchedule.getTrain().getId(), seatType.getId());
+
+                ticketDto.setSchedule(scheduleDto);
+                ticketDto.setDepartureStation(oneWayDepartureRouteSegment.getStation().getName());
+                ticketDto.setArrivalStation(oneWayArrivalRouteSegment.getStation().getName());
+                ticketDto.setDepartureTime(oneWayArrivalRouteSegment.getDeparture_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setArrivalTime(oneWayDepartureRouteSegment.getArrival_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * oneWayTotalDistance);
+                ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * oneWayTotalDistance* (1 - discountPercentage));
+
+            }else{ // roundTrip tickets
+                scheduleDto.setId(roundTripSchedule.getId());
+
+                SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
+                SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(oneWaySchedule.getTrain().getId(), seatType.getId());
+
+                ticketDto.setSchedule(scheduleDto);
+                ticketDto.setDepartureStation(oneWayDepartureRouteSegment.getStation().getName());
+                ticketDto.setArrivalStation(oneWayArrivalRouteSegment.getStation().getName());
+                ticketDto.setDepartureTime(oneWayArrivalRouteSegment.getDeparture_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setArrivalTime(oneWayDepartureRouteSegment.getArrival_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * roundTripTotalDistance);
+                ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * roundTripTotalDistance * (1 - discountPercentage));
+            }
+
+            Ticket findTicket = ticketRepository.findByScheduleIdAndCarriageIdAndSeatId(
+                    scheduleDto.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId());
+
+            if(findTicket != null){
+                log.error("Ticket already booked");
+                throw new BadRequestException("Ticket already booked");
+            }
+
+            Ticket ticket = TicketMapper.INSTANCE.convertToTicket(ticketDto);
+            ticket.setOrder(order);
+            order.getTickets().add(ticket);
+
+            totalPrice += ticket.getPrice();
+        }
+
+        // Get the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = "";
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            userId = userDetails.getUsername();
+            Optional<User> user = userRepository.findById(Long.parseLong(userId));
+            order.setUser(user.orElse(null));
+        }
+        order.setTotalPrice(totalPrice);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
+        log.info("Order placing process started");
+
+
+        Order savedOrder = request.getType().equals("ONE_WAY") ? onewayBookingHandler(request) : roundTripBookingHandler(request);
         log.info("Order placed successfully");
 
         PaymentContext paymentContext;
-        switch (order.getPaymentMethod()){
+        switch (savedOrder.getPaymentMethod()){
             case VNPAY -> paymentContext = new PaymentContext(new VNPayStrategy());
             case MOMO -> paymentContext = new PaymentContext(null);
             case ZALOPAY -> paymentContext = new PaymentContext(null);
@@ -125,6 +230,8 @@ public class OrderServiceImpl implements OrderService {
 
         return new PlaceOrderResponse(200, "Order placed successfully", paymentUrl);
     }
+
+
 
     @Override
     public String placeOrderCallback(Long orderId, String code){
