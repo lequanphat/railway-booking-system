@@ -20,6 +20,8 @@ const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
   const handleSelectSeat = (seat) => {
     if (seat.is_occupied) return;
 
+    console.log('selectedSeats', selectedSeats);
+
     if (selectedSeats.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
       setSelectedSeats(selectedSeats.filter((item) => item.carriageId !== seat.carriageId || item.id !== seat.id));
       return;

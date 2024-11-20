@@ -62,7 +62,9 @@ public class SecurityConfiguration {
 								"/v3/api-docs/**",
 								"/swagger-ui/**",
 								"/swagger-ui.html",
-								"/actuator/**")
+								"/actuator/**",
+								"/ws/**"
+						)
 						.permitAll()
 						.requestMatchers("/api/ad/**").hasAuthority("ADMIN")
 						.requestMatchers("/api/user/**").hasAuthority("USER")

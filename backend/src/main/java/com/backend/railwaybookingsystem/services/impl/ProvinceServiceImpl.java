@@ -42,6 +42,7 @@ public class ProvinceServiceImpl implements ProvinceService {
     }
 
     @Override
+    @Cacheable(value = "provinces", key = "#id")
     public Optional<Province> findById(Long id) {
         return provinceRepository.findById(id)
                 .map(Optional::of)

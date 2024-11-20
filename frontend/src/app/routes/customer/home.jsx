@@ -1,4 +1,5 @@
 import { Card } from 'antd';
+import WebSocketTest from '~/components/WebSocketTest';
 import PopularJouneys from '~/features/home/components/PopularJouneys';
 import SearchRoutesFormHomepage from '~/features/home/components/SearchRoutesFormHomepage';
 
@@ -9,9 +10,9 @@ const HomeRoute = () => {
         <SearchRoutesFormHomepage />
       </Card>
       <PopularJouneys />
+      <WebSocketTest />
     </div>
   );
 };
-
 
 export default HomeRoute;
