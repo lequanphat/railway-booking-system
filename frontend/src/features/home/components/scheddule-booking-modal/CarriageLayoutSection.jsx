@@ -5,7 +5,9 @@ import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
 
 const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
-  const { totalDistance, selectedSeats, setSelectedSeats } = useBookingStore();
+  const { getTotalDistance, getSelectedSeats, setSelectedSeats } = useBookingStore();
+  const totalDistance = getTotalDistance();
+  const selectedSeats = getSelectedSeats();
 
   const renderSeatColor = (seat) => {
     if (seat.is_occupied) {
@@ -19,8 +21,6 @@ const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
 
   const handleSelectSeat = (seat) => {
     if (seat.is_occupied) return;
-
-    console.log('selectedSeats', selectedSeats);
 
     if (selectedSeats.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
       setSelectedSeats(selectedSeats.filter((item) => item.carriageId !== seat.carriageId || item.id !== seat.id));

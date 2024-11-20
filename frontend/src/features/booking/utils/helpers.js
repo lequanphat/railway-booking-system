@@ -1,16 +1,27 @@
+import { TripType } from '~/enums/trip-type';
+
 const formatSeatCode = ({ layoutId, code, position }) => {
   return `L${layoutId}${code}${position}`;
 };
 
-const formatTicketsInformationData = (data) => {
+const formatTicketsInformationData = (data, type = TripType.OneWay) => {
+  const regex =
+    type === TripType.OneWay
+      ? /(oneWay_fullName|oneWay_object|oneWay_identity)_(\d+)-(\d+)/
+      : /(roundTrip_fullName|roundTrip_object|roundTrip_identity)_(\d+)-(\d+)/;
+
+  const objectField = type === TripType.OneWay ? 'oneWay_object' : 'roundTrip_object';
+
+  const removePrefix = (field) => field.replace(/^(oneWay_|roundTrip_)/, '');
+
   const result = Object.entries(data).reduce((acc, [key, value]) => {
-    const match = key.match(/(fullName|object|identity)_(\d+)-(\d+)/);
+    const match = key.match(regex);
     if (match) {
       const [, field, seatId, carriageId] = match;
+      const normalizedField = removePrefix(field); // Loại bỏ tiền tố
       const seatIndex = acc.findIndex(
         (obj) => obj.seat.id === Number(seatId) && obj.carriage.id === Number(carriageId),
       );
-      console.log('field', field);
 
       if (seatIndex === -1) {
         acc.push({
@@ -20,17 +31,16 @@ const formatTicketsInformationData = (data) => {
           carriage: {
             id: Number(carriageId),
           },
-          [field]: field === 'object' ? { id: value } : value,
+          [normalizedField]: field === objectField ? { id: value } : value,
         });
       } else {
-        if (field === 'object') acc[seatIndex][field] = { id: value };
-        else acc[seatIndex][field] = value;
+        if (field === objectField) acc[seatIndex][normalizedField] = { id: value };
+        else acc[seatIndex][normalizedField] = value;
       }
     }
     return acc;
   }, []);
 
-  console.log('result', result);
   return result;
 };
 

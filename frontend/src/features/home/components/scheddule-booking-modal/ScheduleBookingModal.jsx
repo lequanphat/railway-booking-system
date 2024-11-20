@@ -9,16 +9,20 @@ import {
 } from '~/features/booking/components/general/CarriageAbstractFrame';
 import TicketInformation from './TicketInformation';
 import { Link } from 'react-router-dom';
+import { TripType } from '~/enums/trip-type';
 
-const ScheduleBookingModal = ({ open, onCancel, scheduleId = 1, departureStation = 6, arrivalStation = 1 }) => {
+const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, arrivalStation }) => {
   const {
-    departureDate,
-    train,
-    totalDistance,
-    arrivalRouteIndex,
-    departureRouteIndex,
-    routeSegments,
+    type,
+    seatSelectionStep,
+    getTrain,
+    getTotalDistance,
+    getArrivalRouteIndex,
+    getDepartureRouteIndex,
+    getDepartureDate,
+    getRouteSegments,
     initBookingStore,
+    nextSeatSelectionStep,
   } = useBookingStore();
   const { data: scheduleDetails } = useGetScheduleDetails({ id: scheduleId, queryConfig: { enabled: !!scheduleId } });
 
@@ -71,6 +75,13 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId = 1, departureStation
     });
   }, [scheduleId, scheduleDetails, initBookingStore, departureStation, arrivalStation]);
 
+  const routeSegments = getRouteSegments();
+  const train = getTrain();
+  const totalDistance = getTotalDistance();
+  const arrivalRouteIndex = getArrivalRouteIndex();
+  const departureRouteIndex = getDepartureRouteIndex();
+  const departureDate = getDepartureDate();
+
   useEffect(() => {
     setSelectedCarriage(train?.carriages?.[0]?.id);
   }, [train]);
@@ -92,6 +103,14 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId = 1, departureStation
     [selectedCarriage, train],
   );
 
+  // handle next
+
+  const handleFinishSession = () => {
+    console.log('handleFinishSession');
+    nextSeatSelectionStep();
+    onCancel();
+  };
+
   return (
     <Modal
       title={
@@ -108,9 +127,15 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId = 1, departureStation
       width={1200}
       footer={
         <>
-          <Link to={'/booking'}>
-            <Button type="primary">Tiến đến thanh toán</Button>
-          </Link>
+          {type === TripType.OneWay || seatSelectionStep === 2 ? (
+            <Link to={'/booking'}>
+              <Button type="primary">Tiến đến thanh toán</Button>
+            </Link>
+          ) : (
+            <Button type="primary" onClick={handleFinishSession}>
+              Tiếp tục chọn chiều về
+            </Button>
+          )}
         </>
       }
     >

@@ -3,12 +3,10 @@ import { useMemo, useState } from 'react';
 import { PAYMENT_METHOD_OPTIONS } from '~/config';
 import { convertToVnCurrency } from '~/utils/convert';
 import { usePlaceOrder } from '../../api/place-order';
-import lodash from 'lodash';
 import useBookingStore from '~/stores/booking-store';
 
 const PaymentConfirmation = () => {
-  const { scheduleId, departureStation, arrivalStation, selectedSeats, totalDistance, passengerInformation, prevStep } =
-    useBookingStore();
+  const { type, billerInformation, oneWay, roundTrip, prevPaymentStep } = useBookingStore();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const [isAcceptTerm, setIsAcceptTerm] = useState(false);
 
@@ -24,32 +22,53 @@ const PaymentConfirmation = () => {
   });
 
   const totalPrice = useMemo(() => {
-    return selectedSeats.reduce((acc, seat) => {
-      return acc + seat.seatType.original_price_per_km * totalDistance;
-    }, 0);
-  }, [selectedSeats, totalDistance]);
+    return (
+      oneWay?.selectedSeats.reduce((acc, seat) => {
+        return acc + seat.seatType.original_price_per_km * oneWay?.totalDistance;
+      }, 0) +
+      roundTrip?.selectedSeats.reduce(
+        (acc, seat) => acc + seat.seatType.original_price_per_km * roundTrip?.totalDistance,
+        0,
+      )
+    );
+  }, [oneWay, roundTrip]);
 
   const handlePlaceOrder = () => {
     if (!isAcceptTerm) {
       message.warning('Vui lòng đồng ý với các điều khoản mua vé trước khi xác nhận đặt vé!');
       return;
     }
-    const formatTickets = passengerInformation?.tickets?.map((ticket) => {
-      const seat = selectedSeats.find((item) => item.id === ticket.seat.id);
+    const formatOnewayTickets = oneWay?.tickets?.map((ticket) => {
+      const seat = oneWay?.selectedSeats.find((item) => item.id === ticket.seat.id);
       return {
         ...ticket,
         seatType: `[${seat?.code}] - ${seat?.seatType?.name} [${seat?.position}]`,
         carriageType: `${seat?.carriagePosition}: ${seat?.carriageName}`,
+        scheduleId: oneWay?.scheduleId,
+      };
+    });
+
+    const formatRoundTripTickets = roundTrip?.tickets?.map((ticket) => {
+      const seat = roundTrip?.selectedSeats.find((item) => item.id === ticket.seat.id);
+      return {
+        ...ticket,
+        seatType: `[${seat?.code}] - ${seat?.seatType?.name} [${seat?.position}]`,
+        carriageType: `${seat?.carriagePosition}: ${seat?.carriageName}`,
+        scheduleId: roundTrip?.scheduleId,
       };
     });
 
     const data = {
-      ...lodash.omit(passengerInformation, 'tickets'),
-      tickets: formatTickets,
+      ...billerInformation,
+      type,
+      tickets: [...formatOnewayTickets, ...formatRoundTripTickets],
       paymentMethod: selectedPaymentMethod,
-      departureStation,
-      arrivalStation,
-      scheduleId: parseInt(scheduleId),
+      oneWayScheduleId: oneWay?.scheduleId,
+      roundTripScheduleId: roundTrip?.scheduleId,
+      oneWayDepartureStation: oneWay?.departureStation,
+      oneWayArrivalStation: oneWay?.arrivalStation,
+      roundTripDepartureStation: roundTrip?.departureStation,
+      roundTripArrivalStation: roundTrip?.arrivalStation,
     };
     placeOrderMutation.mutate({ data });
   };
@@ -62,7 +81,7 @@ const PaymentConfirmation = () => {
           <Form
             form={null}
             initialValues={{
-              ...passengerInformation,
+              ...billerInformation,
             }}
             name="advanced_search"
             className="pt-6"
@@ -70,22 +89,22 @@ const PaymentConfirmation = () => {
             <Row gutter={[48, 12]}>
               <Col span={12}>
                 <Form.Item name="fullName" label="Họ tên">
-                  <Input placeholder="Nhập họ và tên..." value={passengerInformation.fullName} readOnly />
+                  <Input placeholder="Nhập họ và tên..." value={billerInformation.fullName} readOnly />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item name="identity" label="Số CMND/Hộ chiếu">
-                  <Input placeholder="Nhập số CMND/ Hộ chiếu..." value={passengerInformation.identity} readOnly />
+                  <Input placeholder="Nhập số CMND/ Hộ chiếu..." value={billerInformation.identity} readOnly />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item name="email" label="Email">
-                  <Input placeholder="Nhập địa chỉ email..." value={passengerInformation.email} readOnly />
+                  <Input placeholder="Nhập địa chỉ email..." value={billerInformation.email} readOnly />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item name={'phoneNumber'} label={'Số điện thoại'}>
-                  <Input placeholder="Nhập số điện thoại..." value={passengerInformation.phoneNumber} readOnly />
+                  <Input placeholder="Nhập số điện thoại..." value={billerInformation.phoneNumber} readOnly />
                 </Form.Item>
               </Col>
             </Row>
@@ -139,7 +158,7 @@ const PaymentConfirmation = () => {
       </Card>
 
       <Flex align="center" justify="space-between" className="py-4">
-        <Button onClick={prevStep}>Quay lại</Button>
+        <Button onClick={prevPaymentStep}>Quay lại</Button>
         <Button type="primary" onClick={handlePlaceOrder} loading={placeOrderMutation.isPending}>
           Xác nhận đặt vé
         </Button>

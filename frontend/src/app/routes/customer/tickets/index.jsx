@@ -15,7 +15,6 @@ const TicketsPage = () => {
 
   const handleLookup = () => {
     const { phone } = form.getFieldsValue();
-    console.log(form.getFieldsValue());
     setKeyword(phone);
   };
 
