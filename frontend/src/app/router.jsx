@@ -239,6 +239,14 @@ const createAppRouter = () =>
             return { Component: OrderManagement.default };
           },
         },
+        //Station
+        {
+          path: 'schedules/stations',
+          lazy: async () => {
+            const OrderManagement = await import('./routes/admin/station');
+            return { Component: OrderManagement.default };
+          },
+        },
       ],
     },
     // Auth routes
