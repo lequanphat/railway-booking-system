@@ -4,6 +4,7 @@ import { convertToVnCurrency } from '~/utils/convert';
 import { useOrders } from '../api/get-orders';
 
 const expandColumns = [
+  { title: 'Mã vé', dataIndex: 'code', key: 'code' },
   {
     title: 'Hành khách',
     key: 'info',
@@ -23,7 +24,7 @@ const expandColumns = [
     render: ({ arrivalStation, departureStation, departureTime, arrivalTime }) => (
       <div>
         <p>
-          Tuyến: {arrivalStation} - {departureStation}
+          Tuyến: {departureStation} - {arrivalStation}
         </p>
         <p>
           Thời gian: {departureTime} - {arrivalTime}

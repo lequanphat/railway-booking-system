@@ -3,13 +3,9 @@ import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
 import dayjs from 'dayjs';
 import { calculateTravelTime } from '~/utils/calculateTravelTime';
-import ScheduleBookingModal from '~/features/home/components/scheddule-booking-modal/ScheduleBookingModal';
-import { useBoolean } from '~/hooks/useBoolean';
 const { Text } = Typography;
 
-export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segment }) => {
-  const { value: isModalOpen, setTrue: openModal, setFalse: closeModal } = useBoolean();
-
+export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, onChoose }) => {
   return (
     <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white">
       <Flex gap={10} vertical>
@@ -47,16 +43,9 @@ export const ScheduleItem = ({ id, train_name, arrival_segment, departure_segmen
         </Flex>
       </Flex>
       <div>
-        <Button variant="solid" color="primary" size="large" onClick={openModal}>
+        <Button variant="solid" color="primary" size="large" onClick={onChoose}>
           Chọn chỗ
         </Button>
-        <ScheduleBookingModal
-          open={isModalOpen}
-          scheduleId={id}
-          onCancel={closeModal}
-          departureStation={departure_segment.station_id}
-          arrivalStation={arrival_segment.station_id}
-        />
       </div>
     </Flex>
   );

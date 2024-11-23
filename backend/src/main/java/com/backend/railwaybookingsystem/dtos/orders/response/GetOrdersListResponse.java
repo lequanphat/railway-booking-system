@@ -48,6 +48,7 @@ public class GetOrdersListResponse implements Serializable {
     @Value
     public static class TicketDto implements Serializable {
         Long id;
+        String code;
         String seatType;
         String carriageType;
         double originalPrice;

@@ -10,10 +10,10 @@ const CarriageAbstractPattern = ({ name, position, isSelected, ...others }) => {
         <div
           className={`${isSelected ? 'bg-[#a6b727]' : 'bg-[#80b5d6]'} w-max rounded-md px-1 py-[0.4] cursor-pointer`}
         >
-          <img src={carriageFrame} alt="" className="w-[42px]" />
+          <img src={carriageFrame} alt="" className="w-[52px]" />
         </div>
       </Tooltip>
-      <p className="text-xs">{position}</p>
+      <p className="text-xs font-medium">{position}</p>
     </Flex>
   );
 };
@@ -22,9 +22,9 @@ const TrainHeadAbstractPattern = ({ name }) => {
   return (
     <Flex vertical align="center" gap={4}>
       <div className="w-max">
-        <img src={trainHeadFrame} alt="" className="w-[48px]" />
+        <img src={trainHeadFrame} alt="" className="w-[60px]" />
       </div>
-      <p className="text-xs">{name}</p>
+      <p className="text-xs font-medium">{name}</p>
     </Flex>
   );
 };

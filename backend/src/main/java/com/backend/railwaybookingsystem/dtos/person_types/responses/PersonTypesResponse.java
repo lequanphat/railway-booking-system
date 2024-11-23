@@ -12,6 +12,7 @@ import java.util.List;
 public class PersonTypesResponse implements Serializable {
     Long id;
     String name;
+    String description;
     double percentage;
     List<PersonTypeDto> children;
 

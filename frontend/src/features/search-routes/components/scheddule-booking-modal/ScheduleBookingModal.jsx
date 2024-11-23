@@ -11,8 +11,10 @@ import TicketInformation from './TicketInformation';
 import { Link } from 'react-router-dom';
 import { TripType } from '~/enums/trip-type';
 
-const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, arrivalStation }) => {
+const ScheduleBookingModal = ({ open, onCancel }) => {
   const {
+    oneWay,
+    roundTrip,
     type,
     seatSelectionStep,
     getTrain,
@@ -23,8 +25,15 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
     getRouteSegments,
     initBookingStore,
     nextSeatSelectionStep,
+    resetSelectedSeats,
   } = useBookingStore();
-  const { data: scheduleDetails } = useGetScheduleDetails({ id: scheduleId, queryConfig: { enabled: !!scheduleId } });
+
+  const { scheduleId, departureStation, arrivalStation } = seatSelectionStep === 1 ? oneWay : roundTrip;
+
+  const { data: scheduleDetails } = useGetScheduleDetails({
+    id: scheduleId,
+    queryConfig: { enabled: !!scheduleId && open },
+  });
 
   const [selectedCarriage, setSelectedCarriage] = useState(null);
 
@@ -37,6 +46,7 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
       (route) => route.station.id === parseInt(arrivalStation),
     );
 
+    // format train data
     const formatTrainData = {
       ...scheduleDetails?.train,
       carriages: scheduleDetails?.train?.carriages?.map((carriage) => ({
@@ -63,17 +73,14 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
       scheduleDetails?.train?.routeSegments?.[arrivalRouteIndex]?.distance -
       scheduleDetails?.train?.routeSegments?.[departureRouteIndex]?.distance;
     initBookingStore({
-      scheduleId,
       train: formatTrainData,
       totalDistance,
-      departureStation,
-      arrivalStation,
       arrivalRouteIndex,
       departureRouteIndex,
       routeSegments: scheduleDetails?.train?.routeSegments,
       departureDate: scheduleDetails?.departureDate,
     });
-  }, [scheduleId, scheduleDetails, initBookingStore, departureStation, arrivalStation]);
+  }, [scheduleDetails, initBookingStore, departureStation, arrivalStation]);
 
   const routeSegments = getRouteSegments();
   const train = getTrain();
@@ -106,8 +113,14 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
   // handle next
 
   const handleFinishSession = () => {
-    console.log('handleFinishSession');
+    console.log('__on_finish_session');
     nextSeatSelectionStep();
+    onCancel();
+  };
+
+  const handleCloseModal = () => {
+    console.log('__on_close_modal');
+    resetSelectedSeats();
     onCancel();
   };
 
@@ -123,8 +136,13 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
       centered
       open={open}
       onOk={null}
-      onCancel={onCancel}
+      onCancel={handleCloseModal}
       width={1200}
+      styles={{
+        body: {
+          minHeight: '75vh',
+        },
+      }}
       footer={
         <>
           {type === TripType.OneWay || seatSelectionStep === 2 ? (
@@ -140,7 +158,7 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
       }
     >
       <Row gutter={[16, 16]} className="py-4">
-        <Col span={16}>
+        <Col xs={24} sm={24} md={16}>
           <Flex vertical gap={16}>
             <Card vertical>
               <Flex gap={4} justify="center">
@@ -164,7 +182,7 @@ const ScheduleBookingModal = ({ open, onCancel, scheduleId, departureStation, ar
             />
           </Flex>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={24} md={8}>
           <TicketInformation />
         </Col>
       </Row>

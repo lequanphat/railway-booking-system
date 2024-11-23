@@ -1,4 +1,4 @@
-import { Card, Col, Divider, Empty, Flex, Row } from 'antd';
+import { Card, Col, Divider, Empty, Flex, Row, Space } from 'antd';
 import { useMemo } from 'react';
 import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
@@ -15,6 +15,7 @@ const TicketInformation = () => {
     }, 0);
   }, [selectedSeats, totalDistance]);
 
+  console.log('selectedSeats', selectedSeats);
   return (
     <Card title="Thông tin đặt vé">
       <Flex vertical gap={12} className="pt-2 text-[16px] max-h-[350px] overflow-y-auto overflow-x-hidden">
@@ -23,7 +24,7 @@ const TicketInformation = () => {
             {selectedSeats.map((seat) => (
               <Col span={24} className="mt-2" key={seat.id}>
                 <ChildTicketItem
-                  code={seat.code}
+                  position={seat?.position}
                   price={seat?.seatType?.original_price_per_km * totalDistance}
                   seatName={seat?.seatType?.name}
                   carriageName={`${seat?.carriagePosition}: ${seat?.carriageName}`}
@@ -46,17 +47,20 @@ const TicketInformation = () => {
   );
 };
 
-export const ChildTicketItem = ({ code, price, carriageName, seatName }) => {
+export const ChildTicketItem = ({ position, price, carriageName, seatName }) => {
   return (
-    <Flex vertical className="border border-primary p-2 rounded-md relative overflow-hidden">
+    <div className="border border-primary p-3 rounded-md relative overflow-hidden w-full">
       <div className="absolute top-0 left-0 border-[8px] border-l-primary border-t-primary border-r-transparent border-b-transparent "></div>
-      <Flex justify="space-between" className="w-full">
-        <h1 className="text-base font-normal">{code}</h1>
-        <p className="text-xs font-medium text-red-500">{convertToVnCurrency(price)}</p>
+      <Flex style={{ width: '100%' }} justify="space-between" className="w-full">
+        <Space direction="vertical">
+          <p className="text-xs">
+            Loại: {seatName} [{position}]
+          </p>
+          <p className="text-xs">Toa: {carriageName}</p>
+        </Space>
+        <p className="text-end text-xs font-medium text-red-500">{convertToVnCurrency(price)}</p>
       </Flex>
-      <p className="text-xs">Loại: {seatName}</p>
-      <p className="text-xs">Toa: {carriageName}</p>
-    </Flex>
+    </div>
   );
 };
 

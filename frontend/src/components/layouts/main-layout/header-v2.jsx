@@ -2,33 +2,38 @@ import { Button, Flex, Layout, Menu } from 'antd';
 import logo from '~/assets/logo-dsvn.png';
 import { UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 const { Header: AntHeader } = Layout;
 
 const items = [
   {
-    key: '1',
+    key: 'HOME',
     label: 'Trang chủ',
     url: '/',
   },
   {
-    key: '2',
+    key: 'SCHEDULE',
     label: 'Lịch trình',
-    url: '/quiz',
+    url: '/search',
   },
   {
-    key: '3',
+    key: 'TICKETS',
     label: 'Vé tàu',
-    url: '/activities',
+    url: '/tickets',
   },
   {
-    key: '4',
-    label: 'Tra cứu',
-    url: '/activities',
+    key: 'ORDERS',
+    label: 'Hóa đơn',
+    url: '/orders',
   },
 ];
 
 const HeaderV2 = () => {
   const navigate = useNavigate();
+
+  const onClick = (e) => {
+    navigate(items.find((item) => item.key === e.key).url);
+  };
 
   return (
     <AntHeader className="sticky top-0 z-50  bg-white border-b px-4 shadow-sm">
@@ -38,6 +43,7 @@ const HeaderV2 = () => {
             <img src={logo} alt="logo" className="h-16 w-auto object-cover" />
           </Link>
           <Menu
+            onClick={onClick}
             rootClassName="header-main-layout"
             theme="light"
             mode="horizontal"

@@ -35,6 +35,7 @@ const InfoConfirmation = () => {
             form={form}
             initialValues={{
               [`oneWay_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
+              [`roundTrip_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
             }}
             name="advanced_search"
             onFinish={null}
@@ -84,7 +85,7 @@ const InfoConfirmation = () => {
         render: (record) => {
           return (
             <div>
-              <p>Ghế: {`[${record?.code}] - ${record?.seatType?.name} [${record?.position}]`}</p>
+              <p>Ghế: {`${record?.seatType?.name} [${record?.position}]`}</p>
               <p>Toa {`${record?.carriagePosition}: ${record?.carriageName}`}</p>
               <p>
                 Giá:{' '}
@@ -133,6 +134,7 @@ const InfoConfirmation = () => {
           <Form
             form={form}
             initialValues={{
+              [`oneWay_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
               [`roundTrip_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
             }}
             name="advanced_search"
@@ -183,7 +185,7 @@ const InfoConfirmation = () => {
         render: (record) => {
           return (
             <div>
-              <p>Ghế: {`[${record?.code}] - ${record?.seatType?.name} [${record?.position}]`}</p>
+              <p>Ghế: {`${record?.seatType?.name} [${record?.position}]`}</p>
               <p>Toa {`${record?.carriagePosition}: ${record?.carriageName}`}</p>
               <p>
                 Giá:{' '}

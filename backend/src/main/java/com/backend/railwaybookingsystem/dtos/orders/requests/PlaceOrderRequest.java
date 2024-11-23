@@ -18,7 +18,6 @@ public class PlaceOrderRequest implements Serializable {
     double totalPrice;
     OrderStatus status;
     PaymentMethod paymentMethod;
-    Timestamp createdAt;
     List<TicketDto> tickets;
 
     String type;
@@ -37,6 +36,7 @@ public class PlaceOrderRequest implements Serializable {
 
     @Data
     public static class TicketDto implements Serializable {
+        String code;
         String seatType;
         String carriageType;
         double originalPrice;

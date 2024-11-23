@@ -23,7 +23,7 @@ const expandColumns = [
     render: ({ arrivalStation, departureStation, departureTime, arrivalTime }) => (
       <div>
         <p>
-          Tuyến: {arrivalStation} - {departureStation}
+          Tuyến: {departureStation} - {arrivalStation}
         </p>
         <p>
           Thời gian: {departureTime} - {arrivalTime}
@@ -96,8 +96,9 @@ const columns = [
 
   {
     title: 'Date',
+    dataIndex: 'createdAt',
     key: 'createdAt',
-    render: ({ createdAt }) => <p>{dayjs(createdAt).format('HH:mm:ss DD/MM/YYYY')}</p>,
+    render: (createdAt) => <p>{dayjs(createdAt).format('HH:mm:ss DD/MM/YYYY')}</p>,
   },
 ];
 const MyOrdersTable = () => {

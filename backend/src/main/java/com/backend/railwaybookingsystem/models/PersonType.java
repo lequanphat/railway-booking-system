@@ -20,6 +20,8 @@ public class PersonType {
 
     private String name;
 
+    private String description;
+
     private double percentage;
 
     @ManyToOne

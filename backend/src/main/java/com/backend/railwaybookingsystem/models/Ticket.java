@@ -16,6 +16,9 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "code")
+    private String code;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
@@ -34,8 +37,6 @@ public class Ticket {
 
     @Column(name = "full_name")
     private String fullName;
-
-
 
     @Column(name="identity")
     private String identity;

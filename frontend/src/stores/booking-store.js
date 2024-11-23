@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { TripType } from '~/enums/trip-type';
 
 const useBookingStore = create((set, get) => ({
+  // app state
+  isOpenBookingModal: false,
   // booking data
   type: TripType.OneWay,
   oneWay: {
@@ -44,33 +46,45 @@ const useBookingStore = create((set, get) => ({
   seatSelectionStep: 1,
 
   // actions
+  openBookingModal: ({ scheduleId, departureStation, arrivalStation }) =>
+    set((state) => {
+      if (state.seatSelectionStep === 1) {
+        return {
+          isOpenBookingModal: true,
+          oneWay: {
+            ...state.oneWay,
+            scheduleId,
+            departureStation,
+            arrivalStation,
+          },
+        };
+      }
+      return {
+        isOpenBookingModal: true,
+        roundTrip: {
+          ...state.roundTrip,
+          scheduleId,
+          departureStation,
+          arrivalStation,
+        },
+      };
+    }),
+
+  closeBookingModal: () => set({ isOpenBookingModal: false }),
   setBookingType: (type) => set({ type }),
   nextPaymentStep: () => set((state) => ({ paymentStep: state.paymentStep + 1 })),
   prevPaymentStep: () => set((state) => ({ paymentStep: state.paymentStep - 1 })),
   nextSeatSelectionStep: () => set((state) => ({ seatSelectionStep: state.seatSelectionStep + 1 })),
   prevSeatSelectionStep: () => set((state) => ({ seatSelectionStep: state.seatSelectionStep - 1 })),
-  initBookingStore: ({
-    scheduleId,
-    train,
-    totalDistance,
-    arrivalRouteIndex,
-    departureRouteIndex,
-    routeSegments,
-    departureDate,
-    departureStation,
-    arrivalStation,
-  }) =>
+  initBookingStore: ({ train, totalDistance, arrivalRouteIndex, departureRouteIndex, routeSegments, departureDate }) =>
     set((state) => {
       if (state.seatSelectionStep === 1) {
         // handle oneway
         return {
           oneWay: {
             ...state.oneWay,
-            scheduleId,
             train,
             totalDistance,
-            departureStation,
-            arrivalStation,
             arrivalRouteIndex,
             departureRouteIndex,
             departureDate,
@@ -82,11 +96,8 @@ const useBookingStore = create((set, get) => ({
       return {
         roundTrip: {
           ...state.roundTrip,
-          scheduleId,
           train,
           totalDistance,
-          departureStation,
-          arrivalStation,
           arrivalRouteIndex,
           departureRouteIndex,
           departureDate,
@@ -109,6 +120,24 @@ const useBookingStore = create((set, get) => ({
         roundTrip: {
           ...state.roundTrip,
           selectedSeats,
+        },
+      };
+    }),
+
+  resetSelectedSeats: () =>
+    set((state) => {
+      if (state.seatSelectionStep === 1) {
+        return {
+          oneWay: {
+            ...state.oneWay,
+            selectedSeats: [],
+          },
+        };
+      }
+      return {
+        roundTrip: {
+          ...state.roundTrip,
+          selectedSeats: [],
         },
       };
     }),
@@ -165,7 +194,7 @@ const useBookingStore = create((set, get) => ({
   },
   getDepartureDate: () => {
     const state = get();
-    return state.seatSelectionStep === 1 ? state.oneWay.departureDate : state.roundTrip.departure;
+    return state.seatSelectionStep === 1 ? state.oneWay.departureDate : state.roundTrip.departureDate;
   },
 
   getSelectedSeats: () => {
