@@ -34,18 +34,17 @@ public class TicketServiceImpl implements TicketService {
 
         // Get the currently authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = "";
+
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();
+            Long userId = Long.parseLong(userDetails.getUsername());
+            Optional<User> user = userRepository.findById(userId);
+            Page<MyTicketResponse> tickets = ticketRepository.findTicketByOrderUserId(user.get().getId(), pageRequest)
+                    .map(TicketMapper.INSTANCE::convertToMyTicketResponse);
+
+            return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());
         }
-        Optional<User> user = userRepository.findByEmail(email);
+        return null;
 
-        assert user.isPresent();
-
-        Page<MyTicketResponse> tickets = ticketRepository.findTicketByOrderUserId(user.get().getId(), pageRequest)
-                .map(TicketMapper.INSTANCE::convertToMyTicketResponse);
-
-        return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());
     }
 
 }

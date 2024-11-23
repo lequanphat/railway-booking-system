@@ -1,22 +1,23 @@
 import { Card, Col, Flex, Row, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
-import { formatSeatCode } from '~/features/booking/utils/helpers';
+import SeatIcon from '~/components/icons/SeatIcon';
+import { SEAT_TYPE } from '~/config/constants';
 import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
 
-const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
+const CarriageLayoutSection = ({ name, row_count, floors, seats = [] }) => {
   const { getTotalDistance, getSelectedSeats, setSelectedSeats } = useBookingStore();
   const totalDistance = getTotalDistance();
   const selectedSeats = getSelectedSeats();
 
-  const renderSeatColor = (seat) => {
+  const renderSeatType = (seat) => {
     if (seat.is_occupied) {
-      return 'bg-gray-300';
+      return SEAT_TYPE.UNAVAILABLE;
     }
     if (selectedSeats.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
-      return 'bg-primary text-white';
+      return SEAT_TYPE.SELECTED;
     }
-    return '';
+    return SEAT_TYPE.AVAILABLE;
   };
 
   const handleSelectSeat = (seat) => {
@@ -27,20 +28,14 @@ const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
       return;
     }
 
-    setSelectedSeats([
-      ...selectedSeats,
-      {
-        ...seat,
-        code: formatSeatCode({ layoutId: id, code: seat?.seatType?.code, position: seat?.position }),
-      },
-    ]);
+    setSelectedSeats([...selectedSeats, seat]);
   };
 
   return (
     <Card>
       <Flex vertical align="center" gap={18}>
         <h1 className="text-base font-semibold">{name}</h1>
-        <Row gutter={[10, 10]}>
+        <Row gutter={[10, 10]} className="w-[440px]">
           {seats?.map((seat) => (
             <Col key={seat.id} span={24 / (floors * row_count)}>
               <Flex vertical align="center">
@@ -58,21 +53,17 @@ const CarriageLayoutSection = ({ id, name, row_count, floors, seats = [] }) => {
                     </Flex>
                   }
                 >
-                  <Flex
-                    vertical
-                    align="center"
-                    className={`${renderSeatColor(
-                      seat,
-                    )} w-[80px] h-[60px] border border-[#ccc] p-2 rounded-md cursor-pointer`}
+                  <div
+                    className="relative cursor-pointer"
                     onClick={() => {
                       handleSelectSeat(seat);
                     }}
                   >
-                    <h1 className="font-semibold text-base">{seat?.position}</h1>
-                    <p className="text-xs">
-                      {formatSeatCode({ layoutId: id, code: seat?.seatType?.code, position: seat?.position })}
-                    </p>
-                  </Flex>
+                    <SeatIcon type={renderSeatType(seat)} />
+                    <h1 className="absolute top-[20%] left-[50%] translate-x-[-50%] text-base font-semibold text-white">
+                      {seat?.position}
+                    </h1>
+                  </div>
                 </Tooltip>
               </Flex>
             </Col>

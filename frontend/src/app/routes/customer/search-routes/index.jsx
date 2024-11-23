@@ -10,8 +10,10 @@ import EmptyRoutes from '~/features/search-routes/components/EmptyRoutes';
 import ReturnCard from '~/features/search-routes/components/ReturnCard';
 import { useEffect } from 'react';
 import useBookingStore from '~/stores/booking-store';
+import ScheduleBookingModal from '~/features/search-routes/components/scheddule-booking-modal/ScheduleBookingModal';
 
 const SearchPage = () => {
+  const { isOpenBookingModal, closeBookingModal, openBookingModal } = useBookingStore();
   const [params, setParams] = useSearchParams();
 
   const { setBookingType } = useBookingStore();
@@ -37,6 +39,10 @@ const SearchPage = () => {
     setBookingType(params.get('trip_type'));
   }, [params, setBookingType]);
 
+  const handleOpenBookingModal = (scheduleId, departureStation, arrivalStation) => {
+    openBookingModal({ scheduleId, departureStation, arrivalStation });
+  };
+
   return (
     <Space className="py-4 w-full" direction="vertical" size="middle">
       <Breadcrumb
@@ -61,7 +67,19 @@ const SearchPage = () => {
           <Space direction="vertical" className="w-full mt-4" size="middle">
             {!isRefetching ? (
               departure_schedules && departure_schedules.length > 0 ? (
-                departure_schedules.map((schedule) => <ScheduleItem key={schedule.id} {...schedule} />)
+                departure_schedules.map((schedule) => (
+                  <ScheduleItem
+                    key={schedule.id}
+                    {...schedule}
+                    onChoose={() => {
+                      handleOpenBookingModal(
+                        schedule.id,
+                        schedule.departure_segment.station_id,
+                        schedule.arrival_segment.station_id,
+                      );
+                    }}
+                  />
+                ))
               ) : (
                 <EmptyRoutes />
               )
@@ -84,6 +102,7 @@ const SearchPage = () => {
           </Col>
         )}
       </Row>
+      <ScheduleBookingModal open={isOpenBookingModal} onCancel={closeBookingModal} />
     </Space>
   );
 };

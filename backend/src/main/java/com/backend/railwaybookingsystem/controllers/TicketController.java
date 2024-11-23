@@ -17,7 +17,7 @@ public class TicketController {
     private TicketService ticketService;
 
     @GetMapping("user/tickets/me")
-    @Operation(tags = "Orders", description = "Get my orders")
+    @Operation(tags = "Tickets", description = "Get my tickets")
     public ResponseEntity<CustomPagination<MyTicketResponse>> getMyOrders(@RequestParam(defaultValue = "1") int page,
                                                                           @RequestParam(defaultValue = "10") int size,
                                                                           @RequestParam(defaultValue = "") String keyword

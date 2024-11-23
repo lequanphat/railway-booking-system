@@ -42,7 +42,7 @@ const PaymentConfirmation = () => {
       const seat = oneWay?.selectedSeats.find((item) => item.id === ticket.seat.id);
       return {
         ...ticket,
-        seatType: `[${seat?.code}] - ${seat?.seatType?.name} [${seat?.position}]`,
+        seatType: `${seat?.seatType?.name} [${seat?.position}]`,
         carriageType: `${seat?.carriagePosition}: ${seat?.carriageName}`,
         scheduleId: oneWay?.scheduleId,
       };
@@ -52,7 +52,7 @@ const PaymentConfirmation = () => {
       const seat = roundTrip?.selectedSeats.find((item) => item.id === ticket.seat.id);
       return {
         ...ticket,
-        seatType: `[${seat?.code}] - ${seat?.seatType?.name} [${seat?.position}]`,
+        seatType: `${seat?.seatType?.name} [${seat?.position}]`,
         carriageType: `${seat?.carriagePosition}: ${seat?.carriageName}`,
         scheduleId: roundTrip?.scheduleId,
       };

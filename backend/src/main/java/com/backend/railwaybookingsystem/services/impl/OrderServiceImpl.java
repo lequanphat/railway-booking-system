@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -50,8 +51,16 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PersonTypeRepository personTypeRepository;
+
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter dateCodeFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+
+    public String generateTicketCode(Long scheduleId, Long carriageId, Long seatId, String dateFormatted){
+        return String.valueOf(scheduleId) + String.valueOf(carriageId) + String.valueOf(seatId) + dateFormatted;
+    }
 
     public Order onewayBookingHandler (PlaceOrderRequest request) {
         log.info("Oneway Booking Handler");
@@ -85,15 +94,21 @@ public class OrderServiceImpl implements OrderService {
                 throw new BadRequestException("Ticket already booked");
             }
 
+            // generate ticket code
+            String ticketCode = generateTicketCode(schedule.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId(), schedule.getDepartureDate().format(dateCodeFormatter));
+            ticketDto.setCode(ticketCode);
+
+            PersonType personType = personTypeRepository.findById(ticketDto.getObject().getId()).orElse(null);
             SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
             SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(schedule.getTrain().getId(), seatType.getId());
             ticketDto.setSchedule(scheduleDto);
             ticketDto.setDepartureStation(departureRouteSegment.getStation().getName());
             ticketDto.setArrivalStation(arrivalRouteSegment.getStation().getName());
-            ticketDto.setDepartureTime(arrivalRouteSegment.getDeparture_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
-            ticketDto.setArrivalTime(departureRouteSegment.getArrival_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
+            ticketDto.setDepartureTime(departureRouteSegment.getDeparture_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
+            ticketDto.setArrivalTime(arrivalRouteSegment.getArrival_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
             ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * totalDistance);
-            ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * totalDistance);
+
+            ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * totalDistance * (1 - personType.getPercentage()));
 
             Ticket ticket = TicketMapper.INSTANCE.convertToTicket(ticketDto);
             ticket.setOrder(order);
@@ -111,13 +126,12 @@ public class OrderServiceImpl implements OrderService {
             order.setUser(user.orElse(null));
         }
         order.setTotalPrice(totalPrice);
+        order.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return orderRepository.save(order);
     }
 
     public Order roundTripBookingHandler (PlaceOrderRequest request) {
         log.info("RoundTrip Booking Handler");
-
-        double discountPercentage = 0.1;
 
         Schedule oneWaySchedule = scheduleRepository.findById(request.getOneWayScheduleId()).orElse(null);
         assert oneWaySchedule != null;
@@ -141,8 +155,7 @@ public class OrderServiceImpl implements OrderService {
                 roundTripSchedule.getTrain().getId(), request.getRoundTripArrivalStation());
         assert roundTripArrivalRouteSegment != null;
 
-        double oneWayTotalDistance = oneWayArrivalRouteSegment.getDistance() - oneWayDepartureRouteSegment.getDistance();
-        double roundTripTotalDistance = roundTripArrivalRouteSegment.getDistance() - roundTripDepartureRouteSegment.getDistance();
+        double totalDistance = oneWayArrivalRouteSegment.getDistance() - oneWayDepartureRouteSegment.getDistance();
 
         Order order = OrderMapper.INSTANCE.convertToOrder(request);
         order.getTickets().clear();
@@ -154,8 +167,14 @@ public class OrderServiceImpl implements OrderService {
 
             PlaceOrderRequest.TicketDto.ScheduleDto scheduleDto = new PlaceOrderRequest.TicketDto.ScheduleDto();
 
+            PersonType personType = personTypeRepository.findById(ticketDto.getObject().getId()).orElse(null);
+
             if(Objects.equals(ticketDto.getScheduleId(), request.getOneWayScheduleId())){ // oneway tickets
                 scheduleDto.setId(oneWaySchedule.getId());
+
+                // generate ticket code
+                String ticketCode = generateTicketCode(oneWaySchedule.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId(), oneWaySchedule.getDepartureDate().format(dateCodeFormatter));
+                ticketDto.setCode(ticketCode);
 
                 SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
                 SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(oneWaySchedule.getTrain().getId(), seatType.getId());
@@ -163,24 +182,40 @@ public class OrderServiceImpl implements OrderService {
                 ticketDto.setSchedule(scheduleDto);
                 ticketDto.setDepartureStation(oneWayDepartureRouteSegment.getStation().getName());
                 ticketDto.setArrivalStation(oneWayArrivalRouteSegment.getStation().getName());
-                ticketDto.setDepartureTime(oneWayArrivalRouteSegment.getDeparture_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
-                ticketDto.setArrivalTime(oneWayDepartureRouteSegment.getArrival_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
-                ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * oneWayTotalDistance);
-                ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * oneWayTotalDistance* (1 - discountPercentage));
+                ticketDto.setDepartureTime(oneWayDepartureRouteSegment.getDeparture_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setArrivalTime(oneWayArrivalRouteSegment.getArrival_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * totalDistance * (1 - personType.getPercentage()));
+
+                // calculate price
+                double originalPrice = seatPrice.getOriginal_price_per_km() * totalDistance;
+                double discount = originalPrice * personType.getPercentage() / 100;
+                double price = Math.round(originalPrice - discount);
+                ticketDto.setOriginalPrice(originalPrice);
+                ticketDto.setPrice(price);
 
             }else{ // roundTrip tickets
                 scheduleDto.setId(roundTripSchedule.getId());
 
+                // generate ticket code
+                String ticketCode = generateTicketCode(roundTripSchedule.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId(), roundTripSchedule.getDepartureDate().format(dateCodeFormatter));
+                ticketDto.setCode(ticketCode);
+
                 SeatType seatType = seatRepository.findSeatTypeBySeatId(request.getTickets().get(i).getSeat().getId());
-                SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(oneWaySchedule.getTrain().getId(), seatType.getId());
+                SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(roundTripSchedule.getTrain().getId(), seatType.getId());
 
                 ticketDto.setSchedule(scheduleDto);
-                ticketDto.setDepartureStation(oneWayDepartureRouteSegment.getStation().getName());
-                ticketDto.setArrivalStation(oneWayArrivalRouteSegment.getStation().getName());
-                ticketDto.setDepartureTime(oneWayArrivalRouteSegment.getDeparture_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
-                ticketDto.setArrivalTime(oneWayDepartureRouteSegment.getArrival_time().format(timeFormatter) + " " + oneWaySchedule.getDepartureDate().format(dateFormatter));
-                ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * roundTripTotalDistance);
-                ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * roundTripTotalDistance * (1 - discountPercentage));
+                ticketDto.setDepartureStation(roundTripDepartureRouteSegment.getStation().getName());
+                ticketDto.setArrivalStation(roundTripArrivalRouteSegment.getStation().getName());
+                ticketDto.setDepartureTime(roundTripDepartureRouteSegment.getDeparture_time().format(timeFormatter) + " " + roundTripSchedule.getDepartureDate().format(dateFormatter));
+                ticketDto.setArrivalTime(roundTripArrivalRouteSegment.getArrival_time().format(timeFormatter) + " " + roundTripSchedule.getDepartureDate().format(dateFormatter));
+
+                // calculate price
+                double originalPrice = seatPrice.getOriginal_price_per_km() * totalDistance;
+                int discountForRoundTrip = 10;  // 10% discount for round trip
+                double discount = originalPrice * ((personType.getPercentage() + discountForRoundTrip) / 100);
+                double price = Math.round(originalPrice - discount);
+                ticketDto.setOriginalPrice(originalPrice);
+                ticketDto.setPrice(price);
             }
 
             Ticket findTicket = ticketRepository.findByScheduleIdAndCarriageIdAndSeatId(
@@ -264,18 +299,15 @@ public class OrderServiceImpl implements OrderService {
 
         // Get the currently authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = "";
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
-            email = userDetails.getUsername();
+            Long userId = Long.parseLong(userDetails.getUsername());
+            Optional<User> user = userRepository.findById(userId);
+            Page<GetOrdersListResponse> orders = orderRepository.findByUserId(user.get().getId(), pageRequest)
+                    .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
+
+            return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());
         }
-        Optional<User> user = userRepository.findByEmail(email);
-
-        assert user.isPresent();
-
-        Page<GetOrdersListResponse> orders = orderRepository.findByUserId(user.get().getId(), pageRequest)
-                .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
-
-        return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());
+        return null;
     }
 
 }

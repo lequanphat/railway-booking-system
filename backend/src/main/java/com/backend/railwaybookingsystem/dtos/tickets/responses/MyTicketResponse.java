@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Value
 public class MyTicketResponse implements Serializable {
     Long id;
+    String code;
     OrderDto order;
     String seatType;
     String carriageType;
