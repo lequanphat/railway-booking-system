@@ -5,7 +5,6 @@ import { calculateTravelTime } from '~/utils/calculateTravelTime';
 const { Text, Title } = Typography;
 
 const ReturnCard = ({ params, returnSchedules, isRefetching }) => {
-  console.log('returnSchedules', returnSchedules);
   return (
     <Space className="w-full" direction="vertical">
       <Card
@@ -32,7 +31,7 @@ const ReturnCard = ({ params, returnSchedules, isRefetching }) => {
         )
       ) : (
         <div className="text-center py-4">
-          <Spin />  
+          <Spin />
         </div>
       )}
     </Space>

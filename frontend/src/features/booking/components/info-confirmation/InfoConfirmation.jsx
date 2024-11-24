@@ -43,8 +43,6 @@ const InfoConfirmation = () => {
     [setDiscountForSeat],
   );
 
-  console.log('oneWay', oneWay.selectedSeats);
-
   const oneWayColumns = useMemo(
     () => [
       {

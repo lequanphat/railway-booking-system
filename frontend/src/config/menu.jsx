@@ -184,18 +184,13 @@ const adminMenu = Object.freeze([
     children: [
       {
         key: '11-1',
-        label: 'Quản lý tài khoản',
-        path: '/settings/accounts',
+        label: 'Quản lý đối tượng',
+        path: '/admin/settings/objects',
       },
       {
         key: '11-2',
         label: 'Cấu hình hệ thống',
         path: '/settings/system',
-      },
-      {
-        key: '11-3',
-        label: 'Quản lý giá vé',
-        path: '/settings/pricing',
       },
     ],
   },

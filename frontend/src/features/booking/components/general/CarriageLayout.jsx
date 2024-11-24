@@ -42,11 +42,8 @@ const CarriageLayout = ({ id, name, row_count, floors, seats = [] }) => {
                 <Flex
                   vertical
                   align="center"
-                  className={`${renderSeatColor(
-                    seat,
-                  )} w-[100px] h-[60px] border p-2 rounded-md cursor-pointer`}
+                  className={`${renderSeatColor(seat)} w-[100px] h-[60px] border p-2 rounded-md cursor-pointer`}
                   onClick={() => {
-                    console.log(seat);
                     if (seat.is_occupied) return;
                     setSelectedSeats((prev) => {
                       if (prev.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {

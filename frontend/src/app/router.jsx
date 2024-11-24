@@ -239,6 +239,13 @@ const createAppRouter = () =>
               return { Component: OrderManagement.default };
             },
           },
+          {
+            path: 'settings/objects',
+            lazy: async () => {
+              const ObjectsManagement = await import('./routes/admin/settings/objects');
+              return { Component: ObjectsManagement.default };
+            },
+          },
         ],
       },
       // Auth routes

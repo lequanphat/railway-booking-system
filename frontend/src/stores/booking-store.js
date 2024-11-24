@@ -194,8 +194,6 @@ const useBookingStore = create((set, get) => ({
       const personType = state.personTypes.find((person) => person.id === objectId);
       if (!personType) return state;
 
-      console.log('flag');
-
       if (type === BOOKING_TYPE.ONE_WAY) {
         const seat = state.oneWay.selectedSeats.find((seat) => seat.id === seatId && seat.carriageId === carriageId);
         if (seat) {
