@@ -106,9 +106,14 @@ public class OrderServiceImpl implements OrderService {
             ticketDto.setArrivalStation(arrivalRouteSegment.getStation().getName());
             ticketDto.setDepartureTime(departureRouteSegment.getDeparture_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
             ticketDto.setArrivalTime(arrivalRouteSegment.getArrival_time().format(timeFormatter) + " " + schedule.getDepartureDate().format(dateFormatter));
-            ticketDto.setOriginalPrice(seatPrice.getOriginal_price_per_km() * totalDistance);
 
-            ticketDto.setPrice(seatPrice.getOriginal_price_per_km() * totalDistance * (1 - personType.getPercentage()));
+
+            // calculate price
+            double originalPrice = seatPrice.getOriginal_price_per_km() * totalDistance;
+            double discount = originalPrice * personType.getPercentage() / 100;
+            double price = Math.round(originalPrice - discount);
+            ticketDto.setOriginalPrice(originalPrice);
+            ticketDto.setPrice(price);
 
             Ticket ticket = TicketMapper.INSTANCE.convertToTicket(ticketDto);
             ticket.setOrder(order);

@@ -1,14 +1,26 @@
-import { Alert, Button, Card, Col, Divider, Flex, Form, Input, Row, Select, Table } from 'antd';
-import { useMemo } from 'react';
+import { Alert, Button, Card, Col, Divider, Flex, Form, Input, Row, Select, Space, Table, Tooltip } from 'antd';
+import { useCallback, useEffect, useMemo } from 'react';
 import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
 import { useGetAllPersonTypes } from '../../api/get-all-person-types';
 import { formatTicketsInformationData } from '../../utils/helpers';
 import { TripType } from '~/enums/trip-type';
+import { BOOKING_TYPE } from '~/config/constants';
+import lodash from 'lodash';
+import InfoIcon from '~/components/icons/InfoIcon';
 
 const InfoConfirmation = () => {
   const [form] = Form.useForm();
-  const { type, oneWay, roundTrip, nextPaymentStep, setTickets, setBillerInformation } = useBookingStore();
+  const {
+    type,
+    oneWay,
+    roundTrip,
+    nextPaymentStep,
+    setTickets,
+    setBillerInformation,
+    setDiscountForSeat,
+    setPersonTypes,
+  } = useBookingStore();
   const { data: personTypes } = useGetAllPersonTypes({});
 
   const OBJECT_TYPE_OPTIONS = personTypes?.map((item) => ({
@@ -19,6 +31,19 @@ const InfoConfirmation = () => {
       value: type.id,
     })),
   }));
+
+  useEffect(() => {
+    setPersonTypes(lodash.flatMap(personTypes, 'children'));
+  }, [setPersonTypes, personTypes]);
+
+  const handleObjectChange = useCallback(
+    (value, seatId, carriageId, type = BOOKING_TYPE.ONE_WAY) => {
+      setDiscountForSeat({ objectId: value, seatId, carriageId, type });
+    },
+    [setDiscountForSeat],
+  );
+
+  console.log('oneWay', oneWay.selectedSeats);
 
   const oneWayColumns = useMemo(
     () => [
@@ -31,17 +56,9 @@ const InfoConfirmation = () => {
         title: 'Thông tin khách hàng',
         key: 'passenger',
         render: (record) => (
-          <Form
-            form={form}
-            initialValues={{
-              [`oneWay_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
-              [`roundTrip_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
-            }}
-            name="advanced_search"
-            onFinish={null}
-          >
+          <Form form={form} initialValues={{}} name="advanced_search" onFinish={null}>
             <Form.Item
-              name={`oneWay__fullName_${record?.id}-${record?.carriageId}`}
+              name={`oneWay_fullName_${record?.id}-${record?.carriageId}`}
               label="Họ tên"
               rules={[
                 {
@@ -62,7 +79,12 @@ const InfoConfirmation = () => {
                 },
               ]}
             >
-              <Select onChange={null} options={OBJECT_TYPE_OPTIONS} />
+              <Select
+                onChange={(value) => {
+                  handleObjectChange(value, record?.id, record?.carriageId, BOOKING_TYPE.ONE_WAY);
+                }}
+                options={OBJECT_TYPE_OPTIONS}
+              />
             </Form.Item>
             <Form.Item
               name={`oneWay_identity_${record?.id}-${record?.carriageId}`}
@@ -99,25 +121,50 @@ const InfoConfirmation = () => {
       },
       {
         title: 'Khuyến mãi',
-        dataIndex: 'price',
-        key: 'price',
-        render: () => {
-          return <span>0%</span>;
+        dataIndex: 'discounts',
+        key: 'discounts',
+        render: (discounts) => {
+          const hasDiscount = (discounts || [])?.some((discount) => discount.percentage > 0);
+          return (
+            <Space direction="vertical">
+              {hasDiscount ? (
+                (discounts || []).map(
+                  (discount, index) =>
+                    discount.percentage > 0 && (
+                      <Space key={index}>
+                        <strong className="text-red-500">{discount.percentage}% </strong>
+                        <p>({discount.type === 'OBJECT_DISCOUNT' ? 'Giảm đối tượng' : 'Giảm khứ hồi'})</p>
+                        <Tooltip title={discount.description}>
+                          <div>
+                            <InfoIcon />
+                          </div>
+                        </Tooltip>
+                      </Space>
+                    ),
+                )
+              ) : (
+                <>Không có giảm giá</>
+              )}
+            </Space>
+          );
         },
       },
       {
         title: 'Thành tiền',
         key: 'seat',
         render: (record) => {
+          const discountPercentage = record?.discounts?.reduce((acc, cur) => acc + cur.percentage, 0) || 0;
           return (
             <span className="text-red-500 font-medium">
-              {convertToVnCurrency(record?.seatType?.original_price_per_km * oneWay.totalDistance)}
+              {convertToVnCurrency(
+                record?.seatType?.original_price_per_km * oneWay.totalDistance * (1 - discountPercentage / 100),
+              )}
             </span>
           );
         },
       },
     ],
-    [form, oneWay, OBJECT_TYPE_OPTIONS],
+    [form, OBJECT_TYPE_OPTIONS, handleObjectChange, oneWay.totalDistance],
   );
 
   const roundTripColumns = useMemo(
@@ -131,15 +178,7 @@ const InfoConfirmation = () => {
         title: 'Thông tin khách hàng',
         key: 'passenger',
         render: (record) => (
-          <Form
-            form={form}
-            initialValues={{
-              [`oneWay_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
-              [`roundTrip_object_${record?.id}-${record?.carriageId}`]: OBJECT_TYPE_OPTIONS?.[0]?.options[0]?.value,
-            }}
-            name="advanced_search"
-            onFinish={null}
-          >
+          <Form form={form} initialValues={{}} name="advanced_search" onFinish={null}>
             <Form.Item
               name={`roundTrip_fullName_${record?.id}-${record?.carriageId}`}
               label="Họ tên"
@@ -162,7 +201,12 @@ const InfoConfirmation = () => {
                 },
               ]}
             >
-              <Select onChange={null} options={OBJECT_TYPE_OPTIONS} />
+              <Select
+                onChange={(value) => {
+                  handleObjectChange(value, record?.id, record?.carriageId, BOOKING_TYPE.ROUND_TRIP);
+                }}
+                options={OBJECT_TYPE_OPTIONS}
+              />
             </Form.Item>
             <Form.Item
               name={`roundTrip_identity_${record?.id}-${record?.carriageId}`}
@@ -199,25 +243,50 @@ const InfoConfirmation = () => {
       },
       {
         title: 'Khuyến mãi',
-        dataIndex: 'price',
-        key: 'price',
-        render: () => {
-          return <span>0%</span>;
+        dataIndex: 'discounts',
+        key: 'discounts',
+        render: (discounts) => {
+          const hasDiscount = (discounts || [])?.some((discount) => discount.percentage > 0);
+          return (
+            <Space direction="vertical">
+              {hasDiscount ? (
+                (discounts || []).map(
+                  (discount, index) =>
+                    discount.percentage > 0 && (
+                      <Space key={index}>
+                        <strong className="text-red-500">{discount.percentage}% </strong>
+                        <p>({discount.type === 'OBJECT_DISCOUNT' ? 'Giảm đối tượng' : 'Giảm khứ hồi'})</p>
+                        <Tooltip title={discount.description}>
+                          <div>
+                            <InfoIcon />
+                          </div>
+                        </Tooltip>
+                      </Space>
+                    ),
+                )
+              ) : (
+                <>Không có giảm giá</>
+              )}
+            </Space>
+          );
         },
       },
       {
         title: 'Thành tiền',
         key: 'seat',
         render: (record) => {
+          const discountPercentage = record?.discounts?.reduce((acc, cur) => acc + cur.percentage, 0) || 0;
           return (
             <span className="text-red-500 font-medium">
-              {convertToVnCurrency(record?.seatType?.original_price_per_km * roundTrip.totalDistance)}
+              {convertToVnCurrency(
+                record?.seatType?.original_price_per_km * roundTrip.totalDistance * (1 - discountPercentage / 100),
+              )}
             </span>
           );
         },
       },
     ],
-    [form, roundTrip, OBJECT_TYPE_OPTIONS],
+    [form, OBJECT_TYPE_OPTIONS, handleObjectChange, roundTrip.totalDistance],
   );
 
   const handleNextStep = async () => {
@@ -236,7 +305,6 @@ const InfoConfirmation = () => {
           oneWayTickets: formatTicketsInformationData(values, TripType.OneWay),
           roundTripTickets: formatTicketsInformationData(values, TripType.RoundTrip),
         });
-
         nextPaymentStep();
         window.scrollTo({
           top: 0,
@@ -248,6 +316,20 @@ const InfoConfirmation = () => {
     }
   };
 
+  const { beforeDiscountPrice, afterDiscountPrice } = useMemo(() => {
+    const concatSelectedSeats = [...oneWay.selectedSeats, ...roundTrip.selectedSeats];
+
+    const beforeDiscountPrice = concatSelectedSeats.reduce((acc, cur) => {
+      return acc + cur?.seatType?.original_price_per_km * oneWay.totalDistance;
+    }, 0);
+
+    const afterDiscountPrice = concatSelectedSeats.reduce((acc, cur) => {
+      const discountPercentage = cur?.discounts?.reduce((acc, cur) => acc + cur.percentage, 0) || 0;
+      return acc + cur?.seatType?.original_price_per_km * oneWay.totalDistance * (1 - discountPercentage / 100);
+    }, 0);
+
+    return { beforeDiscountPrice, afterDiscountPrice };
+  }, [oneWay, roundTrip]);
   return (
     <div>
       <Card>
@@ -270,6 +352,13 @@ const InfoConfirmation = () => {
           </div>
         )}
         <Divider />
+        <Flex align="center" justify="space-between" className="py-4">
+          <h1 className="text-base font-medium mb-2 text-primary">Tổng tiền sau giảm giá:</h1>
+          <p className="px-4">
+            <del className="text-gray-400 font-bold mr-4">{convertToVnCurrency(beforeDiscountPrice)}</del>
+            <strong className="text-lg text-red-500 font-bold">{convertToVnCurrency(afterDiscountPrice)}</strong>
+          </p>
+        </Flex>
         <div className="py-4">
           <h1 className="text-base font-medium mb-2 text-primary">Thông tin người đặt vé</h1>
           <Alert

@@ -11,9 +11,10 @@ import ReturnCard from '~/features/search-routes/components/ReturnCard';
 import { useEffect } from 'react';
 import useBookingStore from '~/stores/booking-store';
 import ScheduleBookingModal from '~/features/search-routes/components/scheddule-booking-modal/ScheduleBookingModal';
+import TicketCard from '~/features/search-routes/components/TicketCard';
 
 const SearchPage = () => {
-  const { isOpenBookingModal, closeBookingModal, openBookingModal } = useBookingStore();
+  const { isOpenBookingModal, closeBookingModal, openBookingModal, seatSelectionStep } = useBookingStore();
   const [params, setParams] = useSearchParams();
 
   const { setBookingType } = useBookingStore();
@@ -62,6 +63,11 @@ const SearchPage = () => {
       />
       <SearchForm params={params} setParams={setParams} refetchSchedules={refetchSchedules} />
       <Row gutter={[16, 16]}>
+        {params.get('trip_type') === TripType.RoundTrip && seatSelectionStep === 2 && (
+          <Col xs={24} md={6}>
+            <TicketCard />
+          </Col>
+        )}
         <Col xs={24} md={params.get('trip_type') === TripType.RoundTrip ? 18 : 24}>
           <DateSelection params={params} setParams={setParams} />
           <Space direction="vertical" className="w-full mt-4" size="middle">
@@ -90,7 +96,7 @@ const SearchPage = () => {
             )}
           </Space>
         </Col>
-        {params.get('trip_type') === TripType.RoundTrip && (
+        {params.get('trip_type') === TripType.RoundTrip && seatSelectionStep === 1 && (
           <Col
             xs={24}
             md={6}

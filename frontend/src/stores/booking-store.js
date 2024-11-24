@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { BOOKING_TYPE } from '~/config/constants';
 import { TripType } from '~/enums/trip-type';
 
 const useBookingStore = create((set, get) => ({
@@ -45,6 +46,10 @@ const useBookingStore = create((set, get) => ({
   paymentStep: 1,
   seatSelectionStep: 1,
 
+  // temp state
+  personTypes: [],
+  setPersonTypes: (personTypes) => set({ personTypes }),
+
   // actions
   openBookingModal: ({ scheduleId, departureStation, arrivalStation }) =>
     set((state) => {
@@ -56,6 +61,7 @@ const useBookingStore = create((set, get) => ({
             scheduleId,
             departureStation,
             arrivalStation,
+            selectedSeats: [],
           },
         };
       }
@@ -66,6 +72,7 @@ const useBookingStore = create((set, get) => ({
           scheduleId,
           departureStation,
           arrivalStation,
+          selectedSeats: [],
         },
       };
     }),
@@ -140,6 +147,64 @@ const useBookingStore = create((set, get) => ({
           selectedSeats: [],
         },
       };
+    }),
+
+  setDiscountForSeat: ({ objectId, seatId, carriageId, type = BOOKING_TYPE.ONE_WAY }) =>
+    set((state) => {
+      console.log({ objectId, seatId, carriageId, type });
+      console.log('state.oneWay.selectedSeats', state.oneWay.selectedSeats);
+      console.log('state.personTypes', state.personTypes);
+      const personType = state.personTypes.find((person) => person.id === objectId);
+      if (!personType) return state;
+
+      console.log('flag');
+
+      if (type === BOOKING_TYPE.ONE_WAY) {
+        const seat = state.oneWay.selectedSeats.find((seat) => seat.id === seatId && seat.carriageId === carriageId);
+        if (seat) {
+          return {
+            oneWay: {
+              ...state.oneWay,
+              selectedSeats: state.oneWay.selectedSeats.map((s) => {
+                if (s.id === seatId && s.carriageId === carriageId) {
+                  return {
+                    ...s,
+                    discounts: [
+                      {
+                        percentage: personType.percentage,
+                        description: personType.description,
+                        type: 'OBJECT_DISCOUNT',
+                      },
+                    ],
+                  };
+                }
+                return s;
+              }),
+            },
+          };
+        }
+      }
+
+      const seat = state.roundTrip.selectedSeats.find((seat) => seat.id === seatId && seat.carriageId === carriageId);
+      if (seat) {
+        return {
+          roundTrip: {
+            ...state.roundTrip,
+            selectedSeats: state.roundTrip.selectedSeats.map((s) => {
+              if (s.id === seatId && s.carriageId === carriageId) {
+                return {
+                  ...s,
+                  discounts: [
+                    { percentage: personType.percentage, description: personType.description, type: 'OBJECT_DISCOUNT' },
+                    { percentage: 10, description: 'Giảm giá 10% khi đặt vé khứ hồi', type: 'ROUNDTRIP_DISCOUNT' },
+                  ],
+                };
+              }
+              return s;
+            }),
+          },
+        };
+      }
     }),
 
   setTickets: ({ oneWayTickets, roundTripTickets }) =>
