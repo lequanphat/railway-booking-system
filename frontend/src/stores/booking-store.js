@@ -78,11 +78,51 @@ const useBookingStore = create((set, get) => ({
     }),
 
   closeBookingModal: () => set({ isOpenBookingModal: false }),
-  setBookingType: (type) => set({ type }),
   nextPaymentStep: () => set((state) => ({ paymentStep: state.paymentStep + 1 })),
   prevPaymentStep: () => set((state) => ({ paymentStep: state.paymentStep - 1 })),
   nextSeatSelectionStep: () => set((state) => ({ seatSelectionStep: state.seatSelectionStep + 1 })),
   prevSeatSelectionStep: () => set((state) => ({ seatSelectionStep: state.seatSelectionStep - 1 })),
+
+  setBookingType: (type) => {
+    set({
+      type,
+      oneWay: {
+        scheduleId: null,
+        train: null,
+        departureStation: null,
+        arrivalStation: null,
+        arrivalRouteIndex: -1,
+        departureRouteIndex: -1,
+        totalDistance: 0,
+        departureDate: null,
+        routeSegments: [],
+        selectedSeats: [],
+        tickets: [],
+      },
+      roundTrip: {
+        scheduleId: null,
+        train: null,
+        totalDistance: 0,
+        departureStation: null,
+        arrivalStation: null,
+        arrivalRouteIndex: -1,
+        departureRouteIndex: -1,
+        departureDate: null,
+        routeSegments: [],
+        selectedSeats: [],
+        tickets: [],
+      },
+      billerInformation: {
+        fullName: null,
+        identity: null,
+        email: null,
+        phoneNumber: null,
+      },
+      paymentStep: 1,
+      seatSelectionStep: 1,
+      personTypes: [],
+    });
+  },
   initBookingStore: ({ train, totalDistance, arrivalRouteIndex, departureRouteIndex, routeSegments, departureDate }) =>
     set((state) => {
       if (state.seatSelectionStep === 1) {
@@ -151,9 +191,6 @@ const useBookingStore = create((set, get) => ({
 
   setDiscountForSeat: ({ objectId, seatId, carriageId, type = BOOKING_TYPE.ONE_WAY }) =>
     set((state) => {
-      console.log({ objectId, seatId, carriageId, type });
-      console.log('state.oneWay.selectedSeats', state.oneWay.selectedSeats);
-      console.log('state.personTypes', state.personTypes);
       const personType = state.personTypes.find((person) => person.id === objectId);
       if (!personType) return state;
 
