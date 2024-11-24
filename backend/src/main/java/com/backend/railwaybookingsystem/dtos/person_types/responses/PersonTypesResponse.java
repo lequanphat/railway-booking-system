@@ -23,6 +23,7 @@ public class PersonTypesResponse implements Serializable {
     public static class PersonTypeDto implements Serializable {
         Long id;
         String name;
+        String description;
         double percentage;
     }
 }

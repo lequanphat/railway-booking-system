@@ -22,15 +22,14 @@ const PaymentConfirmation = () => {
   });
 
   const totalPrice = useMemo(() => {
-    return (
-      oneWay?.selectedSeats.reduce((acc, seat) => {
-        return acc + seat.seatType.original_price_per_km * oneWay?.totalDistance;
-      }, 0) +
-      roundTrip?.selectedSeats.reduce(
-        (acc, seat) => acc + seat.seatType.original_price_per_km * roundTrip?.totalDistance,
-        0,
-      )
-    );
+    const concatSelectedSeats = [...oneWay.selectedSeats, ...roundTrip.selectedSeats];
+
+    const totalPrice = concatSelectedSeats.reduce((acc, cur) => {
+      const discountPercentage = cur?.discounts?.reduce((acc, cur) => acc + cur.percentage, 0) || 0;
+      return acc + cur?.seatType?.original_price_per_km * oneWay.totalDistance * (1 - discountPercentage / 100);
+    }, 0);
+
+    return totalPrice;
   }, [oneWay, roundTrip]);
 
   const handlePlaceOrder = () => {
@@ -111,7 +110,7 @@ const PaymentConfirmation = () => {
           </Form>
           <Flex justify="space-between">
             <h1 className="text-base font-medium mb-2 text-primary">Tổng tiền thanh toán:</h1>
-            <h1 className="text-base font-semibold mb-2 text-red-500">{convertToVnCurrency(totalPrice)}</h1>
+            <strong className="text-lg font-bold mb-2 text-red-500">{convertToVnCurrency(totalPrice)}</strong>
           </Flex>
         </div>
         <div className="py-4">
