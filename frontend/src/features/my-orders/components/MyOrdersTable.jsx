@@ -119,7 +119,6 @@ const MyOrdersTable = () => {
 };
 
 const expandedRowRender = ({ tickets }) => {
-  console.log(tickets);
   return <Table columns={expandColumns} dataSource={tickets} pagination={false} />;
 };
 

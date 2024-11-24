@@ -7,7 +7,7 @@ INSERT INTO users (id, email, name, password, provider, user_role, is_verified, 
 -- Data for table `person_types`
 
 INSERT INTO person_types (id, name, description, percentage, parent_id) VALUES
-    (1,'Người Việt Nam', 'Công dân có quốc tịch Việt Nam', 10,null)^;
+    (1,'Người Việt Nam', 'Công dân có quốc tịch Việt Nam', 0,null)^;
 
 INSERT INTO person_types (id, name, description, percentage, parent_id) VALUES
     (2,'Người Nước Ngoài', 'Người nước ngoài đang sinh sống và làm việc tại Việt Nam', 0,null)^;
@@ -16,7 +16,7 @@ INSERT INTO person_types (id, name,description, percentage, parent_id) VALUES
     (3,'Trẻ em', 'Trẻ em dưới 6 tuổi không cần phải mua vé, trẻ em từ 6 tuổi đến 10 tuổi được mua vé trẻ em', 5,1)^;
 
 INSERT INTO person_types (id, name,description, percentage, parent_id) VALUES
-    (4,'Người lớn', 'abc', 0,1)^;
+    (4,'Người lớn', 'No discount', 0,1)^;
 
 INSERT INTO person_types (id, name, description, percentage, parent_id) VALUES
     (5,'Người cao tuổi', 'Người cao tuổi (người từ 60 tuổi trở lên) được hưởng chính sách giảm giá theo quy định của Tổng công ty Đường sắt Việt Nam.', 5,1)^;
@@ -28,7 +28,7 @@ INSERT INTO person_types (id, name, description, percentage, parent_id) VALUES
     (7,'Trẻ em', 'Trẻ em dưới 6 tuổi không cần phải mua vé, trẻ em từ 6 tuổi đến 10 tuổi được mua vé trẻ em', 5,2)^;
 
 INSERT INTO person_types (id, name, description, percentage, parent_id) VALUES
-    (8,'Người lớn', 'abc',  0,2)^;
+    (8,'Người lớn', 'No discount',  0,2)^;
 
 
 -- Data for table `provinces`
