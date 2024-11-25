@@ -8,7 +8,7 @@ import java.io.Serializable;
  * DTO for {@link com.backend.railwaybookingsystem.models.Station}
  */
 @Value
-public class StationReponse implements Serializable {
+public class StationResponse implements Serializable {
     Long id;
     String name;
     ProvinceDto province;

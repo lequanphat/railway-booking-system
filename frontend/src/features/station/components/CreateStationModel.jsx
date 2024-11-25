@@ -1,18 +1,11 @@
-import { Button, Flex, Form, Input, Modal } from 'antd';
-import CustomAsyncSelect from '~/components/ui/CustomAsyncSelect';
+import { Button, Flex, Form, Input, Modal, Select, message } from 'antd';
 import PropTypes from 'prop-types';
-// import { USER_ROLES } from '~/config/constants';
-// import { useCreateSeatType } from '../api/create-seat-type';
+import { useCreateStation } from '../api/Create-station';
 import { useEffect } from 'react';
 import { convertToAbbreviation } from '~/utils/convert';
-
-//test
-import { useStations } from '~/features/station/api/get-stations';
-
-
+import { useProvinces } from '~/features/station/api/get-provinces';
 
 const CreateSeatTypeModal = ({ open, handleCancel }) => {
-
   const [form] = Form.useForm();
 
   const seatName = Form.useWatch('name', form);
@@ -23,28 +16,30 @@ const CreateSeatTypeModal = ({ open, handleCancel }) => {
     }
   }, [seatName, form]);
 
-  // const mutation = useCreateSeatType({
-  //   mutationConfig: {
-  //     onSuccess: () => {
-  //       message.success('Tạo loại ghế thành công!');
-  //       form.resetFields();
-  //       handleCancel();
-  //     },
-  //     onError: (error) => {
-  //       message.error(error?.response?.data?.detail);
-  //     },
-  //   },
-  // });
+  const { data: provinces = [] } = useProvinces();
+  const provinceOptions = provinces.map((province) => ({
+    value: province.id, // Hoặc bất kỳ giá trị duy nhất nào đại diện cho tỉnh
+    label: province.name,
+  }));
 
+  const mutation = useCreateStation({
+    mutationConfig: {
+      onSuccess: () => {
+        message.success('Thêm trạm thành công!');
+        form.resetFields();
+        handleCancel();
+      },
+      onError: (error) => {
+        message.error(error?.response?.data?.detail);
+      },
+    },
+  });
 
-  // const { data: provinces = [], isLoading } = useProvinces() || {};
-  // const provinceOptions = provinces.map((province) => ({
-  //   value: province.id, // Hoặc bất kỳ giá trị duy nhất nào đại diện cho tỉnh
-  //   label: province.name,
-  // }));
   const onFinish = (values) => {
+    mutation.mutate({ data: { ...values, province: { id: values.province } } });
     console.log(values);
   };
+
   return (
     <Modal title="Tạo ga tàu mới" open={open} onCancel={handleCancel} footer={null}>
       <Form form={form} className="pt-4" layout="vertical" onFinish={onFinish}>
@@ -52,19 +47,16 @@ const CreateSeatTypeModal = ({ open, handleCancel }) => {
           <Form.Item label="Tên ga tàu" name="name" rules={null} validateTrigger="onBlur">
             <Input placeholder="Nhập tên ga tàu..." />
           </Form.Item>
-          <Form.Item label="Chọn tỉnh" name="provinceId">
-            <CustomAsyncSelect 
-              loadQuery={useStations}
-            />
+          <Form.Item label="Chọn tỉnh" name="province">
+            <Select options={provinceOptions} placeholder="Chọn tỉnh..." />
           </Form.Item>
-          
         </Flex>
         <Form.Item className="pt-4 m-0">
           <Flex justify="end" className="gap-3">
-            <Button  type="default" htmlType="reset">
+            <Button type="default" htmlType="reset">
               Hoàn tác
             </Button>
-            <Button  type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit">
               Tạo mới
             </Button>
           </Flex>

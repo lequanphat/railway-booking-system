@@ -11,7 +11,7 @@ export const getStations = (keyword, page, size) => {
   });
 };
 
-export const getStationsTypesQueryOptions = ({ page, size, keyword }) => {
+export const getStationsQueryOptions = ({ page, size, keyword }) => {
   return queryOptions({
     queryKey: page ? ['stations', { page, size, keyword }] : ['stations'],
     queryFn: () => getStations(keyword, page, size),
@@ -20,7 +20,7 @@ export const getStationsTypesQueryOptions = ({ page, size, keyword }) => {
 
 export const useStations = ({ queryConfig, page, size, keyword }) => {
   return useQuery({
-    ...getStationsTypesQueryOptions({ page, size, keyword }),
+    ...getStationsQueryOptions({ page, size, keyword }),
     ...queryConfig,
   });
 };

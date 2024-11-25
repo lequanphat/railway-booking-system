@@ -2,6 +2,7 @@ package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.province.requests.CreateProvinceRequest;
 import com.backend.railwaybookingsystem.dtos.province.requests.UpdateProvinceRequest;
+import com.backend.railwaybookingsystem.dtos.provinces.ProvinceResponse;
 import com.backend.railwaybookingsystem.exceptions.DuplicatedException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ProvinceMapper;
@@ -70,4 +71,12 @@ public class ProvinceServiceImpl implements ProvinceService {
     public Page<Province> getProvinces(String searchTerm, Pageable pageable) {
         return provinceRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
     }
+
+    //Dan
+    public List<ProvinceResponse> getOnlyProvinces() {
+        return ProvinceMapper.INSTANCE.toProvinceResponses(provinceRepository.findAll());
+    }
+
+
+
 }

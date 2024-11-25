@@ -2,21 +2,20 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 import { api } from '~/lib/api';
 
 export const getProvinces = () => {
-  return api.get(`/public/provinces`, {
+  return api.get(`/public/provinces/getProvince`, {
     
   });
 };
 
-export const getProvincesTypesQueryOptions = (queryConfig) => {
+export const getProvincesTypesQueryOptions = () => {
   return queryOptions({
-    queryKey: ['provinces', queryConfig],
+    queryKey: ['provinces'],
     queryFn: () => getProvinces(),
   });
 };
 
-export const useProvinces = ({ queryConfig}) => {
+export const useProvinces = () => {
   return useQuery({
     ...getProvincesTypesQueryOptions(),
-    ...queryConfig,
   });
 };

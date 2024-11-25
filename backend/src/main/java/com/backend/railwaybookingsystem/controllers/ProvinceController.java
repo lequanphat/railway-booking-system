@@ -1,17 +1,22 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.province.requests.UpdateProvinceRequest;
+import com.backend.railwaybookingsystem.dtos.stations.StationResponse;
+import com.backend.railwaybookingsystem.services.StationService;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
 import com.backend.railwaybookingsystem.dtos.province.requests.CreateProvinceRequest;
 import com.backend.railwaybookingsystem.models.Province;
 import com.backend.railwaybookingsystem.services.ProvinceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+//Dan
+import com.backend.railwaybookingsystem.dtos.provinces.ProvinceResponse;
 
 import java.util.List;
 
@@ -67,5 +72,14 @@ public class ProvinceController {
                                                                    @RequestParam(defaultValue = "10") int size) {
         Page<Province> provinces = provinceService.getProvinces(searchTerm, PageRequest.of(page, size));
         return ResponseEntity.ok(new CustomPagination<>(provinces));
+    }
+
+//    Dan (chỉ lấy province, không lấy station)
+    @GetMapping("/getProvince")
+    public ResponseEntity<List<ProvinceResponse>> getOnlyProvinces() {
+        List<ProvinceResponse> provinces = provinceService.getOnlyProvinces();
+        return ResponseEntity.ok(
+                provinces.stream().toList()
+        );
     }
 }
