@@ -10,7 +10,7 @@ import com.backend.railwaybookingsystem.mappers.TicketMapper;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.OrderService;
-import com.backend.railwaybookingsystem.strategies.VNPayStrategy;
+import com.backend.railwaybookingsystem.strategies.payment.VNPayStrategy;
 import contexts.PaymentContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

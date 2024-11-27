@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { api } from '~/lib/api';
 
-export const useLogin = ({ data }) => {
-  return api.post(`/auth/login`, data);
+export const useFacebookLogin = ({ accessToken }) => {
+  return api.post(`/oauth2/facebook`, { accessToken });
 };
 
-export const useLoginMutation = ({ mutationConfig }) => {
+export const useFacebookLoginMutation = ({ mutationConfig }) => {
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
@@ -13,6 +13,6 @@ export const useLoginMutation = ({ mutationConfig }) => {
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: useLogin,
+    mutationFn: useFacebookLogin,
   });
 };

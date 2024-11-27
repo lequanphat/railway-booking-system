@@ -1,4 +1,4 @@
-package com.backend.railwaybookingsystem.strategies;
+package com.backend.railwaybookingsystem.strategies.payment;
 
 import com.backend.railwaybookingsystem.configurations.VNPayConfiguration;
 import lombok.extern.slf4j.Slf4j;

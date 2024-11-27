@@ -1,6 +1,6 @@
 package contexts;
 
-import com.backend.railwaybookingsystem.strategies.PaymentStrategy;
+import com.backend.railwaybookingsystem.strategies.payment.PaymentStrategy;
 
 public class PaymentContext {
     private final PaymentStrategy paymentStrategy;

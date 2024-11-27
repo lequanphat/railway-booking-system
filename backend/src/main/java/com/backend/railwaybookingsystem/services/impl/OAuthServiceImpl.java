@@ -9,8 +9,10 @@ import com.backend.railwaybookingsystem.security.jwt.JwtProperties;
 import com.backend.railwaybookingsystem.security.jwt.JwtTokenService;
 import com.backend.railwaybookingsystem.services.OAuthService;
 import com.backend.railwaybookingsystem.services.RefreshTokenService;
-import com.backend.railwaybookingsystem.strategies.GoogleAuthStrategy;
-import contexts.OAuthContext;
+import com.backend.railwaybookingsystem.strategies.auth.enums.OAuthType;
+import com.backend.railwaybookingsystem.strategies.auth.impl.FacebookAuthStrategy;
+import com.backend.railwaybookingsystem.strategies.auth.impl.GoogleAuthStrategy;
+import com.backend.railwaybookingsystem.strategies.auth.OAuthContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,11 +33,27 @@ public class OAuthServiceImpl implements OAuthService {
     @Autowired
     private JwtProperties jwtProperties;
 
+    private final OAuthContext oAuthContext;
+
+    public OAuthServiceImpl(OAuthContext oAuthContext) {
+        this.oAuthContext = oAuthContext;
+    }
+
     @Override
-    public LoginResponse authenticate(String credential) {
+    public LoginResponse authenticateGoogle(String credential) {
         log.info("Google login credential: {}", credential);
-        OAuthContext oAuthContext = new OAuthContext(new GoogleAuthStrategy());
-        OAuthUser oauthUser = oAuthContext.authenticate(credential);
+        OAuthUser oauthUser = oAuthContext.authenticate(credential, OAuthType.GOOGLE);
+        return authenticateOAuthUser(oauthUser);
+    }
+
+    @Override
+    public LoginResponse authenticateFacebook(String accessToken) {
+        log.info("Facebook login credential: {}", accessToken);
+        OAuthUser oauthUser = oAuthContext.authenticate(accessToken, OAuthType.FACEBOOK);
+        return authenticateOAuthUser(oauthUser);
+    }
+
+    private LoginResponse authenticateOAuthUser(OAuthUser oauthUser) {
         Optional<User> optionalUser = userRepository.findUserByEmailAndProvider(oauthUser.getEmail(), oauthUser.getProvider());
         User user = optionalUser.orElseGet(() -> userRepository.save(UserMapper.INSTANCE.convertToUser(oauthUser)));
 

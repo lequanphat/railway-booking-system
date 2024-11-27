@@ -2,7 +2,6 @@ import { Button, Flex, Layout, Menu } from 'antd';
 import logo from '~/assets/logo-dsvn.png';
 import { UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 const { Header: AntHeader } = Layout;
 
 const items = [

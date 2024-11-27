@@ -45,6 +45,9 @@ spring:
             client-secret: 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
             redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3001/api/oauth2/google/callback}"
             scope: openid, profile, email
+          facebook:
+            client-id: 423573474136909
+            client-secret: 26a51e7f5a2c9e3fd32fddc874015b34
   data:
     redis:
       host: localhost
@@ -75,6 +78,7 @@ logging:
         web:
           socket: DEBUG
         messaging: DEBUG
+        core: DEBUG
     com.backend.railwaybookingsystem: INFO
 
 ## FIXME : Customize JWT token and Swagger information for your application

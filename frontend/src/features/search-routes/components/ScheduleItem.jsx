@@ -13,9 +13,9 @@ export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, o
         <Typography level={3} className="text-xl font-bold text-primary">
           {train_name}
         </Typography>
-        <Tag color="cyan" bordered={false}>
+        {/* <Tag color="cyan" bordered={false}>
           Còn 200 chỗ
-        </Tag>
+        </Tag> */}
       </Flex>
       <Flex vertical>
         <Flex align="center">
