@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserOrderReportResponse {
-    private Long guestUser;
-    private Long internalUser;
+    private int guestUser;
+    private int internalUser;
 }

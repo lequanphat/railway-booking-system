@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @RestController
 @RequestMapping("api")
@@ -54,5 +57,27 @@ public class OrderController {
     ) {
         Page<GetOrdersListResponse> orders = orderService.getMyOrders(page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(orders));
+    }
+
+    @GetMapping("public/orders/{id}")
+    @Operation(tags = "Orders", description = "Get order detail")
+    public ResponseEntity<?> getOrderDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderDetail(id));
+    }
+
+    @GetMapping("ad/orders/report")
+    @Operation(tags = "Orders", description = "Get report")
+    public ResponseEntity<?> getReport(@RequestParam String startDate, @RequestParam String endDate) {
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).plusDays(1).atStartOfDay().minusSeconds(1);
+        return ResponseEntity.ok(orderService.getReport(start, end));
+    }
+
+    @GetMapping("ad/orders/report/user")
+    @Operation(tags = "Orders", description = "Get user order report")
+    public ResponseEntity<?> getUserOrderReport(@RequestParam String startDate, @RequestParam String endDate) {
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).plusDays(1).atStartOfDay().minusSeconds(1);
+        return ResponseEntity.ok(orderService.getUserReport(start, end));
     }
 }

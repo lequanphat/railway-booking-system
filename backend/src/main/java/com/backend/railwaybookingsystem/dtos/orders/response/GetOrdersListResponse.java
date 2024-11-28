@@ -8,6 +8,7 @@ import lombok.Value;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class GetOrdersListResponse implements Serializable {
     double totalPrice;
     OrderStatus status;
     PaymentMethod paymentMethod;
-    Timestamp createdAt;
+    LocalDateTime createdAt;
     UserDto user;
     List<TicketDto> tickets;
 

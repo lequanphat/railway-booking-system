@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderReportResponse {
+public class TrainReportResponse {
     private Long totalTickets;
     private Double totalPrice;
-    private LocalDate date;
+    private String train;
 }

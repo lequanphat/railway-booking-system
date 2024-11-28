@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TicketReportResponse {
+public class OrderReportResponse {
     private Long totalTickets;
     private Double totalPrice;
     private LocalDate date;

@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -63,6 +65,14 @@ public class TrainController {
     public ResponseEntity<UpdateTrainResponse> updateTrain(@PathVariable Long id, @Valid @RequestBody UpdateTrainRequest request) {
         UpdateTrainResponse train = trainService.updateTrain(id, request);
         return ResponseEntity.ok(train);
+    }
+
+    @GetMapping("ad/trains/report")
+    @Operation(tags = "Orders", description = "Get report")
+    public ResponseEntity<?> getReport(@RequestParam String startDate, @RequestParam String endDate) {
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).plusDays(1).atStartOfDay().minusSeconds(1);
+        return ResponseEntity.ok(trainService.getReport(start, end));
     }
 
 }
