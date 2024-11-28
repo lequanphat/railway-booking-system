@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.mappers;
 
+import com.backend.railwaybookingsystem.dtos.route_segments.GetScheduleRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateRouteSegmentRequest;
 import com.backend.railwaybookingsystem.models.RouteSegment;
@@ -33,4 +34,12 @@ public interface RouteSegmentMapper {
     @Mapping(source = "departure_time", target = "departureTime")
     @Mapping(source = "arrival_time", target = "arrivalTime")
     SearchScheduleResponse.ScheduleDto.RouteSegmentDto toSearchScheduleResponseRouteSegmentDto(RouteSegment routeSegment);
+
+    @Mapping(source = "station.id", target = "stationId")
+    @Mapping(source = "station.name", target = "stationName")
+    @Mapping(source = "departure_time", target = "departureTime")
+    @Mapping(source = "arrival_time", target = "arrivalTime")
+    GetScheduleRouteSegmentsResponse toGetScheduleRouteSegmentsResponse(RouteSegment routeSegment);
+
+    List<GetScheduleRouteSegmentsResponse> toGetScheduleRouteSegmentsResponse(List<RouteSegment> routeSegments);
 }

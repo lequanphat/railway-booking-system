@@ -25,4 +25,7 @@ public interface OrderService {
     List<OrderReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate);
 
     UserOrderReportResponse getUserReport(LocalDateTime startDate, LocalDateTime endDate);
+
+    // placeOrderCallbackPayPal method is missing
+    boolean placeOrderCallbackPayPal(String paymentId, String payerId);
 }

@@ -1,13 +1,14 @@
-import { Button, Col, Divider, Flex, Form, Input, message, Row, Typography } from 'antd';
-
+import { Button, Divider, Flex, Form, Input, message, Space, Typography } from 'antd';
 import RULES from '~/config/rule';
-import { useGoogleLoginMutation, useLoginMutation } from '~/features/auth/api/login';
 import fb from '~/assets/svg/fb.svg';
-import wt from '~/assets/svg/wt.svg';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useAuthStore from '~/stores/auth-store';
 import LocalStorageManager from '~/utils/localStorageManager';
 import { GoogleLogin } from '@react-oauth/google';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { useLoginMutation } from '~/features/auth/api/login';
+import { useGoogleLoginMutation } from '~/features/auth/api/login-google';
+import { useFacebookLoginMutation } from '~/features/auth/api/login-facebook';
 
 const LoginRoute = () => {
   const [searchParams] = useSearchParams();
@@ -30,26 +31,8 @@ const LoginRoute = () => {
     },
   });
 
-  const googleLoginMutation = useGoogleLoginMutation({
-    mutationConfig: {
-      onSuccess: (data) => {
-        LocalStorageManager.setAccessToken(data?.token);
-        LocalStorageManager.setRefreshToken(data?.refreshToken);
-        setUser(data?.user);
-        navigate(redirect ? redirect : '/');
-      },
-      onError: ({ response }) => {
-        message.error(response?.data?.detail || 'Something went wrong!');
-      },
-    },
-  });
-
   const handleLogin = () => {
     mutation.mutate({ data: form.getFieldsValue() });
-  };
-
-  const handleGoogleLogin = (credential) => {
-    googleLoginMutation.mutate({ data: credential });
   };
 
   return (
@@ -82,35 +65,81 @@ const LoginRoute = () => {
           <Divider>
             <Typography className="text-[#333] mb-2">Hoặc</Typography>
           </Divider>
-          <Row gutter={12}>
-            <Col span={8}>
-              <GoogleLogin
-                text="Google"
-                onSuccess={handleGoogleLogin}
-                onError={() => {
-                  console.log('Login Failed');
-                }}
-              />
-            </Col>
-            <Col span={8}>
-              <Button className="w-full">
-                <img src={wt} alt="" />
-                Twitter
-              </Button>
-            </Col>
-            <Col span={8}>
-              <Button className="w-full">
-                <img src={fb} alt="" />
-                Facebook
-              </Button>
-            </Col>
-          </Row>
+          <Space direction="vertical" className="w-full">
+            <LoginGoogleButton setUser={setUser} redirect={redirect} />
+            <LoginFacebookButton setUser={setUser} redirect={redirect} />
+          </Space>
           <Typography className="text-center mt-6">
             Bạn chưa có tài khoản? <Link to="/auth/register">Đăng ký</Link>
           </Typography>
         </Form.Item>
       </Form>
     </div>
+  );
+};
+
+const LoginGoogleButton = ({ setUser, redirect }) => {
+  const navigate = useNavigate();
+  const googleLoginMutation = useGoogleLoginMutation({
+    mutationConfig: {
+      onSuccess: (data) => {
+        LocalStorageManager.setAccessToken(data?.token);
+        LocalStorageManager.setRefreshToken(data?.refreshToken);
+        setUser(data?.user);
+        navigate(redirect ? redirect : '/');
+      },
+      onError: ({ response }) => {
+        message.error(response?.data?.detail || 'Something went wrong!');
+      },
+    },
+  });
+
+  const handleGoogleLogin = (credential) => {
+    googleLoginMutation.mutate({ data: credential });
+  };
+
+  return (
+    <GoogleLogin
+      onSuccess={handleGoogleLogin}
+      onError={() => {
+        console.log('Login Failed');
+      }}
+    />
+  );
+};
+
+const LoginFacebookButton = ({ setUser, redirect }) => {
+  const navigate = useNavigate();
+
+  const loginFacebookMutation = useFacebookLoginMutation({
+    mutationConfig: {
+      onSuccess: (data) => {
+        LocalStorageManager.setAccessToken(data?.token);
+        LocalStorageManager.setRefreshToken(data?.refreshToken);
+        setUser(data?.user);
+        navigate(redirect ? redirect : '/');
+      },
+      onError: ({ response }) => {
+        message.error(response?.data?.detail || 'Something went wrong!');
+      },
+    },
+  });
+
+  const responseFacebook = (response) => {
+    loginFacebookMutation.mutate({ accessToken: response?.accessToken });
+  };
+
+  return (
+    <FacebookLogin
+      appId="423573474136909"
+      callback={responseFacebook}
+      render={(renderProps) => (
+        <Button className="flex justify-center h-[38px] rounded" onClick={renderProps.onClick} block>
+          <img src={fb} alt="" />
+          <p className="flex-1 text-center">Đăng nhập bằng Facebook</p>
+        </Button>
+      )}
+    />
   );
 };
 

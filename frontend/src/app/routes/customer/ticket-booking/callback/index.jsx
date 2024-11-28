@@ -2,15 +2,36 @@ import { Alert, Button, Card, Descriptions, Divider, Flex, QRCode, Result, Space
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useGetOrderDetails } from '~/features/booking/api/get-order-details';
 import { convertToVnCurrency } from '~/utils/convert';
+import { useEffect } from 'react';
+import { useCallbackPayPal } from '~/features/booking/api/place-order-callback-paypal';
+import { useGetOrderDetails } from '~/features/booking/api/get-order-details';
 
 const TicketBookingCallback = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status');
   const orderId = searchParams.get('order');
+  const paymentId = searchParams.get('paymentId');
+  const payerId = searchParams.get('PayerID');
 
   const { data: orderData } = useGetOrderDetails({ id: orderId, queryConfig: { enabled: !!orderId } });
+
+  const callBackMutation = useCallbackPayPal({
+    mutationConfig: {
+      onSuccess: () => {
+        console.log('Change status of order to success' + paymentId);
+      },
+      onError: () => {
+        searchParams.set('status', 'fail');
+        setSearchParams(searchParams);
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (status === 'success' && paymentId) callBackMutation.mutate({ paymentId, payerId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payerId, paymentId, status]);
 
   const items = useMemo(
     () => [
@@ -107,7 +128,7 @@ const TicketBookingCallback = () => {
     [orderData],
   );
   return (
-    <div>
+    <div className="mt-4">
       {status === 'success' ? (
         <Card>
           <Result

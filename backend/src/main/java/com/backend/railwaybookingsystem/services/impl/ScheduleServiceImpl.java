@@ -7,6 +7,7 @@ import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleR
 import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ScheduleMapper;
+import com.backend.railwaybookingsystem.models.RouteSegment;
 import com.backend.railwaybookingsystem.models.Schedule;
 import com.backend.railwaybookingsystem.models.Train;
 import com.backend.railwaybookingsystem.repositories.ScheduleRepository;

@@ -30,7 +30,7 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
 
   const { scheduleId, departureStation, arrivalStation } = seatSelectionStep === 1 ? oneWay : roundTrip;
 
-  const { data: scheduleDetails } = useGetScheduleDetails({
+  const { data: scheduleDetails, isLoading } = useGetScheduleDetails({
     id: scheduleId,
     queryConfig: { enabled: !!scheduleId && open },
   });
@@ -143,6 +143,7 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
           minHeight: '75vh',
         },
       }}
+      loading={isLoading}
       footer={
         <>
           {type === TripType.OneWay || seatSelectionStep === 2 ? (

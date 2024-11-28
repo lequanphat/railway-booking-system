@@ -13,6 +13,7 @@ const SearchRoutesFormHomepage = () => {
   const { data: stationsData, isLoading: isStationsLoading } = useStations();
   const [form] = Form.useForm();
   const tripType = Form.useWatch('trip_type', form);
+  const departureDate = form.getFieldValue('departure_date');
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
@@ -28,6 +29,11 @@ const SearchRoutesFormHomepage = () => {
 
     if (values.departure_id === values.arrival_id) {
       message.warning('Ga đi và ga đến không được trùng nhau');
+      return;
+    }
+
+    if (values.return_date && values.return_date.isBefore(values.departure_date)) {
+      message.warning('Ngày về không được trước ngày đi');
       return;
     }
 
@@ -109,7 +115,9 @@ const SearchRoutesFormHomepage = () => {
                 type: 'mask',
               }}
               placeholder="Chọn ngày về"
-              disabledDate={(current) => current && current.isBefore(dayjs().startOf('day'))}
+              disabledDate={(current) =>
+                current && (current.isBefore(dayjs().startOf('day')) || current.isBefore(departureDate))
+              }
               className="w-full"
               disabled={tripType == TripType.OneWay}
             />

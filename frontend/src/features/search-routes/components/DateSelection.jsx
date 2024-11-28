@@ -6,9 +6,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { TripType } from '~/enums/trip-type';
 
-const DateSelection = ({ params, type = TripType.OneWay, setParams }) => {
+const DateSelection = ({ params, setParams, isReturn }) => {
   const dates = useMemo(() => {
     let start = dayjs();
     const end =
@@ -26,14 +25,25 @@ const DateSelection = ({ params, type = TripType.OneWay, setParams }) => {
   }, [params]);
 
   const handleChooseDate = (date) => {
-    params.set('departure_date', date.format('YYYY-MM-DD'));
-    setParams(params);
+    if (!isReturn) {
+      params.set('departure_date', date.format('YYYY-MM-DD'));
+      setParams(params);
+    } else {
+      params.set('return_date', date.format('YYYY-MM-DD'));
+      setParams(params);
+    }
   };
 
   return (
     <Card
-      title={type === TripType.OneWay ? 'Chọn ngày đi' : 'Chọn ngày về'}
-      extra={<Text>Sài Gòn → Hà Nội</Text>}
+      title={!isReturn ? 'Chọn ngày đi' : 'Chọn ngày về'}
+      extra={
+        <Text>
+          {!isReturn
+            ? `${params.get('departure_name')} → ${params.get('arrival_name')}`
+            : `${params.get('arrival_name')} → ${params.get('departure_name')}`}
+        </Text>
+      }
       styles={{
         body: {
           padding: 8,
@@ -68,7 +78,7 @@ const DateSelection = ({ params, type = TripType.OneWay, setParams }) => {
           <SwiperSlide key={date.format('YYYY-MM-DD')}>
             <DateItem
               date={date}
-              selected={date.isSame(dayjs(params.get('departure_date'), 'YYYY-MM-DD'), 'day')}
+              selected={date.isSame(isReturn ? dayjs(params.get('return_date')) : dayjs(params.get('departure_date'), 'YYYY-MM-DD'), 'day')}
               onClick={() => handleChooseDate(date)}
             />
           </SwiperSlide>

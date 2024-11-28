@@ -14,11 +14,11 @@ import java.util.List;
 public class PersonTypeController {
     @Autowired
     private PersonTypeService personTypeService;
+
     @GetMapping("public/person-types")
     @Operation(tags = "Person Types", description = "get all person types")
     public ResponseEntity<List<PersonTypesResponse>> getAllPersonTypes() {
         List<PersonTypesResponse> personTypes = personTypeService.getAllPersonTypes();
         return ResponseEntity.ok(personTypes);
     }
-
 }

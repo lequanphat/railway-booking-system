@@ -45,6 +45,9 @@ spring:
             client-secret: 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
             redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3001/api/oauth2/google/callback}"
             scope: openid, profile, email
+          facebook:
+            client-id: 423573474136909
+            client-secret: 26a51e7f5a2c9e3fd32fddc874015b34
   data:
     redis:
       host: localhost
@@ -75,6 +78,7 @@ logging:
         web:
           socket: DEBUG
         messaging: DEBUG
+        core: DEBUG
     com.backend.railwaybookingsystem: INFO
 
 ## FIXME : Customize JWT token and Swagger information for your application
@@ -95,3 +99,8 @@ swagger:
   app-license-url: https://www.apache.org/licenses/LICENSE-2.0.html
   app-license: Apache 2.0
 
+paypal:
+  client:
+    id: AQLsHjZe-il61FgoSzNjDpBPMA9NWS8jFCty4unSn8qLc1xcW1NvZ2Vz9_sZokkzf1CCDfAnh8EyqPyQ
+    secret: EILGMwYVy8_sMmbKpMwJxPtYCRdkqWyWM40N45lwzfJqh5f2mkmMZNDRo9Z7DuMzzCfKyBGZjs25ed-a
+  mode: sandbox

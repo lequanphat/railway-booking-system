@@ -11,11 +11,20 @@ const PAYMENT_METHOD_OPTIONS = Object.freeze([
     enabled: true,
   },
   {
+    value: 'PAYPAL',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/PayPal_logo.svg/1200px-PayPal_logo.svg.png',
+    title: 'Thanh toán trực tuyến qua PayPal',
+    descriptions: [
+      'Thanh toán bằng cách sử dụng tài khoản PayPal hoặc thẻ quốc tế Visa, MasterCard, American Express, Discover',
+    ],
+    enabled: true,
+  },
+  {
     value: 'MOMO',
     logo: 'https://dsvn.vn/images/logo-dvtt-MOM.png',
     title: 'Thanh toán trực tuyến qua ví điện tử MoMo',
     descriptions: ['Nhập mã MOMODSVN giảm đến 100k tại mục Ưu đãi'],
-    enabled: true,
+    enabled: false,
   },
   {
     value: 'ZALOPAY',
