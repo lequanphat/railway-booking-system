@@ -1,5 +1,8 @@
 package com.backend.railwaybookingsystem.services.impl;
 
+import com.backend.railwaybookingsystem.dtos.orders.response.OrderDetailResponse;
+import com.backend.railwaybookingsystem.dtos.reports.OrderReportResponse;
+import com.backend.railwaybookingsystem.dtos.reports.TrainReportResponse;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.UpdateTrainRequest;
@@ -8,6 +11,7 @@ import com.backend.railwaybookingsystem.dtos.trains.responses.GetAllTrainRespons
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.UpdateTrainResponse;
+import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.*;
 import com.backend.railwaybookingsystem.models.*;
@@ -23,10 +27,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -156,6 +159,18 @@ public class TrainServiceImpl implements TrainService {
         }
 
         return TrainMapper.INSTANCE.convertToUpdateTrainResponse(train);
+    }
+
+    @Override
+    public List<TrainReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate){
+        List<Object[]> results = trainRepository.getReport(startDate, endDate);
+        return results.stream()
+                .map(row -> new TrainReportResponse(
+                        ((Number) row[0]).longValue(),
+                        ((Number) row[1]).doubleValue(),
+                        ((String) row[2])
+                ))
+                .collect(Collectors.toList());
     }
 }
 

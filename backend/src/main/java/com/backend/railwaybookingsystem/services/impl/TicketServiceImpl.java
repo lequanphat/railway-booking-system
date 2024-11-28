@@ -44,8 +44,6 @@ public class TicketServiceImpl implements TicketService {
             return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());
         }
         return null;
-
     }
-
 }
 

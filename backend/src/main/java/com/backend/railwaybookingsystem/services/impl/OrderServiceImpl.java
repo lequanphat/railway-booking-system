@@ -3,7 +3,10 @@ package com.backend.railwaybookingsystem.services.impl;
 import com.backend.railwaybookingsystem.configurations.VNPayConfiguration;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
+import com.backend.railwaybookingsystem.dtos.orders.response.OrderDetailResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
+import com.backend.railwaybookingsystem.dtos.reports.OrderReportResponse;
+import com.backend.railwaybookingsystem.dtos.reports.UserOrderReportResponse;
 import com.backend.railwaybookingsystem.enums.OrderStatus;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.OrderMapper;
@@ -27,9 +30,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -141,7 +145,6 @@ public class OrderServiceImpl implements OrderService {
             order.setUser(user.orElse(null));
         }
         order.setTotalPrice(totalPrice);
-        order.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return orderRepository.save(order);
     }
 
@@ -323,6 +326,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate){
+        List<Object[]> results = orderRepository.getReport(startDate, endDate);
+        return results.stream()
+                .map(row -> new OrderReportResponse(
+                        ((Number) row[0]).longValue(),
+                        ((Number) row[1]).doubleValue(),
+                        ((java.sql.Date) row[2]).toLocalDate()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderDetailResponse getOrderDetail(Long orderId){
+        Optional<Order> order = orderRepository.findById(orderId);
+        if(order.isEmpty()){
+            log.error("Order not found");
+            throw new BadRequestException("Order not found");
+        }
+        return OrderMapper.INSTANCE.convertToOrderDetailResponse(order.get());
+    }
+
+    @Override
+    public UserOrderReportResponse getUserReport(LocalDateTime startDate, LocalDateTime endDate) {
+        int totalOrders = orderRepository.countByUserIsNotNullAndCreatedAtBetween(startDate, endDate);
+        int totalGuestOrders = orderRepository.countByUserIsNullAndCreatedAtBetween(startDate, endDate);
+        return new UserOrderReportResponse(totalOrders, totalGuestOrders);
+    }
+
     public boolean placeOrderCallbackPayPal(String paymentId, String payerId) {
         try {
             Payment payment = new Payment();

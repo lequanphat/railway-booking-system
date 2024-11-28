@@ -6,9 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Ticket findByScheduleIdAndCarriageIdAndSeatId(long scheduleId, long carriageId, long seatId);
 
     Page<Ticket> findTicketByOrderUserId(long userId, Pageable pageable);
+
+
 }

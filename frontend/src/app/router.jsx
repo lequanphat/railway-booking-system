@@ -240,6 +240,13 @@ const createAppRouter = () =>
             },
           },
           {
+            path: 'reports/tickets',
+            lazy: async () => {
+              const TicketReport = await import('./routes/admin/reports');
+              return { Component: TicketReport.default };
+            },
+          },
+          {
             path: 'settings/objects',
             lazy: async () => {
               const ObjectsManagement = await import('./routes/admin/settings/objects');

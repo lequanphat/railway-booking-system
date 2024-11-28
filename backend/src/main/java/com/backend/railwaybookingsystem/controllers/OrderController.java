@@ -7,23 +7,21 @@ import com.backend.railwaybookingsystem.services.OrderService;
 import com.backend.railwaybookingsystem.strategies.payment.PaymentContext;
 import com.backend.railwaybookingsystem.strategies.payment.enums.PaymentType;
 import com.backend.railwaybookingsystem.utils.CustomPagination;
-import com.paypal.api.payments.Payment;
-import com.paypal.api.payments.PaymentExecution;
 import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @RestController
 @RequestMapping("api")
-@Slf4j
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -85,5 +83,27 @@ public class OrderController {
     public ResponseEntity<String> placeOrderWithPaypal(@RequestParam Long orderId, @RequestParam Long amount) {
         var savedOrder = paymentContext.executePayment(orderId, amount, PaymentType.PAYPAL);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
+    }
+
+    @GetMapping("public/orders/{id}")
+    @Operation(tags = "Orders", description = "Get order detail")
+    public ResponseEntity<?> getOrderDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderDetail(id));
+    }
+
+    @GetMapping("ad/orders/report")
+    @Operation(tags = "Orders", description = "Get report")
+    public ResponseEntity<?> getReport(@RequestParam String startDate, @RequestParam String endDate) {
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).plusDays(1).atStartOfDay().minusSeconds(1);
+        return ResponseEntity.ok(orderService.getReport(start, end));
+    }
+
+    @GetMapping("ad/orders/report/user")
+    @Operation(tags = "Orders", description = "Get user order report")
+    public ResponseEntity<?> getUserOrderReport(@RequestParam String startDate, @RequestParam String endDate) {
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).plusDays(1).atStartOfDay().minusSeconds(1);
+        return ResponseEntity.ok(orderService.getUserReport(start, end));
     }
 }

@@ -1,13 +1,11 @@
 package com.backend.railwaybookingsystem.dtos.orders.response;
 
-import com.backend.railwaybookingsystem.enums.AuthProvider;
 import com.backend.railwaybookingsystem.enums.OrderStatus;
 import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import com.backend.railwaybookingsystem.enums.UserGender;
 import lombok.Value;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
  * DTO for {@link com.backend.railwaybookingsystem.models.Order}
  */
 @Value
-public class GetOrdersListResponse implements Serializable {
+public class OrderDetailResponse implements Serializable {
     Long id;
     String fullName;
     String phoneNumber;
@@ -35,11 +33,10 @@ public class GetOrdersListResponse implements Serializable {
     public static class UserDto implements Serializable {
         Long id;
         String name;
-        String password;
         String email;
-        AuthProvider provider;
         String phone;
         String address;
+        String avatar;
         UserGender gender;
     }
 
@@ -69,18 +66,8 @@ public class GetOrdersListResponse implements Serializable {
         public static class PersonTypeDto implements Serializable {
             Long id;
             String name;
+            String description;
             double percentage;
-            PersonTypeParentDto parent;
-
-            /**
-             * DTO for {@link com.backend.railwaybookingsystem.models.PersonType}
-             */
-            @Value
-            public static class PersonTypeParentDto implements Serializable {
-                Long id;
-                String name;
-                double percentage;
-            }
         }
     }
 }
