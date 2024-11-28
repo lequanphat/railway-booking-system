@@ -1,4 +1,5 @@
 import { Card } from 'antd';
+import RouteMap from '~/components/ui/RouteMap';
 import WebSocketTest from '~/components/WebSocketTest';
 import PopularJouneys from '~/features/home/components/PopularJouneys';
 import SearchRoutesFormHomepage from '~/features/home/components/SearchRoutesFormHomepage';
@@ -10,6 +11,7 @@ const HomeRoute = () => {
         <SearchRoutesFormHomepage />
       </Card>
       <PopularJouneys />
+      <RouteMap />
       <WebSocketTest />
     </div>
   );

@@ -173,3 +173,10 @@
 .header-main-layout .ant-menu-title-content {
   font-size: medium;
 }
+
+@layer utilities {
+  .leaflet-container {
+    height: 100vh;
+    width: 100vw;
+  }
+}

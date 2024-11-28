@@ -34,14 +34,14 @@ const TicketsPage = () => {
               onFinish={handleLookup}
             >
               <Flex vertical>
-                <Form.Item label="Phone number" name="phone" rules={null} required={false}>
-                  <Input placeholder="Enter phone number..." />
+                <Form.Item label="Mã vé" name="phone" rules={null} required={false}>
+                  <Input placeholder="Nhập mã vé" />
                 </Form.Item>
               </Flex>
               <Form.Item className="m-0">
                 <Flex justify="center">
                   <Button loading={isLoading} type="primary" htmlType="submit" className="rounded-full px-12">
-                    Look up
+                    Tra cứu vé
                   </Button>
                 </Flex>
               </Form.Item>

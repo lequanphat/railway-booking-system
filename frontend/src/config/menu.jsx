@@ -147,23 +147,7 @@ const adminMenu = Object.freeze([
     key: '8',
     icon: <BarChartOutlined />,
     label: 'Báo cáo & Thống kê',
-    children: [
-      {
-        key: '8-1',
-        label: 'Doanh thu',
-        path: '/reports/revenue',
-      },
-      {
-        key: '8-2',
-        label: 'Lượng khách',
-        path: '/reports/passengers',
-      },
-      {
-        key: '8-3',
-        label: 'Hiệu suất tuyến đường',
-        path: '/reports/route-performance',
-      },
-    ],
+    path: '/admin/reports/tickets',
   },
   {
     key: '9',
