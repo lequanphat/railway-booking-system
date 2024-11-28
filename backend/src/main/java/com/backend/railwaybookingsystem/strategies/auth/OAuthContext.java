@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-@AllArgsConstructor
 public class OAuthContext {
     private final Map<OAuthType, OAuthStrategy> oAuthStrategiesByType;
+
+    public OAuthContext(Map<OAuthType, OAuthStrategy> oAuthStrategiesByType) {
+        this.oAuthStrategiesByType = oAuthStrategiesByType;
+    }
 
     public OAuthUser authenticate(String credential, OAuthType oAuthType) {
         OAuthStrategy oAuthStrategy = oAuthStrategiesByType.get(oAuthType);

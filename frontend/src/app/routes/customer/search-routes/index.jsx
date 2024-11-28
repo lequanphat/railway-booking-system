@@ -38,7 +38,8 @@ const SearchPage = () => {
 
   useEffect(() => {
     setBookingType(params.get('trip_type'));
-  }, [params, setBookingType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.get('trip_type'), setBookingType]);
 
   const handleOpenBookingModal = (scheduleId, departureStation, arrivalStation) => {
     openBookingModal({ scheduleId, departureStation, arrivalStation });
@@ -69,32 +70,12 @@ const SearchPage = () => {
           </Col>
         )}
         <Col xs={24} md={params.get('trip_type') === TripType.RoundTrip ? 18 : 24}>
-          <DateSelection params={params} setParams={setParams} />
-          <Space direction="vertical" className="w-full mt-4" size="middle">
-            {!isRefetching ? (
-              departure_schedules && departure_schedules.length > 0 ? (
-                departure_schedules.map((schedule) => (
-                  <ScheduleItem
-                    key={schedule.id}
-                    {...schedule}
-                    onChoose={() => {
-                      handleOpenBookingModal(
-                        schedule.id,
-                        schedule.departure_segment.station_id,
-                        schedule.arrival_segment.station_id,
-                      );
-                    }}
-                  />
-                ))
-              ) : (
-                <EmptyRoutes />
-              )
-            ) : (
-              <div className="text-center py-10">
-                <Spin />
-              </div>
-            )}
-          </Space>
+          <DateSelection params={params} setParams={setParams} isReturn={seatSelectionStep === 2} />
+          <ListSchedule
+            schedules={seatSelectionStep === 2 ? return_schedules : departure_schedules}
+            isRefetching={isRefetching}
+            handleOpenBookingModal={handleOpenBookingModal}
+          />
         </Col>
         {params.get('trip_type') === TripType.RoundTrip && seatSelectionStep === 1 && (
           <Col
@@ -109,6 +90,36 @@ const SearchPage = () => {
         )}
       </Row>
       <ScheduleBookingModal open={isOpenBookingModal} onCancel={closeBookingModal} />
+    </Space>
+  );
+};
+
+const ListSchedule = ({ schedules, isRefetching, handleOpenBookingModal }) => {
+  return (
+    <Space direction="vertical" className="w-full mt-4" size="middle">
+      {!isRefetching ? (
+        schedules && schedules.length > 0 ? (
+          schedules.map((schedule) => (
+            <ScheduleItem
+              key={schedule.id}
+              {...schedule}
+              onChoose={() => {
+                handleOpenBookingModal(
+                  schedule.id,
+                  schedule.departure_segment.station_id,
+                  schedule.arrival_segment.station_id,
+                );
+              }}
+            />
+          ))
+        ) : (
+          <EmptyRoutes />
+        )
+      ) : (
+        <div className="text-center py-10">
+          <Spin />
+        </div>
+      )}
     </Space>
   );
 };

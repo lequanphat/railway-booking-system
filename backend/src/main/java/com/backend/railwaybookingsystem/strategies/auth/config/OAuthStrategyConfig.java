@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-@AllArgsConstructor
 public class OAuthStrategyConfig {
     private List<OAuthStrategy> oAuthStrategies;
+
+    public OAuthStrategyConfig(List<OAuthStrategy> oAuthStrategies) {
+        this.oAuthStrategies = oAuthStrategies;
+    }
 
     @Bean
     public Map<OAuthType, OAuthStrategy> oAuthStrategiesByType() {

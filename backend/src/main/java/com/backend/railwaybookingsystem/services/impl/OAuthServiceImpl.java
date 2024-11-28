@@ -30,14 +30,12 @@ public class OAuthServiceImpl implements OAuthService {
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
     @Autowired
     private JwtProperties jwtProperties;
 
-    private final OAuthContext oAuthContext;
-
-    public OAuthServiceImpl(OAuthContext oAuthContext) {
-        this.oAuthContext = oAuthContext;
-    }
+    @Autowired
+    private OAuthContext oAuthContext;
 
     @Override
     public LoginResponse authenticateGoogle(String credential) {
