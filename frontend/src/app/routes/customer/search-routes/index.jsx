@@ -89,7 +89,7 @@ const SearchPage = () => {
           </Col>
         )}
       </Row>
-      <ScheduleBookingModal open={isOpenBookingModal} onCancel={closeBookingModal} />
+      <ScheduleBookingModal open={!!isOpenBookingModal} onCancel={closeBookingModal} />
     </Space>
   );
 };

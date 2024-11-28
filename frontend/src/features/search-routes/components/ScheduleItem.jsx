@@ -1,9 +1,17 @@
-import { Button, Flex, Tag, Typography } from 'antd';
+import { Button, Flex, Popover, Typography } from 'antd';
 import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
 import dayjs from 'dayjs';
 import { calculateTravelTime } from '~/utils/calculateTravelTime';
+import { FieldTimeOutlined } from '@ant-design/icons';
 const { Text } = Typography;
+
+const content = (
+  <div>
+    <p>Content</p>
+    <p>Content</p>
+  </div>
+);
 
 export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, onChoose }) => {
   return (
@@ -13,9 +21,11 @@ export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, o
         <Typography level={3} className="text-xl font-bold text-primary">
           {train_name}
         </Typography>
-        {/* <Tag color="cyan" bordered={false}>
-          Còn 200 chỗ
-        </Tag> */}
+        <Popover content={content} placement="bottomLeft">
+          <Button size="small" shape="round" icon={<FieldTimeOutlined />} iconPosition="end">
+            Hành trình
+          </Button>
+        </Popover>
       </Flex>
       <Flex vertical>
         <Flex align="center">

@@ -1,12 +1,33 @@
 import { Alert, Button, Card, Flex, Result } from 'antd';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useCallbackPayPal } from '~/features/booking/api/place-order-callback-paypal';
 
 const TicketBookingCallback = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status');
+  const paymentId = searchParams.get('paymentId');
+  const payerId = searchParams.get('PayerID');
+
+  const callBackMutation = useCallbackPayPal({
+    mutationConfig: {
+      onSuccess: () => {
+        console.log('Change status of order to success' + paymentId);
+      },
+      onError: () => {
+        searchParams.set('status', 'fail');
+        setSearchParams(searchParams);
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (status === 'success' && paymentId) callBackMutation.mutate({ paymentId, payerId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payerId, paymentId, status]);
 
   return (
-    <div>
+    <div className="mt-4">
       {status === 'success' ? (
         <Card>
           <Result

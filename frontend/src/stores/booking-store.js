@@ -85,6 +85,7 @@ const useBookingStore = create((set, get) => ({
 
   setBookingType: (type) => {
     set({
+      isOpenBookingModal: false,
       type,
       oneWay: {
         scheduleId: null,

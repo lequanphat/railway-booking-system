@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.services.impl;
 
+import com.backend.railwaybookingsystem.dtos.route_segments.GetScheduleRouteSegmentsResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateRouteSegmentRequest;
 import com.backend.railwaybookingsystem.dtos.trains.responses.GetTrainRouteSegmentsResponse;
@@ -52,5 +53,37 @@ public class RouteSegmentServiceImpl implements RouteSegmentService {
     public SearchScheduleResponse.ScheduleDto.RouteSegmentDto getRouteSegmentByTrainAndStation(Long trainId, Long stationId) {
         var segment = routeSegmentRepository.getRouteSegmentByTrainIdAndStationId(trainId, stationId);
         return RouteSegmentMapper.INSTANCE.toSearchScheduleResponseRouteSegmentDto(segment);
+    }
+
+    @Override
+    public List<GetScheduleRouteSegmentsResponse> getRouteSegments(Long scheduleId, Long departureId, Long arrivalId) {
+        var routeSegments = routeSegmentRepository.getRouteSegmentsByScheduleId(scheduleId);
+
+        var departureNode = routeSegments.stream().filter(routeSegment -> {
+            return departureId.equals(routeSegment.getStation().getId());
+        }).findFirst().orElse(null);
+
+        var arrivalNode = routeSegments.stream().filter(routeSegment -> {
+            return arrivalId.equals(routeSegment.getStation().getId());
+        }).findFirst().orElse(null);
+
+        var routeSegmentResponse = routeSegments.stream()
+                .filter(routeSegment -> routeSegment.getDistance() >= departureNode.getDistance()
+                        && routeSegment.getDistance() <= arrivalNode.getDistance())
+                .sorted(
+                        (a, b) -> {
+                            if (a.getDistance() > b.getDistance()) {
+                                return 1;
+                            } else if (a.getDistance() < b.getDistance()) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                )
+                .toList();
+
+
+        return RouteSegmentMapper.INSTANCE.toGetScheduleRouteSegmentsResponse(routeSegmentResponse);
     }
 }

@@ -13,4 +13,7 @@ public interface OrderService {
     Page<GetOrdersListResponse> getOrders(String keyword, int page, int size);
 
     Page<GetOrdersListResponse> getMyOrders(int page, int size);
+
+    // placeOrderCallbackPayPal method is missing
+    boolean placeOrderCallbackPayPal(String paymentId, String payerId);
 }

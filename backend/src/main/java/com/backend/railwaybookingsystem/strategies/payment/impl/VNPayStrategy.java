@@ -1,21 +1,22 @@
-package com.backend.railwaybookingsystem.strategies.payment;
+package com.backend.railwaybookingsystem.strategies.payment.impl;
 
 import com.backend.railwaybookingsystem.configurations.VNPayConfiguration;
+import com.backend.railwaybookingsystem.strategies.payment.PaymentStrategy;
+import com.backend.railwaybookingsystem.strategies.payment.enums.PaymentType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Service
+@Component
 @Slf4j
 public class VNPayStrategy implements PaymentStrategy {
 
     @Override
     public String payment(Long orderId, Long amount) {
-
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", VNPayConfiguration.vnp_Version);
         vnp_Params.put("vnp_Command", VNPayConfiguration.vnp_Command);
@@ -48,8 +49,7 @@ public class VNPayStrategy implements PaymentStrategy {
             String fieldValue = (String) vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
                 //Build hash data
-                try
-                {
+                try {
                     hashData.append(fieldName);
                     hashData.append('=');
                     hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
@@ -72,6 +72,11 @@ public class VNPayStrategy implements PaymentStrategy {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
 
         return VNPayConfiguration.vnp_PayUrl + "?" + queryUrl;
+    }
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.VNPAY;
     }
 }
 

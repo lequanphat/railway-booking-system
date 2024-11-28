@@ -21,4 +21,5 @@ public interface ScheduleService {
             LocalDate returnDate,
             TripType tripType);
 
+
 }

@@ -129,7 +129,7 @@ const PaymentConfirmation = () => {
                 <List.Item>
                   <Radio value={item.value} disabled={!item?.enabled}>
                     <Flex align="center" gap={20}>
-                      <img src={item.logo} alt="" className="ml-4" />
+                      <img src={item.logo} alt="" className="ml-4 min-w-[140px] max-w-[140px] object-cover " />
                       <Flex vertical>
                         <h1 className="text-base text-primary font-medium">{item.title}</h1>
                         {item.descriptions.map((description, index) => (

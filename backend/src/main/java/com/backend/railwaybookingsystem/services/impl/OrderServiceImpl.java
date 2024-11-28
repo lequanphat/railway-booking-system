@@ -1,4 +1,5 @@
 package com.backend.railwaybookingsystem.services.impl;
+
 import com.backend.railwaybookingsystem.configurations.VNPayConfiguration;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
@@ -10,8 +11,11 @@ import com.backend.railwaybookingsystem.mappers.TicketMapper;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.OrderService;
-import com.backend.railwaybookingsystem.strategies.payment.VNPayStrategy;
-import contexts.PaymentContext;
+import com.backend.railwaybookingsystem.strategies.payment.enums.PaymentType;
+import com.backend.railwaybookingsystem.strategies.payment.PaymentContext;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.PaymentExecution;
+import com.paypal.base.rest.APIContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,15 +58,21 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private PersonTypeRepository personTypeRepository;
 
+    @Autowired
+    private PaymentContext paymentContext;
+
+    @Autowired
+    private APIContext apiContext;
+
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter dateCodeFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
-    public String generateTicketCode(Long scheduleId, Long carriageId, Long seatId, String dateFormatted){
+    public String generateTicketCode(Long scheduleId, Long carriageId, Long seatId, String dateFormatted) {
         return String.valueOf(scheduleId) + String.valueOf(carriageId) + String.valueOf(seatId) + dateFormatted;
     }
 
-    public Order onewayBookingHandler (PlaceOrderRequest request) {
+    public Order onewayBookingHandler(PlaceOrderRequest request) {
         log.info("Oneway Booking Handler");
         Schedule schedule = scheduleRepository.findById(request.getOneWayScheduleId()).orElse(null);
 
@@ -85,11 +95,11 @@ public class OrderServiceImpl implements OrderService {
 
         double totalPrice = 0;
 
-        for(int i=0; i< request.getTickets().size(); i++){
+        for (int i = 0; i < request.getTickets().size(); i++) {
             PlaceOrderRequest.TicketDto ticketDto = request.getTickets().get(i);
 
             Ticket findTicket = ticketRepository.findByScheduleIdAndCarriageIdAndSeatId(schedule.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId());
-            if(findTicket != null){
+            if (findTicket != null) {
                 log.error("Ticket already booked");
                 throw new BadRequestException("Ticket already booked");
             }
@@ -135,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
-    public Order roundTripBookingHandler (PlaceOrderRequest request) {
+    public Order roundTripBookingHandler(PlaceOrderRequest request) {
         log.info("RoundTrip Booking Handler");
 
         Schedule oneWaySchedule = scheduleRepository.findById(request.getOneWayScheduleId()).orElse(null);
@@ -167,14 +177,14 @@ public class OrderServiceImpl implements OrderService {
 
         double totalPrice = 0;
 
-        for(int i=0; i< request.getTickets().size(); i++){
+        for (int i = 0; i < request.getTickets().size(); i++) {
             PlaceOrderRequest.TicketDto ticketDto = request.getTickets().get(i);
 
             PlaceOrderRequest.TicketDto.ScheduleDto scheduleDto = new PlaceOrderRequest.TicketDto.ScheduleDto();
 
             PersonType personType = personTypeRepository.findById(ticketDto.getObject().getId()).orElse(null);
 
-            if(Objects.equals(ticketDto.getScheduleId(), request.getOneWayScheduleId())){ // oneway tickets
+            if (Objects.equals(ticketDto.getScheduleId(), request.getOneWayScheduleId())) { // oneway tickets
                 scheduleDto.setId(oneWaySchedule.getId());
 
                 // generate ticket code
@@ -198,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
                 ticketDto.setOriginalPrice(originalPrice);
                 ticketDto.setPrice(price);
 
-            }else{ // roundTrip tickets
+            } else { // roundTrip tickets
                 scheduleDto.setId(roundTripSchedule.getId());
 
                 // generate ticket code
@@ -226,7 +236,7 @@ public class OrderServiceImpl implements OrderService {
             Ticket findTicket = ticketRepository.findByScheduleIdAndCarriageIdAndSeatId(
                     scheduleDto.getId(), ticketDto.getCarriage().getId(), ticketDto.getSeat().getId());
 
-            if(findTicket != null){
+            if (findTicket != null) {
                 log.error("Ticket already booked");
                 throw new BadRequestException("Ticket already booked");
             }
@@ -254,42 +264,39 @@ public class OrderServiceImpl implements OrderService {
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
         log.info("Order placing process started");
 
-
         Order savedOrder = request.getType().equals("ONE_WAY") ? onewayBookingHandler(request) : roundTripBookingHandler(request);
         log.info("Order placed successfully");
 
-        PaymentContext paymentContext;
-        switch (savedOrder.getPaymentMethod()){
-            case VNPAY -> paymentContext = new PaymentContext(new VNPayStrategy());
-            case MOMO -> paymentContext = new PaymentContext(null);
-            case ZALOPAY -> paymentContext = new PaymentContext(null);
-            case PAYPAL -> paymentContext = new PaymentContext(null);
-            default -> paymentContext = new PaymentContext(new VNPayStrategy());
-        }
-        String paymentUrl = paymentContext.executePayment(savedOrder.getId(), Math.round(savedOrder.getTotalPrice()));
+        var type = switch (savedOrder.getPaymentMethod()) {
+            case VNPAY -> PaymentType.VNPAY;
+            case PAYPAL -> PaymentType.PAYPAL;
+            default ->
+                    throw new IllegalArgumentException("Unsupported payment method: " + savedOrder.getPaymentMethod());
+        };
+
+        String paymentUrl = paymentContext.executePayment(savedOrder.getId(), Math.round(savedOrder.getTotalPrice()), type);
 
         return new PlaceOrderResponse(200, "Order placed successfully", paymentUrl);
     }
 
 
-
     @Override
-    public String placeOrderCallback(Long orderId, String code){
+    public String placeOrderCallback(Long orderId, String code) {
         Order existingOrder = orderRepository.findById(orderId).orElse(null);
         assert existingOrder != null;
-        if(code.equals(VNPayConfiguration.vnp_SuccessCode)){
+        if (code.equals(VNPayConfiguration.vnp_SuccessCode)) {
             existingOrder.setStatus(OrderStatus.COMPLETED);
             log.error("Order already completed");
             orderRepository.save(existingOrder);
             return VNPayConfiguration.paymentSuccessCallback + "&order=" + orderId;
-        }else{
+        } else {
             orderRepository.deleteById(existingOrder.getId());
         }
         return VNPayConfiguration.paymentFailCallback;
     }
 
     @Override
-    public Page<GetOrdersListResponse> getOrders(String keyword, int page, int size){
+    public Page<GetOrdersListResponse> getOrders(String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<GetOrdersListResponse> orders = orderRepository.findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrFullNameNotContainingIgnoreCase(keyword, keyword, keyword, pageRequest)
@@ -299,7 +306,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<GetOrdersListResponse> getMyOrders(int page, int size){
+    public Page<GetOrdersListResponse> getMyOrders(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
         // Get the currently authenticated user
@@ -315,5 +322,36 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
+    @Override
+    public boolean placeOrderCallbackPayPal(String paymentId, String payerId) {
+        try {
+            Payment payment = new Payment();
+            payment.setId(paymentId);
+            PaymentExecution paymentExecution = new PaymentExecution();
+            paymentExecution.setPayerId(payerId);
+            Payment executedPayment = payment.execute(apiContext, paymentExecution);
+
+            if ("approved".equals(executedPayment.getState())) {
+                Long orderId = extractOrderIdFromTransaction(executedPayment);
+
+                log.info("Order with id: " + orderId + " has been paid.");
+
+                Order existingOrder = orderRepository.findById(orderId).orElse(null);
+                assert existingOrder != null;
+                existingOrder.setStatus(OrderStatus.COMPLETED);
+                orderRepository.save(existingOrder);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private Long extractOrderIdFromTransaction(Payment payment) {
+        return Long.parseLong(payment.getTransactions().get(0).getDescription().split(":")[1]);
+    }
 }
 
