@@ -26,12 +26,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private PaymentContext paymentContext;
-
-    @Autowired
-    private APIContext apiContext;
-
     @PostMapping("public/orders")
     @Operation(tags = "Orders", description = "Place order")
     public ResponseEntity<PlaceOrderResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest request) {
@@ -78,12 +72,6 @@ public class OrderController {
         return ResponseEntity.ok(new CustomPagination<>(orders));
     }
 
-    @PostMapping("public/paypal/orders")
-    @Operation(tags = "Orders", description = "Place order with paypal")
-    public ResponseEntity<String> placeOrderWithPaypal(@RequestParam Long orderId, @RequestParam Long amount) {
-        var savedOrder = paymentContext.executePayment(orderId, amount, PaymentType.PAYPAL);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
-    }
 
     @GetMapping("public/orders/{id}")
     @Operation(tags = "Orders", description = "Get order detail")

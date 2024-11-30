@@ -42,8 +42,8 @@ public class PaypalStrategy implements PaymentStrategy {
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:3000/ticket-booking/callback?status=fail");
-        redirectUrls.setReturnUrl("http://localhost:3000/ticket-booking/callback?status=success");
+        redirectUrls.setCancelUrl("http://localhost:3000/ticket-booking/callback?status=fail&order=" + orderId);
+        redirectUrls.setReturnUrl("http://localhost:3000/ticket-booking/callback?status=success&order=" + orderId);
         payment.setRedirectUrls(redirectUrls);
 
         try {
