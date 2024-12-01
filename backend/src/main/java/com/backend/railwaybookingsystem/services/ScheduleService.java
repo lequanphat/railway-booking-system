@@ -1,7 +1,6 @@
 package com.backend.railwaybookingsystem.services;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
-import com.backend.railwaybookingsystem.dtos.schedules.requests.GetDepartureDateCountRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
 
@@ -25,4 +24,6 @@ public interface ScheduleService {
             TripType tripType);
 
     List<GetDepartureDateCountResponse> getDepartureDateCount(LocalDate start, LocalDate end);
+
+    void seedSchedules(LocalDate startDate, LocalDate endDate, List<Long> trainId, String daysOfWeek);
 }

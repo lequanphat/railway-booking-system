@@ -219,10 +219,17 @@ const createAppRouter = () =>
             },
           },
           {
-            path: 'schedules/generate',
+            path: 'schedules/generate-route-segments',
             lazy: async () => {
               const GenerateSchedule = await import('./routes/admin/generate-route-segments');
               return { Component: GenerateSchedule.default };
+            },
+          },
+          {
+            path: 'generate-schedules',
+            lazy: async () => {
+              const GenerateSchedulesPage = await import('./routes/admin/train-schedules/generate-schedules');
+              return { Component: GenerateSchedulesPage.default };
             },
           },
           {

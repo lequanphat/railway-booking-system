@@ -4,6 +4,7 @@ import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRe
 import com.backend.railwaybookingsystem.dtos.schedules.requests.GetDepartureDateCountRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
+import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ScheduleMapper;
 import com.backend.railwaybookingsystem.models.RouteSegment;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -99,6 +102,26 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .stream()
                 .map(objects -> new GetDepartureDateCountResponse((LocalDate) objects[0], (Long) objects[1]))
                 .toList();
+    }
+
+    @Override
+    public void seedSchedules(LocalDate startDate, LocalDate endDate, List<Long> trainIds, String daysOfWeek) {
+        Map<Long, LocalDate> maxDates = scheduleRepository.findMaxDepartureDateByTrainIds(trainIds)
+                .stream()
+                .map(objects -> Map.entry((Long) objects[0], (LocalDate) objects[1]))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        for (Long trainId : trainIds) {
+            LocalDate maxDate = maxDates.get(trainId);
+            if (maxDate != null && (maxDate.isAfter(startDate) || maxDate.isEqual(startDate))) {
+                var trainName = trainRepository.findById(trainId).get().getName();
+                throw new BadRequestException("Tàu " + trainName + " đã có lịch chạy tới ngày " + maxDate);
+            }
+        }
+
+        for (Long trainId : trainIds) {
+            scheduleRepository.seedSchedules(startDate, endDate, trainId, daysOfWeek);
+        }
     }
 
     private List<SearchScheduleResponse.ScheduleDto> mapSchedulesToResponse(List<Schedule> schedules, Long departureStation, Long arrivalStation) {
