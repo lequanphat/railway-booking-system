@@ -5,6 +5,7 @@ const PieChart = ({ data = [], labels = ['A', 'B'], xaxis = {}, yaxis = {}, titl
     <ReactApexChart
       options={{
         chart: {
+          fontFamily: 'inherit',
           toolbar: {
             show: false,
           },

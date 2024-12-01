@@ -62,4 +62,6 @@ public class ScheduleController {
         var schedules = scheduleService.searchSchedules(departureStation, arrivalStation, departureDate, returnDate, tripType);
         return ResponseEntity.ok(schedules);
     }
+
+    
 }

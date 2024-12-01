@@ -5,6 +5,7 @@ const BarChart = ({ data = [], xaxis = {}, yaxis = {}, title = '', colors = ['#0
     <ReactApexChart
       options={{
         chart: {
+          fontFamily: 'inherit',
           toolbar: {
             show: false,
           },

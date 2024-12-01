@@ -7,6 +7,7 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,12 +20,17 @@ public class PaypalStrategy implements PaymentStrategy {
     @Autowired
     private APIContext apiContext;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
+    private final int VND_TO_USD = 25000;
+
     @Override
     public String payment(Long orderId, Long amount) {
         log.info("Creating payment for order: " + orderId + " with amount: " + amount);
         Amount amountObj = new Amount();
         amountObj.setCurrency("USD");
-        amountObj.setTotal(String.format("%.2f", amount / 100.0));
+        amountObj.setTotal(Double.toString(amount / VND_TO_USD));
 
         Transaction transaction = new Transaction();
         transaction.setDescription("Order payment:" + orderId);
@@ -42,15 +48,14 @@ public class PaypalStrategy implements PaymentStrategy {
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:3000/ticket-booking/callback?status=fail&order=" + orderId);
-        redirectUrls.setReturnUrl("http://localhost:3000/ticket-booking/callback?status=success&order=" + orderId);
+        redirectUrls.setCancelUrl(frontendUrl + "/ticket-booking/callback?status=fail&order=" + orderId);
+        redirectUrls.setReturnUrl(frontendUrl + "/ticket-booking/callback?status=success&order=" + orderId);
         payment.setRedirectUrls(redirectUrls);
 
         try {
             Payment createdPayment = payment.create(apiContext);
             for (Links link : createdPayment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
-                    log.info("Redirecting to: " + link.getHref());
                     return link.getHref();
                 }
             }

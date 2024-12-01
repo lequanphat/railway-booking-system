@@ -13,5 +13,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     Page<Ticket> findTicketByOrderUserId(long userId, Pageable pageable);
 
-
+    Page<Ticket> findTicketBySchedule_Id(long scheduleId, Pageable pageable);
 }
