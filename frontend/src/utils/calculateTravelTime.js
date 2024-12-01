@@ -5,6 +5,9 @@ dayjs.extend(duration);
 
 export const calculateTravelTime = (start, end) => {
   // Chênh lệch ngày
+  if (!start || !end) {
+    return '0 phút';
+  }
   const dayDifference = end.day_number - start.day_number;
 
   // Tính giờ chênh lệch giữa departure_time của start và arrival_time của end

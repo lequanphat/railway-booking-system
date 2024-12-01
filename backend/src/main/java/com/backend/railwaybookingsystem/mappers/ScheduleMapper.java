@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.mappers;
 
+import com.backend.railwaybookingsystem.dtos.schedules.responses.GetPassengersOfScheduleResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
@@ -32,4 +33,6 @@ public interface ScheduleMapper {
             List<SearchScheduleResponse.ScheduleDto> returnSchedules,
             String tripType
     );
+
+    GetPassengersOfScheduleResponse convertToGetPassengersOfScheduleResponse(Schedule schedule);
 }

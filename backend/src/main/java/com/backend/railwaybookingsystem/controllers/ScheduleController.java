@@ -1,9 +1,7 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -63,5 +61,13 @@ public class ScheduleController {
         return ResponseEntity.ok(schedules);
     }
 
-    
+    @GetMapping("public/schedules/count")
+    public ResponseEntity<List<GetDepartureDateCountResponse>> getDepartureDateCountsBetween(
+            @RequestParam LocalDate start,
+            @RequestParam LocalDate end
+    ) {
+        log.info("Getting departure date counts between startDate: {} and endDate: {}", start, end);
+        var counts = scheduleService.getDepartureDateCount(start, end);
+        return ResponseEntity.ok(counts);
+    }
 }

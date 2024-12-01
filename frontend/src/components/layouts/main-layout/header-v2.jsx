@@ -2,6 +2,8 @@ import { Button, Flex, Layout, Menu } from 'antd';
 import logo from '~/assets/logo-dsvn.png';
 import { UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
+import useAuthStore from '~/stores/auth-store';
+import UserDropdown from '~/components/layouts/main-layout/user-dropdown';
 const { Header: AntHeader } = Layout;
 
 const items = [
@@ -10,11 +12,11 @@ const items = [
     label: 'Trang chủ',
     url: '/',
   },
-  {
-    key: 'SCHEDULE',
-    label: 'Lịch trình',
-    url: '/search',
-  },
+  // {
+  //   key: 'SCHEDULE',
+  //   label: 'Lịch trình',
+  //   url: '/search',
+  // },
   {
     key: 'TICKETS',
     label: 'Vé tàu',
@@ -29,13 +31,14 @@ const items = [
 
 const HeaderV2 = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
 
   const onClick = (e) => {
     navigate(items.find((item) => item.key === e.key).url);
   };
 
   return (
-    <AntHeader className="sticky top-0 z-50  bg-white border-b px-4 shadow-sm">
+    <AntHeader className="sticky top-0 z-50  bg-white px-4 shadow-sm">
       <div className="flex items-center justify-between w-[90%] md:w-[90%] xl:w-[1228px] 2xl:w-[1228px] mx-auto">
         <Flex align="center" gap={40} className="flex-1">
           <Link to="/">
@@ -51,15 +54,19 @@ const HeaderV2 = () => {
             className="flex-1"
           />
         </Flex>
-        <Button
-          variant="filled"
-          color="primary"
-          shape="round"
-          icon={<UserOutlined />}
-          onClick={() => navigate('/auth/login')}
-        >
-          Đăng nhập
-        </Button>
+        {isAuthenticated ? (
+          <UserDropdown />
+        ) : (
+          <Button
+            variant="filled"
+            color="primary"
+            shape="round"
+            icon={<UserOutlined />}
+            onClick={() => navigate('/auth/login')}
+          >
+            Đăng nhập
+          </Button>
+        )}
       </div>
     </AntHeader>
   );

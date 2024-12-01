@@ -1,9 +1,8 @@
 package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.requests.GetDepartureDateCountRequest;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.ScheduleMapper;
@@ -92,6 +91,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         var returnResponse = mapSchedulesToResponse(returnSchedules, arrivalStation, departureStation);
 
         return buildSearchScheduleResponse(departureStation, arrivalStation, departureDate, returnDate, departureResponse, returnResponse, tripType);
+    }
+
+    @Override
+    public List<GetDepartureDateCountResponse> getDepartureDateCount(LocalDate start, LocalDate end) {
+        return scheduleRepository.findDepartureDateCountsBetween(start, end)
+                .stream()
+                .map(objects -> new GetDepartureDateCountResponse((LocalDate) objects[0], (Long) objects[1]))
+                .toList();
     }
 
     private List<SearchScheduleResponse.ScheduleDto> mapSchedulesToResponse(List<Schedule> schedules, Long departureStation, Long arrivalStation) {

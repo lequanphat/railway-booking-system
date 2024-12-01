@@ -32,6 +32,11 @@ const adminMenu = Object.freeze([
         path: '/admin/schedules/routes',
       },
       {
+        key: '2-5',
+        label: 'Tạo nhanh lịch trình',
+        path: '/admin/schedules/routes',
+      },
+      {
         key: '2-2',
         label: 'Lịch trình tàu',
         path: '/admin/train-schedules',
