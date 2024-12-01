@@ -15,7 +15,7 @@ const content = (
 
 export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, onChoose }) => {
   return (
-    <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white">
+    <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white" wrap={true}>
       <Flex gap={10} vertical>
         <span className="text-xs text-gray-500">Số hiệu</span>
         <Typography level={3} className="text-xl font-bold text-primary">

@@ -2,10 +2,7 @@ package com.backend.railwaybookingsystem.services;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.requests.GetDepartureDateCountRequest;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.GetDepartureDateCountResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
 
 import java.time.LocalDate;

@@ -29,7 +29,7 @@ public class TicketServiceImpl implements TicketService {
     private UserRepository userRepository;
 
     @Override
-    public Page<MyTicketResponse> getMyTickets(String keyword, int page, int size){
+    public Page<MyTicketResponse> getMyTickets(String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
         // Get the currently authenticated user
@@ -44,6 +44,15 @@ public class TicketServiceImpl implements TicketService {
             return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());
         }
         return null;
+    }
+
+    @Override
+    public Page<MyTicketResponse> getTicketsForSchedule(Long scheduleId, String keyword, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        Page<MyTicketResponse> tickets = ticketRepository.findTicketByScheduleId(scheduleId, keyword, pageRequest)
+                .map(TicketMapper.INSTANCE::convertToMyTicketResponse);
+
+        return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());
     }
 }
 

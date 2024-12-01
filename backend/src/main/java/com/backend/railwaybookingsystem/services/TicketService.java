@@ -7,4 +7,5 @@ import org.springframework.data.domain.Page;
 public interface TicketService {
 
     Page<MyTicketResponse> getMyTickets(String keyword, int page, int size);
+    Page<MyTicketResponse> getTicketsForSchedule(Long scheduleId, String keyword, int page, int size);
 }

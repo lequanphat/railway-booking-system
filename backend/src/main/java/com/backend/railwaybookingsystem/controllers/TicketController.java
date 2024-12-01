@@ -27,4 +27,16 @@ public class TicketController {
         Page<MyTicketResponse> tickets = ticketService.getMyTickets(keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(tickets));
     }
+
+    // ticket for a schedule
+    @GetMapping("public/tickets/schedules/{id}")
+    @Operation(tags = "Tickets", description = "Get tickets for a schedule")
+    public ResponseEntity<CustomPagination<MyTicketResponse>> getTicketsForSchedule(@PathVariable Long id,
+                                                                                    @RequestParam(defaultValue = "1") int page,
+                                                                                    @RequestParam(defaultValue = "10") int size,
+                                                                                    @RequestParam(defaultValue = "") String keyword
+    ) {
+        Page<MyTicketResponse> tickets = ticketService.getTicketsForSchedule(id, keyword, page - 1, size);
+        return ResponseEntity.ok(new CustomPagination<>(tickets));
+    }
 }

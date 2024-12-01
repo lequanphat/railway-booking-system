@@ -1,10 +1,7 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.GetDepartureDateCountResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.GetScheduleByDateResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.ScheduleDetailsResponse;
-import com.backend.railwaybookingsystem.dtos.schedules.responses.SearchScheduleResponse;
+import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.services.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
