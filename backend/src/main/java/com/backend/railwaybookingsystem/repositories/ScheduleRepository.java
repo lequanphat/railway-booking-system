@@ -25,4 +25,13 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
                   AND rsDeparture.distance < rsArrival.distance
             """)
     List<Schedule> searchSchedules(LocalDate departureDate, Long departureStation, Long arrivalStation);
+
+    @Query("""
+            SELECT s.departureDate, count(s.train.id) as count
+            FROM Schedule s
+            WHERE s.departureDate between :startDate and :endDate
+            GROUP BY s.departureDate
+            """)
+    List<Object[]> findDepartureDateCountsBetween(LocalDate startDate, LocalDate endDate);
+
 }

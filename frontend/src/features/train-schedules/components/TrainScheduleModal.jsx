@@ -1,6 +1,6 @@
-import { App, Button, Flex, Form, Modal, Popconfirm, Select, Space, Table, Tag } from 'antd';
+import { App, Button, Drawer, Flex, Form, Popconfirm, Select, Space, Table, Tag } from 'antd';
 import { useMemo } from 'react';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, FieldTimeOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import { useGetAllTrain } from '~/features/trains/api/get-all-train';
 import { useScheduleByDate } from '~/features/train-schedules/api/get-schedule-by-date';
 import { useDeleteSchedule } from '~/features/train-schedules/api/delete-schedule';
@@ -32,16 +32,17 @@ const TrainScheduleModal = ({ date, open, onCancel }) => {
         title: '#',
         dataIndex: 'id',
         key: 'id',
-        width: 50,
+        width: 70,
         align: 'center',
       },
       {
         title: 'Mác tàu',
         dataIndex: ['train', 'name'],
         key: 'name',
-        width: 100,
+        width: 80,
+        align: 'center',
         render: (label, record) => (
-          <Tag color="cyan" key={record.train.id}>
+          <Tag color="orange-inverse" key={record.train.id}>
             {record.train.name}
           </Tag>
         ),
@@ -53,30 +54,45 @@ const TrainScheduleModal = ({ date, open, onCancel }) => {
       },
       {
         render: (label, record) => (
-          <Popconfirm
-            title="Xoá chuyến?"
-            description="Bạn có chắc chắn xoá không ?"
-            okText="Yes"
-            cancelText="No"
-            placement="topRight"
-            onConfirm={() => deleteScheduleMutation.mutate({ id: record.id })}
-          >
-            <Button size="small" icon={<DeleteOutlined />} color="danger" variant="filled" />
-          </Popconfirm>
+          <Space>
+            <Button size="small" icon={<UserSwitchOutlined />} variant="filled" color="default">
+              Hành khách
+            </Button>
+            <Button
+              size="small"
+              icon={<FieldTimeOutlined />}
+              variant="filled"
+              color="primary"
+              href={`/admin/trains/${record.train.id}/route-segments`}
+              target="_blank"
+            >
+              Giờ tàu
+            </Button>
+            <Popconfirm
+              title="Xoá chuyến?"
+              description="Bạn có chắc chắn xoá không ?"
+              okText="Yes"
+              cancelText="No"
+              placement="topRight"
+              onConfirm={() => deleteScheduleMutation.mutate({ id: record.id })}
+            >
+              <Button size="small" icon={<DeleteOutlined />} color="danger" variant="filled" />
+            </Popconfirm>
+          </Space>
         ),
         fixed: 'right',
-        width: 50,
+        width: 250,
       },
     ],
     [deleteScheduleMutation],
   );
 
   return (
-    <Modal
+    <Drawer
       title={`Danh sách tàu chạy ${date?.format('dddd')} ngày ${date?.format('DD-MM-YYYY')}`}
       open={open}
-      onCancel={onCancel}
-      footer={null}
+      onClose={onCancel}
+      size="large"
       centered
     >
       <AddTrainScheduleForm date={date} currentList={data} />
@@ -87,10 +103,9 @@ const TrainScheduleModal = ({ date, open, onCancel }) => {
         dataSource={data}
         loading={isLoading}
         pagination={false}
-        scroll={{ y: 300, x: false }}
         bordered
       />
-    </Modal>
+    </Drawer>
   );
 };
 

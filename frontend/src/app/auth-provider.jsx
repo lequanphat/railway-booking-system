@@ -5,7 +5,7 @@ import useAuthStore from '~/stores/auth-store';
 
 const AuthProvider = ({ children }) => {
   const { setUser } = useAuthStore();
-  const { data: user, error, isLoading } = useAuthentication();
+  const { data: user, error, isFetching } = useAuthentication();
 
   useEffect(() => {
     if (user?.id) {
@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
     }
   }, [user, setUser, error]);
 
-  if (isLoading) return <LoadingScreen />;
+  if (isFetching) return <LoadingScreen />;
 
   return children;
 };
