@@ -66,6 +66,11 @@ const adminMenu = Object.freeze([
       },
       {
         key: '3-3',
+        label: 'Quản lý hành khách',
+        path: '/admin/passengers',
+      },
+      {
+        key: '3-4',
         label: 'Hủy/Đổi vé',
         path: '/bookings/change',
       },
@@ -88,23 +93,23 @@ const adminMenu = Object.freeze([
     //   },
     // ],
   },
-  {
-    key: '5',
-    icon: <DollarOutlined />,
-    label: 'Quản lý thanh toán',
-    children: [
-      {
-        key: '5-1',
-        label: 'Giao dịch',
-        path: '/payments/transactions',
-      },
-      {
-        key: '5-2',
-        label: 'Hoàn tiền',
-        path: '/payments/refunds',
-      },
-    ],
-  },
+  // {
+  //   key: '5',
+  //   icon: <DollarOutlined />,
+  //   label: 'Quản lý thanh toán',
+  //   children: [
+  //     {
+  //       key: '5-1',
+  //       label: 'Giao dịch',
+  //       path: '/payments/transactions',
+  //     },
+  //     {
+  //       key: '5-2',
+  //       label: 'Hoàn tiền',
+  //       path: '/payments/refunds',
+  //     },
+  //   ],
+  // },
   {
     key: '6',
     icon: <TeamOutlined />,

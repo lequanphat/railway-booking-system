@@ -260,6 +260,13 @@ const createAppRouter = () =>
               return { Component: ObjectsManagement.default };
             },
           },
+          {
+            path: 'passengers',
+            lazy: async () => {
+              const ManagePassengerPage = await import('./routes/admin/train-schedules/manage-passengers');
+              return { Component: ManagePassengerPage.default };
+            },
+          },
         ],
       },
       // Auth routes

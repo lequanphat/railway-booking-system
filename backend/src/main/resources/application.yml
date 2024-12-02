@@ -15,13 +15,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # if you have problems with db, change to 'create' at the first time you run application
+      ddl-auto: update # if you have problems with db, change to 'create' at the first time you run application
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     defer-datasource-initialization: true
   sql:
     init:
-      mode: always # always khi ddl-auto = create, never khi ddl-auto = update
+      mode: never # always khi ddl-auto = create, never khi ddl-auto = update
       data-locations: classpath:/procedures.sql, classpath:/data.sql
       separator: ^;
 
@@ -86,8 +86,8 @@ logging:
 jwt:
   secretKey: secret
   issuer: nhatsinh.id.vn
-  expirationMinute: 1
-  expirationRefreshMinute: 5
+  expirationMinute: 30
+  expirationRefreshMinute: 10080 # 7 days
 
 swagger:
   contact-name: Tran Nhat Sinh

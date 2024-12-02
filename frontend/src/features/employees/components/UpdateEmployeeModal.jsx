@@ -13,7 +13,7 @@ const UpdateEmployeeModal = ({ mutation, open, handleCancel, selectedEmployee })
   };
 
   return (
-    <Modal title="Update employee" open={open} onCancel={handleCancel} footer={null}>
+    <Modal title="Update employee" open={open} onCancel={handleCancel} footer={null} centered>
       <Form
         form={form}
         className="pt-4"

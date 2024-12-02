@@ -1,4 +1,4 @@
-import { Alert, App, Button, Card, Checkbox, DatePicker, Flex, Form, Select, Space } from 'antd';
+import { Alert, App, Button, Card, Checkbox, DatePicker, Flex, Form, Select, Space, Tag } from 'antd';
 import { useState } from 'react';
 import PageHeader from '~/components/ui/page-header';
 import { useSeedSchedules } from '~/features/train-schedules/api/seed-schedule';
@@ -104,6 +104,17 @@ const GenerateSchedules = () => {
               allowClear
               mode="multiple"
               filterOption={(input, option) => option.name.toLowerCase().includes(input.toLowerCase())}
+              optionRender={(option) => {
+                const { name = '', route = {} } = option.data;
+                return (
+                  <Flex justify="space-between">
+                    <span>{name}</span>
+                    <Space>
+                      <Tag color="cyan">{route.name}</Tag>
+                    </Space>
+                  </Flex>
+                );
+              }}
             />
           </Form.Item>
           <Form.Item
