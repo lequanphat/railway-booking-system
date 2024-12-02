@@ -55,7 +55,14 @@ const TrainScheduleModal = ({ date, open, onCancel }) => {
       {
         render: (label, record) => (
           <Space>
-            <Button size="small" icon={<UserSwitchOutlined />} variant="filled" color="default">
+            <Button
+              size="small"
+              icon={<UserSwitchOutlined />}
+              variant="filled"
+              color="default"
+              href={`/admin/passengers/?trainId=${record.train.id}&departureTime=${date?.format('YYYY-MM-DD')}`}
+              target="_blank"
+            >
               Hành khách
             </Button>
             <Button

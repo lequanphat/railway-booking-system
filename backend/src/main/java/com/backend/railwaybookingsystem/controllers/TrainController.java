@@ -75,4 +75,9 @@ public class TrainController {
         return ResponseEntity.ok(trainService.getReport(start, end));
     }
 
+    @GetMapping("ad/trains/{id}/carriages")
+    @Operation(tags = "Train", description = "get carriages of a train")
+    public ResponseEntity<?> getCarriagesOfTrain(@PathVariable Long id) {
+        return ResponseEntity.ok(trainService.getCarriagesOfTrain(id));
+    }
 }

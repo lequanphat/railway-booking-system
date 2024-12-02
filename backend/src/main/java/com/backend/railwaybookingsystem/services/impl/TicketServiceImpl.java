@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -47,9 +48,9 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Page<MyTicketResponse> getTicketsForSchedule(Long scheduleId, String keyword, int page, int size) {
+    public Page<MyTicketResponse> getTicketsForSchedule(Long trainId, LocalDate departureTime, Long personTypeId, Long carriageId, String departureStation, String arrivalStation, String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        Page<MyTicketResponse> tickets = ticketRepository.findTicketByScheduleId(scheduleId, keyword, pageRequest)
+        Page<MyTicketResponse> tickets = ticketRepository.filterTicket(trainId, departureTime, personTypeId, carriageId, departureStation, arrivalStation, keyword, pageRequest)
                 .map(TicketMapper.INSTANCE::convertToMyTicketResponse);
 
         return new PageImpl<>(tickets.getContent(), pageRequest, tickets.getTotalElements());

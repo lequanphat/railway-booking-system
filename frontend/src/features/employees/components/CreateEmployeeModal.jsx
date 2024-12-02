@@ -24,7 +24,7 @@ const CreateEmployeeModal = ({ open, handleCancel }) => {
     mutation.mutate({ data: { ...values, userRole: USER_ROLES.ADMIN } });
   };
   return (
-    <Modal title="Thêm nhân viên mới" open={open} onCancel={handleCancel} footer={null}>
+    <Modal title="Thêm nhân viên mới" open={open} onCancel={handleCancel} footer={null} centered>
       <Form form={form} className="pt-4" onFinish={onFinish} layout="vertical">
         <Flex vertical>
           <Form.Item label="Tên nhân viên" name="name" rules={RULES.createEmployee.name} validateTrigger="onBlur">

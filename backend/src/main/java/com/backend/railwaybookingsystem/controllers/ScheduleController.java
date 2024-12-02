@@ -1,9 +1,11 @@
 package com.backend.railwaybookingsystem.controllers;
 
 import com.backend.railwaybookingsystem.dtos.schedules.requests.CreateScheduleRequest;
+import com.backend.railwaybookingsystem.dtos.schedules.requests.SeedScheduleRequest;
 import com.backend.railwaybookingsystem.dtos.schedules.responses.*;
 import com.backend.railwaybookingsystem.enums.TripType;
 import com.backend.railwaybookingsystem.services.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -69,5 +71,11 @@ public class ScheduleController {
         log.info("Getting departure date counts between startDate: {} and endDate: {}", start, end);
         var counts = scheduleService.getDepartureDateCount(start, end);
         return ResponseEntity.ok(counts);
+    }
+
+    @PostMapping("ad/schedules/seed")
+    public ResponseEntity<Void> seedSchedules(@Valid @RequestBody SeedScheduleRequest request) {
+        scheduleService.seedSchedules(request.getStartDate(), request.getEndDate(), request.getTrainIds(), request.getDaysOfWeek());
+        return ResponseEntity.noContent().build();
     }
 }

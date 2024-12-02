@@ -1,9 +1,11 @@
-import { Calendar, Flex, Tag } from 'antd';
+import { Button, Calendar, Flex, Tag } from 'antd';
 import { useState } from 'react';
 import TrainScheduleModal from '~/features/train-schedules/components/TrainScheduleModal';
 import dayjs from 'dayjs';
 import PageHeader from '~/components/ui/page-header';
 import { useCountScheduleBetween } from '~/features/train-schedules/api/count-schedule';
+import { Link } from 'react-router-dom';
+import { PlusOutlined } from '@ant-design/icons';
 
 const TrainScheDulesPage = () => {
   const [open, setOpen] = useState(false);
@@ -15,16 +17,21 @@ const TrainScheDulesPage = () => {
     return { start: start.format('YYYY-MM-DD'), end: end.format('YYYY-MM-DD') };
   };
 
-  console.log(dateRange(date));
-
   const { data } = useCountScheduleBetween(dateRange(date));
 
   return (
     <>
-      <PageHeader
-        heading="Quản lý lịch tàu"
-        links={[{ title: 'Trang chủ', href: '/admin' }, { title: 'Lịch trình' }]}
-      />
+      <Flex align="center" justify="space-between">
+        <PageHeader
+          heading="Quản lý lịch tàu"
+          links={[{ title: 'Trang chủ', href: '/admin' }, { title: 'Lịch trình' }]}
+        />
+        <Link to="/admin/generate-schedules">
+          <Button type="primary" icon={<PlusOutlined />}>
+            Tạo lịch trình
+          </Button>
+        </Link>
+      </Flex>
       <Calendar
         cellRender={(date, info) => {
           if (info.type === 'date') {

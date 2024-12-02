@@ -76,9 +76,9 @@ logging:
     org:
       springframework:
         web:
-          socket: DEBUG
-        messaging: DEBUG
-        core: DEBUG
+          socket: INFO
+        messaging: INFO
+        core: INFO
     com.backend.railwaybookingsystem: INFO
 
 ## FIXME : Customize JWT token and Swagger information for your application
@@ -86,8 +86,8 @@ logging:
 jwt:
   secretKey: secret
   issuer: nhatsinh.id.vn
-  expirationMinute: 1
-  expirationRefreshMinute: 5
+  expirationMinute: 30
+  expirationRefreshMinute: 10080 # 7 days
 
 swagger:
   contact-name: Tran Nhat Sinh

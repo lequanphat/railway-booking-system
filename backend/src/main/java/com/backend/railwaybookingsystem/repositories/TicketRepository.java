@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
@@ -17,7 +19,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("""
             SELECT t FROM Ticket t 
-            WHERE t.schedule.id = :scheduleId 
+            WHERE (:trainId IS NULL OR t.schedule.train.id = :trainId)
+                AND (:departureTime IS NULL OR t.schedule.departureDate = :departureTime)
+                AND (:personTypeId IS NULL OR t.object.id = :personTypeId)
+                AND (:carriageId IS NULL OR t.carriage.id = :carriageId)
+                AND (:departureStation IS NULL OR t.departureStation = :departureStation)
+                AND (:arrivalStation IS NULL OR t.arrivalStation = :arrivalStation)
                 AND (t.code LIKE %:keyword% 
                 OR t.seatType LIKE %:keyword% 
                 OR t.carriageType LIKE %:keyword% 
@@ -27,6 +34,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                 OR t.arrivalStation LIKE %:keyword% 
                 OR t.departureTime LIKE %:keyword% 
                 OR t.arrivalTime LIKE %:keyword%)
+            ORDER BY t.order.createdAt DESC
             """)
-    Page<Ticket> findTicketByScheduleId(long scheduleId, String keyword, Pageable pageable);
+    Page<Ticket> filterTicket(Long trainId, LocalDate departureTime, Long personTypeId, Long carriageId, String departureStation, String arrivalStation, String keyword, Pageable pageable);
 }

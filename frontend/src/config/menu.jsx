@@ -7,10 +7,6 @@ import {
   FileSearchOutlined,
   DollarOutlined,
   BarChartOutlined,
-  SafetyOutlined,
-  NotificationOutlined,
-  QuestionCircleOutlined,
-  GiftOutlined,
   TruckOutlined,
 } from '@ant-design/icons';
 
@@ -33,8 +29,8 @@ const adminMenu = Object.freeze([
       },
       {
         key: '2-5',
-        label: 'Tạo nhanh lịch trình',
-        path: '/admin/schedules/routes',
+        label: 'Tạo lịch trình',
+        path: '/admin/generate-schedules',
       },
       {
         key: '2-2',
@@ -49,7 +45,7 @@ const adminMenu = Object.freeze([
       {
         key: '2-4',
         label: 'Generate Route',
-        path: '/admin/schedules/generate',
+        path: '/admin/schedules/generate-route-segments',
       },
     ],
   },
@@ -70,6 +66,11 @@ const adminMenu = Object.freeze([
       },
       {
         key: '3-3',
+        label: 'Quản lý hành khách',
+        path: '/admin/passengers',
+      },
+      {
+        key: '3-4',
         label: 'Hủy/Đổi vé',
         path: '/bookings/change',
       },
@@ -79,52 +80,41 @@ const adminMenu = Object.freeze([
     key: '4',
     icon: <UserOutlined />,
     label: 'Quản lý khách hàng',
-    children: [
-      {
-        key: '4-1',
-        label: 'Danh sách khách hàng',
-        path: '/admin/customers',
-      },
-      {
-        key: '4-2',
-        label: 'Thẻ thành viên',
-        path: '/customers/membership',
-      },
-    ],
+    path: '/admin/customers',
+    // children: [
+    //   {
+    //     key: '4-1',
+    //     label: 'Danh sách khách hàng',
+    //   },
+    //   {
+    //     key: '4-2',
+    //     label: 'Thẻ thành viên',
+    //     path: '/customers/membership',
+    //   },
+    // ],
   },
-  {
-    key: '5',
-    icon: <DollarOutlined />,
-    label: 'Quản lý thanh toán',
-    children: [
-      {
-        key: '5-1',
-        label: 'Giao dịch',
-        path: '/payments/transactions',
-      },
-      {
-        key: '5-2',
-        label: 'Hoàn tiền',
-        path: '/payments/refunds',
-      },
-    ],
-  },
+  // {
+  //   key: '5',
+  //   icon: <DollarOutlined />,
+  //   label: 'Quản lý thanh toán',
+  //   children: [
+  //     {
+  //       key: '5-1',
+  //       label: 'Giao dịch',
+  //       path: '/payments/transactions',
+  //     },
+  //     {
+  //       key: '5-2',
+  //       label: 'Hoàn tiền',
+  //       path: '/payments/refunds',
+  //     },
+  //   ],
+  // },
   {
     key: '6',
     icon: <TeamOutlined />,
     label: 'Quản lý nhân viên',
-    children: [
-      {
-        key: '6-1',
-        label: 'Danh sách nhân viên',
-        path: '/admin/employees',
-      },
-      {
-        key: '6-2',
-        label: 'Phân công công việc',
-        path: '/employees/assignments',
-      },
-    ],
+    path: '/admin/employees',
   },
   {
     key: '7',
@@ -154,18 +144,18 @@ const adminMenu = Object.freeze([
     label: 'Báo cáo & Thống kê',
     path: '/admin/reports/tickets',
   },
-  {
-    key: '9',
-    icon: <SafetyOutlined />,
-    label: 'An toàn & Bảo mật',
-    path: '/security',
-  },
-  {
-    key: '10',
-    icon: <NotificationOutlined />,
-    label: 'Thông báo',
-    path: '/notifications',
-  },
+  // {
+  //   key: '9',
+  //   icon: <SafetyOutlined />,
+  //   label: 'An toàn & Bảo mật',
+  //   path: '/security',
+  // },
+  // {
+  //   key: '10',
+  //   icon: <NotificationOutlined />,
+  //   label: 'Thông báo',
+  //   path: '/notifications',
+  // },
   {
     key: '11',
     icon: <SettingOutlined />,
@@ -183,34 +173,34 @@ const adminMenu = Object.freeze([
       },
     ],
   },
-  {
-    key: '12',
-    icon: <QuestionCircleOutlined />,
-    label: 'Hỗ trợ',
-    path: '/support',
-  },
-  {
-    key: '13',
-    icon: <GiftOutlined />,
-    label: 'Khuyến mãi',
-    children: [
-      {
-        key: '13-1',
-        label: 'Tạo khuyến mãi',
-        path: '/promotions/create',
-      },
-      {
-        key: '13-2',
-        label: 'Quản lý mã giảm giá',
-        path: '/promotions/discount-codes',
-      },
-      {
-        key: '13-3',
-        label: 'Chương trình theo mùa',
-        path: '/promotions/seasonal',
-      },
-    ],
-  },
+  // {
+  //   key: '12',
+  //   icon: <QuestionCircleOutlined />,
+  //   label: 'Hỗ trợ',
+  //   path: '/support',
+  // },
+  // {
+  //   key: '13',
+  //   icon: <GiftOutlined />,
+  //   label: 'Khuyến mãi',
+  //   children: [
+  //     {
+  //       key: '13-1',
+  //       label: 'Tạo khuyến mãi',
+  //       path: '/promotions/create',
+  //     },
+  //     {
+  //       key: '13-2',
+  //       label: 'Quản lý mã giảm giá',
+  //       path: '/promotions/discount-codes',
+  //     },
+  //     {
+  //       key: '13-3',
+  //       label: 'Chương trình theo mùa',
+  //       path: '/promotions/seasonal',
+  //     },
+  //   ],
+  // },
 ]);
 
 const userMenu = Object.freeze([

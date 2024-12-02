@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.services.impl;
 
+import com.backend.railwaybookingsystem.dtos.carriages.GetCarriageOfTrainResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.OrderDetailResponse;
 import com.backend.railwaybookingsystem.dtos.reports.OrderReportResponse;
 import com.backend.railwaybookingsystem.dtos.reports.TrainReportResponse;
@@ -97,7 +98,7 @@ public class TrainServiceImpl implements TrainService {
                 .map(TrainMapper.INSTANCE::convertToTrainDetailResponse)
                 .orElse(null);
 
-        if(train == null){
+        if (train == null) {
             throw new NotFoundException("Train not found");
         }
         return train;
@@ -106,7 +107,7 @@ public class TrainServiceImpl implements TrainService {
     @Transactional
     public UpdateTrainResponse updateTrain(Long id, UpdateTrainRequest request) {
         Train train = trainRepository.findById(id).orElse(null);
-        if(train == null){
+        if (train == null) {
             throw new NotFoundException("Train not found");
         }
 
@@ -116,9 +117,9 @@ public class TrainServiceImpl implements TrainService {
 
         int updatedLength = Math.min(newCarriages.size(), train.getCarriages().size());
 
-        for(int i = 0; i < updatedLength; i++){
+        for (int i = 0; i < updatedLength; i++) {
             Carriage preCarriage = train.getCarriages().get(i);
-            if(!Objects.equals(preCarriage.getCarriageLayout().getId(), newCarriages.get(i))) {
+            if (!Objects.equals(preCarriage.getCarriageLayout().getId(), newCarriages.get(i))) {
                 preCarriage.setCarriageLayout(carriageLayoutRepository.getReferenceById(newCarriages.get(i)));
                 carriageRepository.save(preCarriage);
             }
@@ -128,14 +129,14 @@ public class TrainServiceImpl implements TrainService {
 
         int differentLength = newCarriages.size() - train.getCarriages().size();
 
-        if(differentLength < 0){
-            for(int i = train.getCarriages().size() - 1; i >= updatedLength; i--){
+        if (differentLength < 0) {
+            for (int i = train.getCarriages().size() - 1; i >= updatedLength; i--) {
                 Carriage carriage = train.getCarriages().get(i);
                 train.getCarriages().remove(carriage);
                 carriageRepository.delete(carriage);
             }
-        } else if(differentLength>0) {
-            for(int i = 0; i < differentLength; i++){
+        } else if (differentLength > 0) {
+            for (int i = 0; i < differentLength; i++) {
                 Carriage carriage = new Carriage();
                 carriage.setPosition(updatedLength + i + 1);
                 carriage.setCarriageLayout(carriageLayoutRepository.findById(newCarriages.get(updatedLength + i)).orElse(null));
@@ -149,7 +150,7 @@ public class TrainServiceImpl implements TrainService {
 
         for (SeatPriceRequest seatPriceRequest : seatPricesList) {
             SeatPrice seatPrice = seatPriceRepository.findByTrainIdAndSeatTypeId(train.getId(), seatPriceRequest.getSeat_type_id());
-            if(seatPrice == null){
+            if (seatPrice == null) {
                 seatPrice = new SeatPrice();
                 seatPrice.setTrain(train);
                 seatPrice.setSeatType(seatTypeRepository.findById(seatPriceRequest.getSeat_type_id()).orElse(null));
@@ -162,7 +163,7 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public List<TrainReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate){
+    public List<TrainReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate) {
         List<Object[]> results = trainRepository.getReport(startDate, endDate);
         return results.stream()
                 .map(row -> new TrainReportResponse(
@@ -171,6 +172,12 @@ public class TrainServiceImpl implements TrainService {
                         ((String) row[2])
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetCarriageOfTrainResponse> getCarriagesOfTrain(Long trainId) {
+        var result = carriageRepository.findCarriagesByTrainIdOrOrderByPosition(trainId);
+        return CarriageMapper.INSTANCE.toGetCarriageOfTrainResponseList(result);
     }
 }
 

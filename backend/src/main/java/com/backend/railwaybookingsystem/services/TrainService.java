@@ -1,5 +1,6 @@
 package com.backend.railwaybookingsystem.services;
 
+import com.backend.railwaybookingsystem.dtos.carriages.GetCarriageOfTrainResponse;
 import com.backend.railwaybookingsystem.dtos.reports.OrderReportResponse;
 import com.backend.railwaybookingsystem.dtos.reports.TrainReportResponse;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
@@ -28,4 +29,5 @@ public interface TrainService {
 
     List<TrainReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate);
 
+    List<GetCarriageOfTrainResponse> getCarriagesOfTrain(Long trainId);
 }

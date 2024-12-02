@@ -8,8 +8,9 @@ export const fetchTrain = (id) => {
 export const trainQuery = (id) => ({
   queryKey: ['train', id],
   queryFn: () => fetchTrain(id),
+  enabled: !!id,
 });
 
-export const useTrain = (id) => {
+export const useRouteSegments = (id) => {
   return useQuery(trainQuery(id));
 };

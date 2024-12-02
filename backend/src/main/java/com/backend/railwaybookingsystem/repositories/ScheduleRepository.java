@@ -4,6 +4,7 @@ import com.backend.railwaybookingsystem.models.Schedule;
 import com.backend.railwaybookingsystem.models.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -34,4 +35,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             """)
     List<Object[]> findDepartureDateCountsBetween(LocalDate startDate, LocalDate endDate);
 
+    @Procedure("SeedSchedules")
+    void seedSchedules(LocalDate startDate, LocalDate endDate, Long trainId, String daysOfWeek);
+
+    @Query("SELECT s.train.id, MAX(s.departureDate) FROM Schedule s WHERE s.train.id IN :trainIds GROUP BY s.train.id")
+    List<Object[]> findMaxDepartureDateByTrainIds(List<Long> trainIds);
 }
