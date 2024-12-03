@@ -19,30 +19,30 @@ const PAYMENT_METHOD_OPTIONS = Object.freeze([
     ],
     enabled: true,
   },
-  {
-    value: 'MOMO',
-    logo: 'https://dsvn.vn/images/logo-dvtt-MOM.png',
-    title: 'Thanh toán trực tuyến qua ví điện tử MoMo',
-    descriptions: ['Nhập mã MOMODSVN giảm đến 100k tại mục Ưu đãi'],
-    enabled: false,
-  },
-  {
-    value: 'ZALOPAY',
-    logo: 'https://dsvn.vn/images/logo-dvtt-ZLP.png',
-    title: 'Thanh toán trực tuyến qua ví điện tử ZaloPay',
-    descriptions: [
-      'Thanh toán bằng hình thức Quét mã QR sử dụng ví điện tử ZaloPay',
-      'Nhập mã TAUTET2025 giảm 30.000 VNĐ cho đơn hàng có giá trị thanh toán từ 1.200.000 VNĐ, giảm 70.000 VNĐ cho đơn hàng có giá trị thanh toán từ 2.200.000 VNĐ',
-    ],
-    enabled: false,
-  },
-  {
-    value: 'EPAY',
-    logo: 'https://dsvn.vn/images/logo-dvtt-EPA.png',
-    title: 'Thanh toán trực tuyến qua cổng thanh toán Epay',
-    descriptions: ['Ví điện tử, thẻ nội địa, thẻ quốc tế qua cổng thanh toán EPay'],
-    enabled: false,
-  },
+  // {
+  //   value: 'MOMO',
+  //   logo: 'https://dsvn.vn/images/logo-dvtt-MOM.png',
+  //   title: 'Thanh toán trực tuyến qua ví điện tử MoMo',
+  //   descriptions: ['Nhập mã MOMODSVN giảm đến 100k tại mục Ưu đãi'],
+  //   enabled: false,
+  // },
+  // {
+  //   value: 'ZALOPAY',
+  //   logo: 'https://dsvn.vn/images/logo-dvtt-ZLP.png',
+  //   title: 'Thanh toán trực tuyến qua ví điện tử ZaloPay',
+  //   descriptions: [
+  //     'Thanh toán bằng hình thức Quét mã QR sử dụng ví điện tử ZaloPay',
+  //     'Nhập mã TAUTET2025 giảm 30.000 VNĐ cho đơn hàng có giá trị thanh toán từ 1.200.000 VNĐ, giảm 70.000 VNĐ cho đơn hàng có giá trị thanh toán từ 2.200.000 VNĐ',
+  //   ],
+  //   enabled: false,
+  // },
+  // {
+  //   value: 'EPAY',
+  //   logo: 'https://dsvn.vn/images/logo-dvtt-EPA.png',
+  //   title: 'Thanh toán trực tuyến qua cổng thanh toán Epay',
+  //   descriptions: ['Ví điện tử, thẻ nội địa, thẻ quốc tế qua cổng thanh toán EPay'],
+  //   enabled: false,
+  // },
 ]);
 
 const OBJECT_TYPE_OPTIONS = [
