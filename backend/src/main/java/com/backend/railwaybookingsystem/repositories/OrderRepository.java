@@ -1,6 +1,9 @@
 package com.backend.railwaybookingsystem.repositories;
 
+import com.backend.railwaybookingsystem.enums.OrderStatus;
+import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import com.backend.railwaybookingsystem.models.Order;
+import com.backend.railwaybookingsystem.models.Ticket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,14 +11,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findById(long id);
-
-    Page<Order> findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrFullNameNotContainingIgnoreCase(String email, String fullName, String phone, Pageable pageable);
 
     Page<Order> findByUserId(Long userId, Pageable pageable);
 
@@ -34,4 +36,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     int countByUserIsNullAndCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
+    @Query("""
+            SELECT o FROM Order o
+            WHERE (o.createdAt BETWEEN :startDate AND :endDate)
+                AND (:paymentMethod IS NULL OR o.paymentMethod = :paymentMethod)
+                AND (:status IS NULL OR o.status = :status)
+                AND (o.email LIKE %:keyword%
+                OR o.fullName LIKE %:keyword%
+                OR o.identity LIKE %:keyword%
+                OR o.phoneNumber LIKE %:keyword%)
+            """)
+    Page<Order> getOrders(LocalDateTime startDate, LocalDateTime endDate, PaymentMethod paymentMethod, OrderStatus status, String keyword, Pageable pageable);
 }

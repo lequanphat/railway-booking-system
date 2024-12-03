@@ -8,6 +8,7 @@ import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
 import com.backend.railwaybookingsystem.dtos.reports.OrderReportResponse;
 import com.backend.railwaybookingsystem.dtos.reports.UserOrderReportResponse;
 import com.backend.railwaybookingsystem.enums.OrderStatus;
+import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.mappers.OrderMapper;
 import com.backend.railwaybookingsystem.mappers.TicketMapper;
@@ -307,10 +308,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<GetOrdersListResponse> getOrders(String keyword, int page, int size) {
+    public Page<GetOrdersListResponse> getOrders(LocalDateTime start, LocalDateTime end, PaymentMethod paymentMethod, OrderStatus status, String keyword, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        Page<GetOrdersListResponse> orders = orderRepository.findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrFullNameNotContainingIgnoreCase(keyword, keyword, keyword, pageRequest)
+        Page<GetOrdersListResponse> orders = orderRepository.getOrders(start, end, paymentMethod, status, keyword, pageRequest)
                 .map(OrderMapper.INSTANCE::convertToGetOrdersListResponse);
 
         return new PageImpl<>(orders.getContent(), pageRequest, orders.getTotalElements());

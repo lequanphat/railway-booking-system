@@ -1,7 +1,7 @@
 import { Alert, Button, Card, Descriptions, Divider, Flex, QRCode, Result, Space, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { convertToVnCurrency } from '~/utils/convert';
 import { useEffect } from 'react';
 import { useCallbackPayPal } from '~/features/booking/api/place-order-callback-paypal';
@@ -44,7 +44,7 @@ const TicketBookingCallback = () => {
       {
         key: '2',
         label: 'Trạng thái',
-        children: <p>{orderData?.status}</p>,
+        children: <p>COMPLETED</p>,
         span: 1,
       },
       {
@@ -100,11 +100,15 @@ const TicketBookingCallback = () => {
                       <p>
                         Thời gian: {ticket?.departureTime} - {ticket?.arrivalTime}
                       </p>
+                      <Divider className="my-2" />
+                      <p>Tàu: {ticket?.schedule?.train?.name}</p>
+                      <p>Toa {ticket?.carriageType}</p>
                       <p>Loại ghế: {ticket?.seatType}</p>
                       <p>
                         Hành khách: {ticket?.fullName} - {ticket?.identity}
                       </p>
                       <p>Đối tượng: {ticket?.object?.name}</p>
+                      <Divider className="my-2" />
                       <p>
                         Giá vé: <strong className=" text-primary">{convertToVnCurrency(ticket?.price)}</strong>
                       </p>
@@ -146,7 +150,9 @@ const TicketBookingCallback = () => {
             className="mt-4"
           />
           <Flex justify="end" className="mt-6">
-            <Button type="primary"> Quay trang đặt vé</Button>
+            <Link to="/">
+              <Button type="primary"> Quay lại trang chủ</Button>
+            </Link>
           </Flex>
         </Card>
       ) : (
@@ -164,7 +170,9 @@ const TicketBookingCallback = () => {
             className="mt-4"
           />
           <Flex justify="end" className="mt-6">
-            <Button type="primary"> Quay trang đặt vé</Button>
+            <Link to="/">
+              <Button type="primary"> Quay lại trang chủ</Button>
+            </Link>
           </Flex>
         </Card>
       )}
