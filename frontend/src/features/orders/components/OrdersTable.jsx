@@ -35,10 +35,11 @@ const expandColumns = [
   {
     title: 'Chỗ ngồi',
     key: 'seat',
-    render: ({ seatType, carriageType }) => (
+    render: ({ seatType, carriageType, schedule }) => (
       <div>
-        <p>Ghế: {seatType}</p>
+        <p>Tàu: {schedule?.train?.name}</p>
         <p>Toa {carriageType}</p>
+        <p>Ghế: {seatType}</p>
       </div>
     ),
   },
@@ -80,7 +81,18 @@ const columns = [
     title: 'Thanh toán',
     dataIndex: 'paymentMethod',
     key: 'paymentMethod',
-    render: (value) => <Tag color="cyan">{value}</Tag>,
+    render: (value) => {
+      let color = 'green';
+      switch (value) {
+        case 'VNPAY':
+          color = 'purple';
+          break;
+        case 'PAYPAL':
+          color = 'cyan';
+          break;
+      }
+      return <Tag color={color}>{value}</Tag>;
+    },
   },
   {
     title: 'Tổng giá',
@@ -92,7 +104,18 @@ const columns = [
     title: 'Trạng thái',
     dataIndex: 'status',
     key: 'status',
-    render: (value) => <Tag color="green">{value}</Tag>,
+    render: (value) => {
+      let color = 'green';
+      switch (value) {
+        case 'COMPLETED':
+          color = 'green';
+          break;
+        case 'PENDING':
+          color = 'blue';
+          break;
+      }
+      return <Tag color={color}>{value}</Tag>;
+    },
   },
   {
     title: 'Date',
@@ -100,11 +123,15 @@ const columns = [
     render: ({ createdAt }) => <p>{dayjs(createdAt).format('HH:mm:ss DD/MM/YYYY')}</p>,
   },
 ];
-const OrdersTable = () => {
+const OrdersTable = ({ filters }) => {
   const { data } = useOrders({
+    startDate: filters?.dateRange?.startDate,
+    endDate: filters?.dateRange?.endDate,
+    keyword: filters?.keyword || '',
+    paymentMethod: filters?.paymentMethod,
+    status: filters?.status,
     page: 1,
     size: 10,
-    keyword: '',
   });
   return (
     <Table
