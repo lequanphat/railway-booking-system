@@ -1,6 +1,8 @@
 package com.backend.railwaybookingsystem.services.impl;
 
+import com.backend.railwaybookingsystem.configurations.RabbitMQConfiguration;
 import com.backend.railwaybookingsystem.configurations.VNPayConfiguration;
+import com.backend.railwaybookingsystem.dtos.email.OrderEmailDto;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.OrderDetailResponse;
@@ -15,6 +17,7 @@ import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
 import com.backend.railwaybookingsystem.services.EmailService;
 import com.backend.railwaybookingsystem.services.OrderService;
+import com.backend.railwaybookingsystem.services.RabbitMQSender;
 import com.backend.railwaybookingsystem.strategies.payment.enums.PaymentType;
 import com.backend.railwaybookingsystem.strategies.payment.PaymentContext;
 import com.paypal.api.payments.Payment;
@@ -70,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
     private APIContext apiContext;
 
     @Autowired
-    private EmailService emailService;
+    private RabbitMQSender rabbitMQSender;
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -283,10 +286,9 @@ public class OrderServiceImpl implements OrderService {
                     throw new IllegalArgumentException("Unsupported payment method: " + savedOrder.getPaymentMethod());
         };
 
-        emailService.sendOrderConfirmationEmail(savedOrder.getEmail(), this.getOrderDetail(savedOrder.getId()));
+        rabbitMQSender.send(RabbitMQConfiguration.ORDER_QUEUE_NAME, new OrderEmailDto(savedOrder.getEmail(), this.getOrderDetail(savedOrder.getId())));
 
         String paymentUrl = paymentContext.executePayment(savedOrder.getId(), Math.round(savedOrder.getTotalPrice()), type);
-
         return new PlaceOrderResponse(200, "Order placed successfully", paymentUrl);
     }
 

@@ -1,7 +1,10 @@
 package com.backend.railwaybookingsystem.services.impl;
+
+import com.backend.railwaybookingsystem.configurations.RabbitMQConfiguration;
 import com.backend.railwaybookingsystem.dtos.auth.request.RegistrationRequest;
 import com.backend.railwaybookingsystem.dtos.auth.response.AuthenticationResponse;
 import com.backend.railwaybookingsystem.dtos.auth.response.RegistrationResponse;
+import com.backend.railwaybookingsystem.dtos.email.RegistrationEmailDto;
 import com.backend.railwaybookingsystem.dtos.users.CreateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UpdateUserRequest;
 import com.backend.railwaybookingsystem.dtos.users.UserResponse;
@@ -14,6 +17,7 @@ import com.backend.railwaybookingsystem.mappers.UserMapper;
 import com.backend.railwaybookingsystem.models.User;
 import com.backend.railwaybookingsystem.repositories.UserRepository;
 import com.backend.railwaybookingsystem.services.EmailService;
+import com.backend.railwaybookingsystem.services.RabbitMQSender;
 import com.backend.railwaybookingsystem.services.UserService;
 import com.backend.railwaybookingsystem.services.UserVerificationService;
 import lombok.SneakyThrows;
@@ -42,6 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
 
     @Autowired
     private UserVerificationService userVerificationService;
@@ -83,7 +90,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setPhone(updateRequest.getPhone());
         existingUser.setAddress(updateRequest.getAddress());
 
-        if(updateRequest.getIs_deleted() != null){
+        if (updateRequest.getIs_deleted() != null) {
             existingUser.setIs_deleted(updateRequest.getIs_deleted());
         }
 
@@ -105,7 +112,7 @@ public class UserServiceImpl implements UserService {
     public RegistrationResponse registration(RegistrationRequest registrationRequest) {
         User existingUser = userRepository.findUserByEmailAndProvider(registrationRequest.getEmail(), AuthProvider.EMAIL)
                 .orElse(null);
-        if(existingUser != null){
+        if (existingUser != null) {
             throw new NotFoundException("No user found with username {}", registrationRequest.getEmail());
         }
 
@@ -123,7 +130,9 @@ public class UserServiceImpl implements UserService {
 
         emailService.sendVerificationEmail(email, token);
 
-        return new RegistrationResponse(email , "OK");
+        rabbitMQSender.send(RabbitMQConfiguration.REGISTRATION_QUEUE_NAME, new RegistrationEmailDto(email, token));
+
+        return new RegistrationResponse(email, "OK");
     }
 
     @Override
@@ -133,9 +142,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public  User verifyAccount(String token){
+    public User verifyAccount(String token) {
         User user = userVerificationService.validateToken(token);
-        if(user == null){
+        if (user == null) {
             throw new BadRequestException("Invalid token");
         }
         user.setIs_verified(true);
