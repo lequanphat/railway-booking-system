@@ -124,14 +124,13 @@ const useBookingStore = create((set, get) => ({
       personTypes: [],
     });
   },
-  initBookingStore: ({ train, totalDistance, arrivalRouteIndex, departureRouteIndex, routeSegments, departureDate }) =>
+  initBookingStore: ({ totalDistance, arrivalRouteIndex, departureRouteIndex, routeSegments, departureDate }) =>
     set((state) => {
       if (state.seatSelectionStep === 1) {
         // handle oneway
         return {
           oneWay: {
             ...state.oneWay,
-            train,
             totalDistance,
             arrivalRouteIndex,
             departureRouteIndex,
@@ -144,12 +143,29 @@ const useBookingStore = create((set, get) => ({
       return {
         roundTrip: {
           ...state.roundTrip,
-          train,
           totalDistance,
           arrivalRouteIndex,
           departureRouteIndex,
           departureDate,
           routeSegments,
+        },
+      };
+    }),
+
+  setTrain: (train) =>
+    set((state) => {
+      if (state.seatSelectionStep === 1) {
+        return {
+          oneWay: {
+            ...state.oneWay,
+            train,
+          },
+        };
+      }
+      return {
+        roundTrip: {
+          ...state.roundTrip,
+          train,
         },
       };
     }),
@@ -301,6 +317,10 @@ const useBookingStore = create((set, get) => ({
   getSelectedSeats: () => {
     const state = get();
     return state.seatSelectionStep === 1 ? state.oneWay.selectedSeats : state.roundTrip.selectedSeats;
+  },
+  getScheduleId: () => {
+    const state = get();
+    return state.seatSelectionStep === 1 ? state.oneWay.scheduleId : state.roundTrip.scheduleId;
   },
 }));
 

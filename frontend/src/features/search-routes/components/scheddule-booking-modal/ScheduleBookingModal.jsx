@@ -10,8 +10,14 @@ import {
 import TicketInformation from './TicketInformation';
 import { Link } from 'react-router-dom';
 import { TripType } from '~/enums/trip-type';
+import { useSubscription } from 'react-stomp-hooks';
+import { useGetReservationsBySchedule } from '../../api/get-reservations-by-schedule';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ScheduleBookingModal = ({ open, onCancel }) => {
+  const queryClient = useQueryClient();
+
+  const [selectedCarriage, setSelectedCarriage] = useState(null);
   const {
     oneWay,
     roundTrip,
@@ -26,6 +32,8 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
     initBookingStore,
     nextSeatSelectionStep,
     resetSelectedSeats,
+    getSelectedSeats,
+    setTrain,
   } = useBookingStore();
 
   const { scheduleId, departureStation, arrivalStation } = seatSelectionStep === 1 ? oneWay : roundTrip;
@@ -35,7 +43,18 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
     queryConfig: { enabled: !!scheduleId && open },
   });
 
-  const [selectedCarriage, setSelectedCarriage] = useState(null);
+  const { data: reservations } = useGetReservationsBySchedule({
+    scheduleId: scheduleId,
+    queryConfig: { enabled: !!scheduleId && open },
+  });
+
+  const routeSegments = getRouteSegments();
+  const train = getTrain();
+  const totalDistance = getTotalDistance();
+  const arrivalRouteIndex = getArrivalRouteIndex();
+  const departureRouteIndex = getDepartureRouteIndex();
+  const departureDate = getDepartureDate();
+  const selectedSeats = getSelectedSeats();
 
   useEffect(() => {
     const departureRouteIndex = scheduleDetails?.train?.routeSegments?.findIndex(
@@ -46,7 +65,22 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
       (route) => route.station.id === parseInt(arrivalStation),
     );
 
-    // format train data
+    const totalDistance =
+      scheduleDetails?.train?.routeSegments?.[arrivalRouteIndex]?.distance -
+      scheduleDetails?.train?.routeSegments?.[departureRouteIndex]?.distance;
+    initBookingStore({
+      totalDistance,
+      arrivalRouteIndex,
+      departureRouteIndex,
+      routeSegments: scheduleDetails?.train?.routeSegments,
+      departureDate: scheduleDetails?.departureDate,
+    });
+
+    //
+    setSelectedCarriage(scheduleDetails?.train?.carriages?.[0]?.id);
+  }, [scheduleDetails, initBookingStore, departureStation, arrivalStation, setSelectedCarriage]);
+
+  useEffect(() => {
     const formatTrainData = {
       ...scheduleDetails?.train,
       carriages: scheduleDetails?.train?.carriages?.map((carriage) => ({
@@ -58,9 +92,19 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
             carriageId: carriage.id,
             carriagePosition: carriage.position,
             carriageName: carriage.carriageLayout.name,
-            is_occupied: scheduleDetails?.tickets.some(
-              (ticket) => ticket.seat.id === seat.id && ticket.carriage.id === carriage.id,
-            ),
+            is_occupied:
+              scheduleDetails?.tickets.some(
+                (ticket) => ticket.seat.id === seat.id && ticket.carriage.id === carriage.id,
+              ) ||
+              (reservations?.some(
+                (reservation) =>
+                  scheduleDetails?.id == reservation?.scheduleId &&
+                  reservation.seatId === seat.id &&
+                  reservation.carriageId === carriage.id,
+              ) &&
+                !selectedSeats?.some(
+                  (selectedSeat) => selectedSeat.id === seat.id && selectedSeat.carriageId === carriage.id,
+                )),
             seatType:
               scheduleDetails?.train?.seatPrices.find((seatPrice) => seatPrice?.seatType?.id === seat?.seatType?.id)
                 ?.seatType || seat.seatType,
@@ -68,30 +112,17 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
         },
       })),
     };
+    setTrain(formatTrainData);
+  }, [setTrain, scheduleDetails, reservations, selectedSeats]);
 
-    const totalDistance =
-      scheduleDetails?.train?.routeSegments?.[arrivalRouteIndex]?.distance -
-      scheduleDetails?.train?.routeSegments?.[departureRouteIndex]?.distance;
-    initBookingStore({
-      train: formatTrainData,
-      totalDistance,
-      arrivalRouteIndex,
-      departureRouteIndex,
-      routeSegments: scheduleDetails?.train?.routeSegments,
-      departureDate: scheduleDetails?.departureDate,
-    });
-  }, [scheduleDetails, initBookingStore, departureStation, arrivalStation]);
-
-  const routeSegments = getRouteSegments();
-  const train = getTrain();
-  const totalDistance = getTotalDistance();
-  const arrivalRouteIndex = getArrivalRouteIndex();
-  const departureRouteIndex = getDepartureRouteIndex();
-  const departureDate = getDepartureDate();
-
-  useEffect(() => {
-    setSelectedCarriage(train?.carriages?.[0]?.id);
-  }, [train]);
+  // handle socket
+  useSubscription('/topic/seats', (originalMessage) => {
+    const message = JSON.parse(originalMessage.body);
+    // check if the message is for the current schedule
+    if (message?.scheduleId !== scheduleId) return;
+    queryClient.invalidateQueries({ queryKey: ['reservations'], exact: false });
+  });
+  // end handle socket
 
   const options = useMemo(
     () =>
