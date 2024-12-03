@@ -44,7 +44,7 @@ const ManagePassengerPage = () => {
       departure_time: segment.departure_time,
       arrival_time: segment.arrival_time,
     }));
-  }, [routeSegments]);
+  }, [routeSegments.route_segments]);
 
   const routeOptionRender = (option) => {
     const { departure_time, arrival_time } = option.data;
@@ -52,7 +52,7 @@ const ManagePassengerPage = () => {
       <Flex justify="space-between">
         <span>{option.label}</span>
         <Tag color="cyan">
-          {dayjs(departure_time, 'hh:mm:ss').format('HH:MM')} - {dayjs(arrival_time, 'hh:mm:ss').format('HH:MM')}
+          {dayjs(departure_time, 'HH:mm:ss').format('HH:mm')} - {dayjs(arrival_time, 'HH:mm:ss').format('HH:mm')}
         </Tag>
       </Flex>
     );
