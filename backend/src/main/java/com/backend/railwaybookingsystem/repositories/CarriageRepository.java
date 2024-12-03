@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface CarriageRepository extends JpaRepository<Carriage, Long> {
 
-    List<Carriage> findCarriagesByTrainIdOrOrderByPosition(Long trainId);
+    List<Carriage> findCarriagesByTrainIdOrderByPosition(Long trainId);
 }

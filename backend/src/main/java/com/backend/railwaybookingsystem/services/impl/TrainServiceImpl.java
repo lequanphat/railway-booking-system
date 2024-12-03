@@ -176,7 +176,7 @@ public class TrainServiceImpl implements TrainService {
 
     @Override
     public List<GetCarriageOfTrainResponse> getCarriagesOfTrain(Long trainId) {
-        var result = carriageRepository.findCarriagesByTrainIdOrOrderByPosition(trainId);
+        var result = carriageRepository.findCarriagesByTrainIdOrderByPosition(trainId);
         return CarriageMapper.INSTANCE.toGetCarriageOfTrainResponseList(result);
     }
 }
