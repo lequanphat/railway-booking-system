@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -64,5 +67,30 @@ public class SeatReservationServiceImpl implements SeatReservationService {
 
     private String generateRedisKey(Long scheduleId, Long seatId, Long carriageId) {
         return String.format("reservation:schedule:%d:seat:%d:carriage:%d", scheduleId, seatId, carriageId);
+    }
+
+    @Override
+    public List<SeatReservationResponse> getAllReservationsByScheduleId(Long scheduleId) {
+        String pattern = String.format("reservation:schedule:%d:*", scheduleId);
+        Set<String> keys = redisTemplate.keys(pattern);
+        List<SeatReservationResponse> reservations = new ArrayList<>();
+        if (keys != null) {
+            for (String key : keys) {
+                String[] parts = key.split(":");
+                Long extractedSeatId = Long.valueOf(parts[4]);
+                Long extractedCarriageId = Long.valueOf(parts[6]);
+                Long expirationTime = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+                reservations.add(SeatReservationResponse.builder()
+                        .scheduleId(scheduleId)
+                        .seatId(extractedSeatId)
+                        .carriageId(extractedCarriageId)
+                        .isReserved(true)
+                        .expirationTime(expirationTime)
+                        .success(true)
+                        .actionType(SeatReservationResponse.ActionType.RESERVE)
+                        .build());
+            }
+        }
+        return reservations;
     }
 }

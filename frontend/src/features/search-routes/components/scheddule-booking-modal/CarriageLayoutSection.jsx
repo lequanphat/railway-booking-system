@@ -4,11 +4,21 @@ import SeatIcon from '~/components/icons/SeatIcon';
 import { SEAT_TYPE } from '~/config/constants';
 import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
+import { useReserveTicket } from '../../api/reserve-ticket';
+import { useCancelTicket } from '../../api/cancel-ticket';
 
 const CarriageLayoutSection = ({ name, row_count, floors, seats = [] }) => {
-  const { getTotalDistance, getSelectedSeats, setSelectedSeats } = useBookingStore();
+  const {
+    getScheduleId,
+    getTotalDistance,
+    getSelectedSeats,
+    setSelectedSeats,
+  } = useBookingStore();
   const totalDistance = getTotalDistance();
   const selectedSeats = getSelectedSeats();
+
+  const reserveTicketMutation = useReserveTicket({});
+  const cancelTicketMutation = useCancelTicket({});
 
   const renderSeatType = (seat) => {
     if (seat.is_occupied) {
@@ -23,11 +33,17 @@ const CarriageLayoutSection = ({ name, row_count, floors, seats = [] }) => {
   const handleSelectSeat = (seat) => {
     if (seat.is_occupied) return;
 
+    const scheduleId = getScheduleId();
     if (selectedSeats.find((item) => item.carriageId === seat.carriageId && item.id === seat.id)) {
       setSelectedSeats(selectedSeats.filter((item) => item.carriageId !== seat.carriageId || item.id !== seat.id));
+
+      console.log('__cancel_reservation', { scheduleId, carriageId: seat.carriageId, seatId: seat.id });
+      cancelTicketMutation.mutate({ scheduleId, carriageId: seat.carriageId, seatId: seat.id });
       return;
     }
 
+    console.log('__reservation', { scheduleId, carriageId: seat.carriageId, seatId: seat.id });
+    reserveTicketMutation.mutate({ scheduleId, carriageId: seat.carriageId, seatId: seat.id });
     setSelectedSeats([...selectedSeats, seat]);
   };
 
