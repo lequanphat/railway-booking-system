@@ -13,6 +13,7 @@ import com.backend.railwaybookingsystem.mappers.OrderMapper;
 import com.backend.railwaybookingsystem.mappers.TicketMapper;
 import com.backend.railwaybookingsystem.models.*;
 import com.backend.railwaybookingsystem.repositories.*;
+import com.backend.railwaybookingsystem.services.EmailService;
 import com.backend.railwaybookingsystem.services.OrderService;
 import com.backend.railwaybookingsystem.strategies.payment.enums.PaymentType;
 import com.backend.railwaybookingsystem.strategies.payment.PaymentContext;
@@ -67,6 +68,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private APIContext apiContext;
+
+    @Autowired
+    private EmailService emailService;
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -145,6 +149,7 @@ public class OrderServiceImpl implements OrderService {
             order.setUser(user.orElse(null));
         }
         order.setTotalPrice(totalPrice);
+        order.setStatus(OrderStatus.PENDING);
         return orderRepository.save(order);
     }
 
@@ -260,6 +265,7 @@ public class OrderServiceImpl implements OrderService {
             order.setUser(user.orElse(null));
         }
         order.setTotalPrice(totalPrice);
+        order.setStatus(OrderStatus.PENDING);
         return orderRepository.save(order);
     }
 
@@ -276,6 +282,8 @@ public class OrderServiceImpl implements OrderService {
             default ->
                     throw new IllegalArgumentException("Unsupported payment method: " + savedOrder.getPaymentMethod());
         };
+
+        emailService.sendOrderConfirmationEmail(savedOrder.getEmail(), this.getOrderDetail(savedOrder.getId()));
 
         String paymentUrl = paymentContext.executePayment(savedOrder.getId(), Math.round(savedOrder.getTotalPrice()), type);
 
@@ -326,7 +334,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate){
+    public List<OrderReportResponse> getReport(LocalDateTime startDate, LocalDateTime endDate) {
         List<Object[]> results = orderRepository.getReport(startDate, endDate);
         return results.stream()
                 .map(row -> new OrderReportResponse(
@@ -338,9 +346,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetailResponse getOrderDetail(Long orderId){
+    public OrderDetailResponse getOrderDetail(Long orderId) {
         Optional<Order> order = orderRepository.findById(orderId);
-        if(order.isEmpty()){
+        if (order.isEmpty()) {
             log.error("Order not found");
             throw new BadRequestException("Order not found");
         }

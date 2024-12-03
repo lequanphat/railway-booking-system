@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #333;
+        }
+        .order-details, .ticket-details {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .order-details th, .ticket-details th {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: left;
+        }
+        .order-details td, .ticket-details td {
+            padding: 10px;
+        }
+        .total-price {
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="header">Order Confirmation</h1>
+    <p>Dear <span th:text="${fullName}"></span>,</p>
+    <p>Thank you for your order! Below are the details:</p>
+
+    <table class="order-details">
+        <tr>
+            <th>Order ID</th>
+            <td th:text="${id}"></td>
+        </tr>
+        <tr>
+            <th>Full Name</th>
+            <td th:text="${fullName}"></td>
+        </tr>
+        <tr>
+            <th>Phone Number</th>
+            <td th:text="${phoneNumber}"></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td th:text="${email}"></td>
+        </tr>
+        <tr>
+            <th>Total Price</th>
+            <td class="total-price" th:text="${totalPrice} + ' đ'"></td>
+        </tr>
+        <tr>
+            <th>Order Status</th>
+            <td th:text="${status}"></td>
+        </tr>
+        <tr>
+            <th>Payment Method</th>
+            <td th:text="${paymentMethod}"></td>
+        </tr>
+        <tr>
+            <th>Order Date</th>
+            <td th:text="${createdAt}"></td>
+        </tr>
+    </table>
+
+    <h2>Ticket Details</h2>
+    <table class="ticket-details">
+        <thead>
+        <tr>
+            <th>Ticket Code</th>
+            <th>Seat Type</th>
+            <th>Carriage Type</th>
+            <th>Price</th>
+            <th>Departure Station</th>
+            <th>Arrival Station</th>
+            <th>Departure Time</th>
+            <th>Arrival Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ticket : ${tickets}">
+            <td th:text="${ticket.code}"></td>
+            <td th:text="${ticket.seatType}"></td>
+            <td th:text="${ticket.carriageType}"></td>
+            <td th:text="${ticket.price} + ' đ'"></td>
+            <td th:text="${ticket.departureStation}"></td>
+            <td th:text="${ticket.arrivalStation}"></td>
+            <td th:text="${ticket.departureTime}"></td>
+            <td th:text="${ticket.arrivalTime}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>If you have any questions, feel free to contact us at support@example.com.</p>
+    <p>Thank you for choosing our service!</p>
+</div>
+</body>
+</html>

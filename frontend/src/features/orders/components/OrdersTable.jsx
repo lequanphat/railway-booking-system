@@ -114,13 +114,14 @@ const OrdersTable = () => {
         expandedRowRender,
       }}
       dataSource={data?.items}
+      size='middle'
     />
   );
 };
 
 const expandedRowRender = ({ tickets }) => {
   console.log(tickets);
-  return <Table columns={expandColumns} dataSource={tickets} pagination={false} />;
+  return <Table columns={expandColumns} dataSource={tickets} pagination={false} size="small" />;
 };
 
 export default OrdersTable;

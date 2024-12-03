@@ -22,11 +22,11 @@ const adminMenu = Object.freeze([
     icon: <ScheduleOutlined />,
     label: 'Quản lý lịch trình',
     children: [
-      {
-        key: '2-1',
-        label: 'Tuyến đường',
-        path: '/admin/schedules/routes',
-      },
+      // {
+      //   key: '2-1',
+      //   label: 'Tuyến đường',
+      //   path: '/admin/schedules/routes',
+      // },
       {
         key: '2-5',
         label: 'Tạo lịch trình',
@@ -37,11 +37,11 @@ const adminMenu = Object.freeze([
         label: 'Lịch trình tàu',
         path: '/admin/train-schedules',
       },
-      {
-        key: '2-3',
-        label: 'Ga tàu',
-        path: '/admin/schedules/stations',
-      },
+      // {
+      //   key: '2-3',
+      //   label: 'Ga tàu',
+      //   path: '/admin/schedules/stations',
+      // },
       {
         key: '2-4',
         label: 'Generate Route',
@@ -54,11 +54,11 @@ const adminMenu = Object.freeze([
     icon: <FileSearchOutlined />,
     label: 'Quản lý đặt vé',
     children: [
-      {
-        key: '3-1',
-        label: 'Đặt vé mới',
-        path: '/bookings/new',
-      },
+      // {
+      //   key: '3-1',
+      //   label: 'Đặt vé mới',
+      //   path: '/bookings/new',
+      // },
       {
         key: '3-2',
         label: 'Quản lý hóa đơn',
@@ -69,11 +69,11 @@ const adminMenu = Object.freeze([
         label: 'Quản lý hành khách',
         path: '/admin/passengers',
       },
-      {
-        key: '3-4',
-        label: 'Hủy/Đổi vé',
-        path: '/bookings/change',
-      },
+      // {
+      //   key: '3-4',
+      //   label: 'Hủy/Đổi vé',
+      //   path: '/bookings/change',
+      // },
     ],
   },
   {
@@ -166,11 +166,11 @@ const adminMenu = Object.freeze([
         label: 'Quản lý đối tượng',
         path: '/admin/settings/objects',
       },
-      {
-        key: '11-2',
-        label: 'Cấu hình hệ thống',
-        path: '/settings/system',
-      },
+      // {
+      //   key: '11-2',
+      //   label: 'Cấu hình hệ thống',
+      //   path: '/settings/system',
+      // },
     ],
   },
   // {
