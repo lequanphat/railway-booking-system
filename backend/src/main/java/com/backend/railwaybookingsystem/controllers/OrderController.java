@@ -3,6 +3,8 @@ package com.backend.railwaybookingsystem.controllers;
 import com.backend.railwaybookingsystem.dtos.orders.requests.PlaceOrderRequest;
 import com.backend.railwaybookingsystem.dtos.orders.response.GetOrdersListResponse;
 import com.backend.railwaybookingsystem.dtos.orders.response.PlaceOrderResponse;
+import com.backend.railwaybookingsystem.enums.OrderStatus;
+import com.backend.railwaybookingsystem.enums.PaymentMethod;
 import com.backend.railwaybookingsystem.services.OrderService;
 import com.backend.railwaybookingsystem.strategies.payment.PaymentContext;
 import com.backend.railwaybookingsystem.strategies.payment.enums.PaymentType;
@@ -55,11 +57,18 @@ public class OrderController {
 
     @GetMapping("ad/orders")
     @Operation(tags = "Orders", description = "Get orders")
-    public ResponseEntity<CustomPagination<GetOrdersListResponse>> getOrders(@RequestParam(defaultValue = "1") int page,
-                                                                             @RequestParam(defaultValue = "10") int size,
-                                                                             @RequestParam(defaultValue = "") String keyword
+    public ResponseEntity<CustomPagination<GetOrdersListResponse>> getOrders(
+                                                                            @RequestParam(required = false) PaymentMethod paymentMethod,
+                                                                            @RequestParam(required = false) OrderStatus status,
+                                                                            @RequestParam String startDate,
+                                                                            @RequestParam String endDate,
+                                                                            @RequestParam(defaultValue = "1") int page,
+                                                                            @RequestParam(defaultValue = "10") int size,
+                                                                            @RequestParam(defaultValue = "") String keyword
     ) {
-        Page<GetOrdersListResponse> orders = orderService.getOrders(keyword, page - 1, size);
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).plusDays(1).atStartOfDay().minusSeconds(1);
+        Page<GetOrdersListResponse> orders = orderService.getOrders(start, end, paymentMethod, status, keyword, page - 1, size);
         return ResponseEntity.ok(new CustomPagination<>(orders));
     }
 

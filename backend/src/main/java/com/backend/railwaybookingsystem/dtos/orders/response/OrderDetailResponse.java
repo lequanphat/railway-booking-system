@@ -58,6 +58,25 @@ public class OrderDetailResponse implements Serializable {
         String departureTime;
         String arrivalTime;
         PersonTypeDto object;
+        ScheduleDto schedule;
+
+        /**
+         * DTO for {@link com.backend.railwaybookingsystem.models.Schedule}
+         */
+        @Value
+        public static class ScheduleDto implements Serializable {
+            Long id;
+            TrainDto train;
+
+            /**
+             * DTO for {@link com.backend.railwaybookingsystem.models.Train}
+             */
+            @Value
+            public static class TrainDto implements Serializable {
+                Long id;
+                String name;
+            }
+        }
 
         /**
          * DTO for {@link com.backend.railwaybookingsystem.models.PersonType}

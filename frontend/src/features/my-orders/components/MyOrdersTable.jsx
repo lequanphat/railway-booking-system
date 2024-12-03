@@ -34,10 +34,11 @@ const expandColumns = [
   {
     title: 'Chỗ ngồi',
     key: 'seat',
-    render: ({ seatType, carriageType }) => (
+    render: ({ seatType, carriageType, schedule }) => (
       <div>
-        <p>Ghế: {seatType}</p>
+        <p>Tàu: {schedule?.train?.name}</p>
         <p>Toa {carriageType}</p>
+        <p>Ghế: {seatType}</p>
       </div>
     ),
   },
