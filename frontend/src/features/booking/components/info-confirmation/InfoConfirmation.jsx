@@ -402,7 +402,11 @@ const InfoConfirmation = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Vui lòng nhập số CMND/Hộ chiếu!',
+                      message: 'Vui lòng nhập email',
+                    },
+                    {
+                      type: 'email',
+                      message: 'Email không đúng định dạng!',
                     },
                   ]}
                 >
