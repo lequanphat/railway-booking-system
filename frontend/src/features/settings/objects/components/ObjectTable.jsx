@@ -52,6 +52,8 @@ const ObjectsTable = () => {
     return <Table rowKey="id" columns={expandColumns} dataSource={record.children} pagination={false} />;
   };
 
+  console.log(personTypes);
+
   return (
     <Table
       rowKey="id"
