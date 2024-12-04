@@ -128,7 +128,7 @@ const ManagePassengerPage = () => {
                       <Flex justify="space-between">
                         <span>{name}</span>
                         <Space>
-                          <Tag color="cyan">{route.name}</Tag>
+                          <Tag color="cyan">{route?.name}</Tag>
                         </Space>
                       </Flex>
                     );

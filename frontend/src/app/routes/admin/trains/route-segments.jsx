@@ -89,7 +89,7 @@ const RouteSegments = () => {
     {
       key: '3',
       label: 'Tuyến',
-      children: route.name,
+      children: route?.name,
     },
     {
       key: '4',

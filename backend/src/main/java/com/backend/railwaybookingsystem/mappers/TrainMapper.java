@@ -16,6 +16,7 @@ public interface TrainMapper {
 
     CreateTrainResponse convertToCreateTrainResponse(Train train);
 
+    @Mapping(target = "route.id", source = "routeId")
     Train convertToTrain(CreateTrainRequest request);
 
     GetTrainRouteSegmentsResponse convertToGetTrainRouteSegmentsResponse(Train train);

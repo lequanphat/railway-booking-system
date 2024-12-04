@@ -362,7 +362,7 @@ public class OrderServiceImpl implements OrderService {
     public UserOrderReportResponse getUserReport(LocalDateTime startDate, LocalDateTime endDate) {
         int totalOrders = orderRepository.countByUserIsNotNullAndCreatedAtBetween(startDate, endDate);
         int totalGuestOrders = orderRepository.countByUserIsNullAndCreatedAtBetween(startDate, endDate);
-        return new UserOrderReportResponse(totalOrders, totalGuestOrders);
+        return new UserOrderReportResponse(totalGuestOrders, totalOrders);
     }
 
     public boolean placeOrderCallbackPayPal(String paymentId, String payerId) {

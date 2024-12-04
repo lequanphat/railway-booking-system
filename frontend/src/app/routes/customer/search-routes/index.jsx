@@ -68,7 +68,7 @@ const SearchPage = () => {
       <Row gutter={[16, 16]}>
         {params.get('trip_type') === TripType.RoundTrip && seatSelectionStep === 2 && (
           <Col xs={24} md={6}>
-            <TicketCard />
+            <TicketCard params={params} />
           </Col>
         )}
         <Col xs={24} md={params.get('trip_type') === TripType.RoundTrip ? 18 : 24}>

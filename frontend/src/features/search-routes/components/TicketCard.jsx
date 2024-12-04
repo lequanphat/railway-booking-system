@@ -3,7 +3,7 @@ import PersonOnSeatIcon from '~/components/icons/PersonOnSeatIcon';
 import useBookingStore from '~/stores/booking-store';
 import { convertToVnCurrency } from '~/utils/convert';
 
-const TicketCard = () => {
+const TicketCard = ({ params }) => {
   const { oneWay } = useBookingStore();
 
   return (
@@ -19,7 +19,9 @@ const TicketCard = () => {
         }}
         className="shadow-sm"
       >
-        <h1 className="text-base font-semibold">Sài Gòn → Hà Nội</h1>
+        <h1 className="text-base font-semibold">
+          {params.get('departure_name')} → {params.get('arrival_name')}
+        </h1>
       </Card>
       {oneWay?.selectedSeats.map((seat) => (
         <TicketItem
