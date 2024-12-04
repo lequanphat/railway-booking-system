@@ -20,7 +20,7 @@ const EmployeePage = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const updateMutation = useUpdateEmployee({
-    mutationConfig: {
+    mutationConfig: {     
       onSuccess: () => {
         message.success('Cập nhật thành công!');
       },

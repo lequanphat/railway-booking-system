@@ -1,10 +1,11 @@
-import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined,LockOutlined,UnlockOutlined } from '@ant-design/icons';
 import { Button, Flex, Input, Space, Table, Tag } from 'antd';
 import { useMemo, useState } from 'react';
 import { ROW_PER_PAGE } from '~/config/constants';
 import { useCustomers } from '../api/get-customers';
+import PropTypes from 'prop-types';
 
-export const CustomerTable = () => {
+export const CustomerTable = ({handleUpdateStatus}) => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const { data: customers, isLoading } = useCustomers({
@@ -61,10 +62,15 @@ export const CustomerTable = () => {
       {
         title: 'Action',
         key: 'action',
-        render: () => (
+        render: (data) => (
           <Space>
             <Button disabled onClick={null} icon={<EditOutlined />} iconPosition={'end'} />
             <Button disabled onClick={null} icon={<DeleteOutlined />} iconPosition={'end'} />
+            <Button
+              onClick={() => handleUpdateStatus(data)}
+              icon={data?.is_deleted ? <LockOutlined /> : <UnlockOutlined />}
+              iconPosition={'end'}
+            />
           </Space>
         ),
       },
@@ -106,4 +112,8 @@ export const CustomerTable = () => {
       />
     </>
   );
+};
+
+CustomerTable.propTypes = {
+  handleUpdateStatus: PropTypes.func,
 };

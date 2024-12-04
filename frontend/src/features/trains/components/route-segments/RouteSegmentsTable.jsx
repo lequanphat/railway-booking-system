@@ -118,7 +118,7 @@ const RouteSegmentsTable = ({
           <PopconfirmDelete onConfirm={() => handleDelete(index)} />
         </Space>
       ),
-    },
+    },  
   ];
 
   const onDragEnd = ({ active, over }) => {
@@ -166,7 +166,7 @@ const PopconfirmDelete = ({ onConfirm }) => {
       placement="topRight"
     >
       <Button icon={<DeleteOutlined />} size="small" danger />
-    </Popconfirm>
+    </Popconfirm> 
   );
 };
 
