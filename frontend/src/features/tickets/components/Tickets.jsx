@@ -92,6 +92,11 @@ const Tickets = ({ code, departureStation, arrivalStation, departureTime, arriva
         </Col>
 
         <Col span={24}>
+          <p className="text-xs opacity-70">Ngày đi</p>
+          <h1 className="text-base">{departureTime}</h1>
+        </Col>
+
+        <Col span={24}>
           <Divider className="mb-4 mt-1" />
           <Space>
             <p className="text-xs opacity-70">Giá vé</p>

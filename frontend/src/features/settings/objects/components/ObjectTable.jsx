@@ -58,8 +58,11 @@ const ObjectsTable = () => {
       columns={columns}
       expandable={{
         expandedRowRender,
+        rowExpandable: (record) => record.children && record.children.length > 0,
+        childrenColumnName: 'not-existed',
       }}
       dataSource={personTypes}
+      bordered
     />
   );
 };
