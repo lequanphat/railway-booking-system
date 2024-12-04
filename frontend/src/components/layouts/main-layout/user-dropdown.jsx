@@ -39,10 +39,10 @@ const UserDropdown = () => {
       }}
       trigger={['click']}
       placement="bottomRight"
-      className='cursor-pointer'
+      className="cursor-pointer"
       arrow
     >
-      <Avatar src={user?.avatar} />
+      <Avatar src={user?.avatar ?? '/default_avatar.jpg'} />
     </Dropdown>
   );
 };
