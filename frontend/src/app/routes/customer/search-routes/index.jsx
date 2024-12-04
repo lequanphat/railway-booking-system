@@ -8,10 +8,12 @@ import { useSearchSchedules } from '~/features/search-routes/api/search-schedule
 import { TripType } from '~/enums/trip-type';
 import EmptyRoutes from '~/features/search-routes/components/EmptyRoutes';
 import ReturnCard from '~/features/search-routes/components/ReturnCard';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useBookingStore from '~/stores/booking-store';
 import ScheduleBookingModal from '~/features/search-routes/components/scheddule-booking-modal/ScheduleBookingModal';
 import TicketCard from '~/features/search-routes/components/TicketCard';
+import { useBoolean } from '~/hooks/useBoolean';
+import RouteSegmentModal from '~/features/search-routes/components/RouteSegmentModal';
 
 const SearchPage = () => {
   const { isOpenBookingModal, closeBookingModal, openBookingModal, seatSelectionStep } = useBookingStore();
@@ -95,6 +97,24 @@ const SearchPage = () => {
 };
 
 const ListSchedule = ({ schedules, isRefetching, handleOpenBookingModal }) => {
+  const [params, setParams] = useState({
+    id: null,
+    arrivalId: null,
+    departureId: null,
+    trainName: null,
+  });
+
+  const {
+    value: routeSegmentModalVisible,
+    setTrue: showRouteSegmentModal,
+    setFalse: hideRouteSegmentModal,
+  } = useBoolean();
+
+  const handleOpenRouteSegmentModal = (id, arrivalId, departureId, trainName) => {
+    setParams({ id, arrivalId, departureId, trainName });
+    showRouteSegmentModal();
+  };
+
   return (
     <Space direction="vertical" className="w-full mt-4" size="middle">
       {!isRefetching ? (
@@ -110,6 +130,7 @@ const ListSchedule = ({ schedules, isRefetching, handleOpenBookingModal }) => {
                   schedule.arrival_segment.station_id,
                 );
               }}
+              handleOpenRouteSegmentModal={handleOpenRouteSegmentModal}
             />
           ))
         ) : (
@@ -120,6 +141,14 @@ const ListSchedule = ({ schedules, isRefetching, handleOpenBookingModal }) => {
           <Spin />
         </div>
       )}
+      <RouteSegmentModal
+        id={params.id}
+        arrivalId={params.arrivalId}
+        departureId={params.departureId}
+        trainName={params.trainName}
+        open={routeSegmentModalVisible}
+        onCancel={hideRouteSegmentModal}
+      />
     </Space>
   );
 };

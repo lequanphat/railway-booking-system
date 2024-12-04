@@ -155,6 +155,8 @@ const ScheduleBookingModal = ({ open, onCancel }) => {
     onCancel();
   };
 
+  if (isLoading) return null;
+
   return (
     <Modal
       title={

@@ -1,4 +1,4 @@
-import { Button, Flex, Popover, Typography } from 'antd';
+import { Button, Flex, Typography } from 'antd';
 import PickupIcon from '~/assets/svg/pickup.svg';
 import StationIcon from '~/assets/svg/station.svg';
 import dayjs from 'dayjs';
@@ -6,14 +6,14 @@ import { calculateTravelTime } from '~/utils/calculateTravelTime';
 import { FieldTimeOutlined } from '@ant-design/icons';
 const { Text } = Typography;
 
-const content = (
-  <div>
-    <p>Content</p>
-    <p>Content</p>
-  </div>
-);
-
-export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, onChoose }) => {
+export const ScheduleItem = ({
+  id,
+  train_name,
+  arrival_segment,
+  departure_segment,
+  onChoose,
+  handleOpenRouteSegmentModal,
+}) => {
   return (
     <Flex align="center" justify="space-between" gap={10} className="shadow-sm p-4 rounded-xl bg-white" wrap={true}>
       <Flex gap={10} vertical>
@@ -21,11 +21,17 @@ export const ScheduleItem = ({ train_name, arrival_segment, departure_segment, o
         <Typography level={3} className="text-xl font-bold text-primary">
           {train_name}
         </Typography>
-        <Popover content={content} placement="bottomLeft">
-          <Button size="small" shape="round" icon={<FieldTimeOutlined />} iconPosition="end">
-            Hành trình
-          </Button>
-        </Popover>
+        <Button
+          size="small"
+          shape="round"
+          icon={<FieldTimeOutlined />}
+          iconPosition="end"
+          onClick={() =>
+            handleOpenRouteSegmentModal(id, arrival_segment.station_id, departure_segment.station_id, train_name)
+          }
+        >
+          Hành trình
+        </Button>
       </Flex>
       <Flex vertical>
         <Flex align="center">
