@@ -3,7 +3,17 @@ import { jsPDF } from 'jspdf';
 import TrainIcon from '~/components/icons/TrainIcon';
 import { convertToVnCurrency } from '~/utils/convert';
 
-const Tickets = ({ code, departureStation, arrivalStation, departureTime, arrivalTime, price, fullName, seatType }) => {
+const Tickets = ({
+  code,
+  departureStation,
+  arrivalStation,
+  departureTime,
+  arrivalTime,
+  price,
+  fullName,
+  seatType,
+  trainName,
+}) => {
   const generatePdf = () => {
     const doc = new jsPDF({
       unit: 'pt',
@@ -85,7 +95,10 @@ const Tickets = ({ code, departureStation, arrivalStation, departureTime, arriva
           <p className="text-xs opacity-70">Đến nơi</p>
           <h1 className="text-base">{arrivalTime.split(' ')?.[0]}</h1>
         </Col>
-
+        <Col span={24}>
+          <p className="text-xs opacity-70">Tàu</p>
+          <h1 className="text-base">{trainName}</h1>
+        </Col>
         <Col span={24}>
           <p className="text-xs opacity-70">Hành khách</p>
           <h1 className="text-base">{fullName}</h1>

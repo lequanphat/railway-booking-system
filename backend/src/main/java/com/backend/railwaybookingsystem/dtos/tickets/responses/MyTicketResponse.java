@@ -22,6 +22,7 @@ public class MyTicketResponse implements Serializable {
     String arrivalStation;
     String departureTime;
     String arrivalTime;
+    String trainName;
     PersonTypeDto object;
 
     /**

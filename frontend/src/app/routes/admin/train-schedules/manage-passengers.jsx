@@ -268,8 +268,9 @@ const PassengerTable = ({ params, setParams }) => {
     {
       title: 'Chỗ ngồi',
       key: 'seat',
-      render: ({ seatType, carriageType }) => (
+      render: ({ seatType, carriageType, trainName }) => (
         <div>
+          <p>Tàu: {trainName}</p>
           <p>Ghế: {seatType}</p>
           <p>Toa {carriageType}</p>
         </div>
