@@ -1,5 +1,5 @@
 import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Input, message, Space } from 'antd';
+import { Button, Flex, Form, Input, message, Select, Space } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomAsyncSelect from '~/components/ui/CustomAsyncSelect';
@@ -9,6 +9,7 @@ import { useCarriageLayouts } from '~/features/carriages/api/get-layouts';
 import { moveArrayItem } from '~/features/carriages/utils/helpers';
 import { useCreateTrain } from '~/features/trains/api/create-train';
 import { useAllSeatTypes } from '~/features/trains/api/get-all-seat-types';
+import { useGetRoutes } from '~/features/trains/api/get-routes';
 import CarriageSortableItem from '~/features/trains/components/CarriageSortableItem';
 import SelectedCarriagesTable from '~/features/trains/components/SelectedCarriagesTable';
 import TrainContainer from '~/features/trains/components/TrainContainer';
@@ -27,6 +28,8 @@ const TrainsManagement = () => {
   const { data: allSeatTypes } = useAllSeatTypes({
     retry: false,
   });
+
+  const { data: routes } = useGetRoutes();
 
   const mutation = useCreateTrain({
     mutationConfig: {
@@ -68,12 +71,13 @@ const TrainsManagement = () => {
           price: parseFloat(item.price) > 0 ? parseFloat(item.price) : 0,
         }));
         const data = {
-          name: values.name,
+          name: values?.name,
+          routeId: values?.route,
           carriagesList: carriages.map((item) => item.value),
           seatPricesList: validatedSeatPrices,
         };
         mutation.mutate({ data });
-      // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars
       } catch (error) {
         message.error('Vui lòng nhập giá vé cho tất cả các loại ghế');
       }
@@ -93,6 +97,15 @@ const TrainsManagement = () => {
       seats: item.seats.length,
     }));
   }, [carriages]);
+
+  const routesOptions = useMemo(
+    () =>
+      routes?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+    [routes],
+  );
 
   return (
     <>
@@ -125,6 +138,7 @@ const TrainsManagement = () => {
           form={form}
           initialValues={{
             name: '',
+            routes: null,
             seat_prices: [],
           }}
           layout="vertical"
@@ -143,6 +157,9 @@ const TrainsManagement = () => {
                 <Input placeholder="Nhập tên toa tàu..." />
               </Form.Item>
 
+              <Form.Item label="Tuyến đường" name="route" rules={RULES.createTrain.route} required={true}>
+                <Select options={routesOptions} />
+              </Form.Item>
               <Form.Item label="Chọn toa tàu">
                 <Flex gap={8}>
                   <CustomAsyncSelect

@@ -90,7 +90,7 @@ const AddStopPointModal = ({ open, closeModal, handleAddItem, dataSource }) => {
                 },
               ]}
             >
-              <InputNumber placeholder="Ngày thứ" min={1} max={7} className="w-full" changeOnWheel />
+              <InputNumber placeholder="Ngày thứ" min={0} max={7} className="w-full" changeOnWheel />
             </Form.Item>
           </Col>
         </Row>

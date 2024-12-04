@@ -80,4 +80,10 @@ public class TrainController {
     public ResponseEntity<?> getCarriagesOfTrain(@PathVariable Long id) {
         return ResponseEntity.ok(trainService.getCarriagesOfTrain(id));
     }
+
+    @GetMapping("ad/routes")
+    @Operation(tags = "Routes", description = "get all routes")
+    public ResponseEntity<?> getRoutes() {
+        return ResponseEntity.ok(trainService.getAllRoutes());
+    }
 }

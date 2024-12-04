@@ -82,6 +82,7 @@ const RULES = {
         message: 'Name must be at most 150 characters!',
       },
     ],
+    route: [{ required: true, message: 'Please select the route!' }],
   },
 };
 export default RULES;

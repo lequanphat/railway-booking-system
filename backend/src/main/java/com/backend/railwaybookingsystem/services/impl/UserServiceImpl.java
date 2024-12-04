@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
         userVerificationService.createUserVerification(savedUser, token);
 
-        emailService.sendVerificationEmail(email, token);
+        // emailService.sendVerificationEmail(email, token);
 
         rabbitMQSender.send(RabbitMQConfiguration.REGISTRATION_QUEUE_NAME, new RegistrationEmailDto(email, token));
 

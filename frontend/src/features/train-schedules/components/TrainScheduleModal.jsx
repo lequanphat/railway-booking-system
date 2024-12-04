@@ -178,7 +178,7 @@ const AddTrainScheduleForm = ({ date, currentList }) => {
               <Flex justify="space-between">
                 <span>{name}</span>
                 <Space>
-                  <Tag color="cyan">{route.name}</Tag>
+                  <Tag color="cyan">{route?.name}</Tag>
                   {option.data.disabled && <Tag color="red">Đã chọn</Tag>}
                 </Space>
               </Flex>

@@ -1,9 +1,8 @@
 package com.backend.railwaybookingsystem.services.impl;
 
 import com.backend.railwaybookingsystem.dtos.carriages.GetCarriageOfTrainResponse;
-import com.backend.railwaybookingsystem.dtos.orders.response.OrderDetailResponse;
-import com.backend.railwaybookingsystem.dtos.reports.OrderReportResponse;
 import com.backend.railwaybookingsystem.dtos.reports.TrainReportResponse;
+import com.backend.railwaybookingsystem.dtos.routes.RouteResponse;
 import com.backend.railwaybookingsystem.dtos.seat_prices.SeatPriceRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.CreateTrainRequest;
 import com.backend.railwaybookingsystem.dtos.trains.requests.UpdateTrainRequest;
@@ -12,7 +11,6 @@ import com.backend.railwaybookingsystem.dtos.trains.responses.GetAllTrainRespons
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainDetailResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.TrainListResponse;
 import com.backend.railwaybookingsystem.dtos.trains.responses.UpdateTrainResponse;
-import com.backend.railwaybookingsystem.exceptions.BadRequestException;
 import com.backend.railwaybookingsystem.exceptions.NotFoundException;
 import com.backend.railwaybookingsystem.mappers.*;
 import com.backend.railwaybookingsystem.models.*;
@@ -21,7 +19,6 @@ import com.backend.railwaybookingsystem.services.TrainService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +47,9 @@ public class TrainServiceImpl implements TrainService {
 
     @Autowired
     private SeatPriceRepository seatPriceRepository;
+
+    @Autowired
+    private RouteRepository routeRepository;
 
 
     public CreateTrainResponse saveTrain(CreateTrainRequest request) {
@@ -178,6 +178,13 @@ public class TrainServiceImpl implements TrainService {
     public List<GetCarriageOfTrainResponse> getCarriagesOfTrain(Long trainId) {
         var result = carriageRepository.findCarriagesByTrainIdOrderByPosition(trainId);
         return CarriageMapper.INSTANCE.toGetCarriageOfTrainResponseList(result);
+    }
+
+    @Override
+    public List<RouteResponse> getAllRoutes(){
+       return routeRepository.findAll().stream()
+               .map(RouteMapper.INSTANCE::convertToRouteResponse)
+               .collect(Collectors.toList());
     }
 }
 
