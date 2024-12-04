@@ -52,14 +52,19 @@ const ObjectsTable = () => {
     return <Table rowKey="id" columns={expandColumns} dataSource={record.children} pagination={false} />;
   };
 
+  console.log(personTypes);
+
   return (
     <Table
       rowKey="id"
       columns={columns}
       expandable={{
         expandedRowRender,
+        rowExpandable: (record) => record.children && record.children.length > 0,
+        childrenColumnName: 'not-existed',
       }}
       dataSource={personTypes}
+      bordered
     />
   );
 };
